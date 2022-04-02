@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:project/login_page.dart';
 import 'package:project/signup_page.dart';
 import 'package:project/splash_1.dart';
@@ -14,6 +15,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        localizationsDelegates: [
+          GlobalCupertinoLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale("fa", "IR"), // OR Locale('ar', 'AE') OR Other RTL locales
+        ],
+        locale: Locale("fa", "IR"),
+
+
       debugShowCheckedModeBanner: false,
       routes: {
         '/splash1': (context) => const Splash1(),
@@ -26,7 +38,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Splash1(),
+      home:Directionality( // add this
+        textDirection: TextDirection.rtl,
+        child :Splash1(),
+      )
+
+
     );
   }
 }

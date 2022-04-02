@@ -75,12 +75,12 @@ class Splash3 extends StatelessWidget {
                     style: ElevatedButton.styleFrom(primary:Colors.pinkAccent),
                     onPressed: (){
                       Navigator.pushNamed(context, '/login');
-                    }, child: Text("ثبت نام"),
+                    }, child: Text("ورود"),
                   ),
                   ElevatedButton(
                     onPressed: (){
                       Navigator.pushNamed(context, '/signup');
-                    }, child: Text("ورود"),
+                    }, child: Text("ثبت نام"),
                   )
                 ],
               )
