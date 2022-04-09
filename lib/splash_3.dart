@@ -16,12 +16,17 @@ class Splash3 extends StatelessWidget {
               ),
               Text(
                 "پرسش و پاسخ با اساتید ",
-                style: TextStyle(color: Color(0xff181818),fontSize: 25),
+                style: TextStyle(color: Color(0xff181818),fontSize: 28,
+                  fontFamily: 'Blotus',),
               ),
-              Text(
-                "دانشجویان می توانند سوالات خود را مطرح کنند و برای ویرایش پاسخ این سوال ها همکاری کنند. ",
-                style: TextStyle(color: Color(0xff494949),fontSize: 15,),
-                textDirection: TextDirection.rtl,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text(
+                  "دانشجویان می توانند سوالات خود را مطرح کنند و برای ویرایش پاسخ این سوال ها همکاری کنند. ",
+                  style: TextStyle(color: Color(0xff494949),fontSize: 18,
+                    fontFamily: 'lotus',),
+                  textDirection: TextDirection.rtl,
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -69,18 +74,39 @@ class Splash3 extends StatelessWidget {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary:Colors.pinkAccent),
-                    onPressed: (){
-                      Navigator.pushNamed(context, '/login');
-                    }, child: Text("ورود"),
+                  SizedBox(
+                    width: 130,
+                    height: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: StadiumBorder(),
+                          primary:Colors.lightBlue
+                      ),
+                      onPressed: (){
+                        Navigator.pushNamed(context, '/login');
+                      }, child: Text("ورود",style: TextStyle(
+                      fontFamily: 'lotus',
+                      fontSize: 18,
+                    ),),
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: (){
-                      Navigator.pushNamed(context, '/signup');
-                    }, child: Text("ثبت نام"),
+                  SizedBox(
+                    width: 130,
+                    height: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: StadiumBorder(),
+                          primary:Colors.pinkAccent
+                      ),
+                      onPressed: (){
+                        Navigator.pushNamed(context, '/signup');
+                      }, child: Text("ثبت نام",style: TextStyle(
+                      fontFamily: 'lotus',
+                      fontSize: 18,
+                    ),),
+                    ),
                   )
                 ],
               )
