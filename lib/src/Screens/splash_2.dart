@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-class Splash3 extends StatelessWidget {
-  const Splash3({Key? key}) : super(key: key);
+class Splash2 extends StatelessWidget {
+  const Splash2({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -9,25 +9,21 @@ class Splash3 extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Image.asset(
-                  "assets/images/image_4.PNG",
+                  "assets/images/image_3.PNG",
                   width: 300.0,
                   height: 300.0,
                   fit: BoxFit.cover
               ),
               Text(
                 "پرسش و پاسخ با اساتید ",
-                style: TextStyle(color: Color(0xff181818),fontSize: 28,
-                  fontFamily: 'Blotus',),
+                style: TextStyle(color: Color(0xff181818),fontSize: 25),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(
-                  "دانشجویان می توانند سوالات خود را مطرح کنند و برای ویرایش پاسخ این سوال ها همکاری کنند. ",
-                  style: TextStyle(color: Color(0xff494949),fontSize: 18,
-                    fontFamily: 'lotus',),
-                  textDirection: TextDirection.rtl,
-                ),
+              Text(
+                "دانشجویان می توانند سوالات خود را مطرح کنند و برای ویرایش پاسخ این سوال ها همکاری کنند. ",
+                style: TextStyle(color: Color(0xff494949),fontSize: 15),
+                textDirection: TextDirection.rtl,
               ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -53,7 +49,7 @@ class Splash3 extends StatelessWidget {
                         width: 15.0,
                         height: 15.0,
                         decoration: new BoxDecoration(
-                          color: Color(0xff83b2ff),
+                          color: Color(0xff005ffc),
                           shape: BoxShape.circle,
                         )),
                   ),
@@ -66,7 +62,7 @@ class Splash3 extends StatelessWidget {
                         width: 15.0,
                         height: 15.0,
                         decoration: new BoxDecoration(
-                          color: Color(0xff005ffc),
+                          color: Color(0xff83b2ff),
                           shape: BoxShape.circle,
                         )),
                   ),
@@ -74,39 +70,18 @@ class Splash3 extends StatelessWidget {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 130,
-                    height: 40,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          shape: StadiumBorder(),
-                          primary:Colors.lightBlue
-                      ),
-                      onPressed: (){
-                        Navigator.pushNamed(context, '/login');
-                      }, child: Text("ورود",style: TextStyle(
-                      fontFamily: 'lotus',
-                      fontSize: 18,
-                    ),),
-                    ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary:Colors.pinkAccent),
+                    onPressed: (){
+                      Navigator.pushNamed(context, '/login');
+                    }, child: Text("ورود"),
                   ),
-                  SizedBox(
-                    width: 130,
-                    height: 40,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          shape: StadiumBorder(),
-                          primary:Colors.pinkAccent
-                      ),
-                      onPressed: (){
-                        Navigator.pushNamed(context, '/signup');
-                      }, child: Text("ثبت نام",style: TextStyle(
-                      fontFamily: 'lotus',
-                      fontSize: 18,
-                    ),),
-                    ),
+                  ElevatedButton(
+                    onPressed: (){
+                      Navigator.pushNamed(context, '/signup');
+                    }, child: Text("ثبت نام"),
                   )
                 ],
               )

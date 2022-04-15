@@ -33,21 +33,15 @@ class _SignUpPageState extends State<SignUpPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         "نقش",
-                        style: TextStyle(
-                          fontFamily: "lotus",
-                          fontSize: 20,
-                        ),
+                        style: TextStyle(),
                       ),
                     ),
                     DropdownButtonFormField<String>(
                       decoration: const InputDecoration(
                         fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
                         border: OutlineInputBorder(),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xff555555))),
+                            borderSide: BorderSide(color: Colors.pinkAccent)),
                         filled: true,
                         contentPadding:
                         EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
@@ -74,26 +68,17 @@ class _SignUpPageState extends State<SignUpPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         "ایمیل",
-                        style: TextStyle(
-                          fontFamily: "lotus",
-                          fontSize: 20,
-                        ),
+                        style: TextStyle(),
                       ),
                     ),
                     TextFormField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: "ایمیل خود را وارد کنید",
-                          hintStyle: Theme.of(context).textTheme.caption!.copyWith(
-                            color: Colors.grey,
-                          ),
                           fillColor: Colors.white,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
                           border: OutlineInputBorder(),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Color(0xff555555))),
+                              borderSide: BorderSide(color: Colors.pinkAccent)),
                           filled: true,
                           contentPadding:
                           EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
@@ -118,17 +103,11 @@ class _SignUpPageState extends State<SignUpPage> {
 
                         decoration: InputDecoration(
                           hintText: "نام موسسه یا دانشگاه",
-                          hintStyle: Theme.of(context).textTheme.caption!.copyWith(
-                            color: Colors.grey,
-                          ),
                           fillColor: Colors.white,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
                           border: OutlineInputBorder(),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Color(0xff494949))),
+                              borderSide: BorderSide(color: Colors.pinkAccent)),
                           filled: true,
                           contentPadding:
                           EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
@@ -145,26 +124,17 @@ class _SignUpPageState extends State<SignUpPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         "رمز عبور",
-                        style: TextStyle(
-                          fontFamily: "lotus",
-                          fontSize: 20,
-                        ),
+                        style: TextStyle(),
                       ),
                     ),
                     TextFormField(
                         decoration: InputDecoration(
                           hintText: "رمز عبور خود را وارد کنید",
-                          hintStyle: Theme.of(context).textTheme.caption!.copyWith(
-                            color: Colors.grey,
-                          ),
                           fillColor: Colors.white,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
                           border: OutlineInputBorder(),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Color(0xff555555))),
+                              borderSide: BorderSide(color: Colors.pinkAccent)),
                           filled: true,
                           contentPadding:
                           EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
@@ -181,26 +151,17 @@ class _SignUpPageState extends State<SignUpPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         "تکرار رمز عبور",
-                        style: TextStyle(
-                          fontFamily: "lotus",
-                          fontSize: 20,
-                        ),
+                        style: TextStyle(),
                       ),
                     ),
                     TextFormField(
                         decoration: InputDecoration(
                           hintText: "تکرار رمز عبور خود را وارد کنید",
-                          hintStyle: Theme.of(context).textTheme.caption!.copyWith(
-                            color: Colors.grey,
-                          ),
                           fillColor: Colors.white,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
                           border: OutlineInputBorder(),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Color(0xff555555))),
+                              borderSide: BorderSide(color: Colors.pinkAccent)),
                           filled: true,
                           contentPadding:
                           EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
@@ -242,17 +203,12 @@ class _SignUpPageState extends State<SignUpPage> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Text("حساب کاربری دارید؟",
-                style: TextStyle(
-                  fontFamily: "lotus",
-                ),),
+                child: Text("حساب کاربری دارید؟"),
               ),
               InkWell(
                 child: Text(
                   'ورود',
-                  style: TextStyle(color: Colors.pink,
-                    fontFamily: "lotus",
-                  ),
+                  style: TextStyle(color: Colors.pink),
                 ),
                 onTap: () => Navigator.pushNamed(context, '/login'),
               ),

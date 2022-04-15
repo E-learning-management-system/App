@@ -21,9 +21,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Text(
               "ورود",
-            style: TextStyle(color: Colors.black87, fontSize: 28,
-              fontFamily: 'BNazanin',
-              ),
+            style: TextStyle(color: Colors.black87, fontSize: 27),
           ),
           Image.asset("assets/images/login.png",
                 width: 350.0, height: 300.0, fit: BoxFit.cover),
@@ -38,22 +36,13 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           "ایمیل",
-                          style: TextStyle(
-                            fontFamily: 'lotus',
-                            fontSize: 20,
-                            ),
+                          style: TextStyle(),
                         ),
                       ),
                       TextFormField(
                           decoration: InputDecoration(
                             hintText: "ایمیل خود را وارد کنید",
-                            hintStyle: Theme.of(context).textTheme.caption!.copyWith(
-                              color: Colors.grey,
-                            ),
                             fillColor: Colors.white,
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
                             border: OutlineInputBorder(),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -73,22 +62,13 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           "رمز عبور",
-                          style: TextStyle(
-                            fontFamily: 'lotus',
-                            fontSize: 20,
-                          ),
+                          style: TextStyle(),
                         ),
                       ),
                       TextFormField(
                           decoration: InputDecoration(
                             hintText: "رمز عبور خود را وارد کنید",
-                            hintStyle: Theme.of(context).textTheme.caption!.copyWith(
-                                color: Colors.grey,
-                            ),
                             fillColor: Colors.white,
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
                             border: OutlineInputBorder(),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -104,49 +84,31 @@ class _LoginPageState extends State<LoginPage> {
                               return null;
                             }
                           }),
-                      // CheckboxListTile(
-                      //     title: Text("مرا به خاطر بسپار"),
-                      //     checkColor: Colors.white,
-                      //     value: isChecked,
-                      //     onChanged: (bool? value) {
-                      //       setState(() {
-                      //         isChecked = value!;
-                      //       });
-                      //     },
-                      //     controlAffinity: ListTileControlAffinity.leading),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: InkWell(
-                          child: Text(
-                            'رمز خود را فراموش کرده اید؟',
-                            style: TextStyle(color: Colors.blue,
-                              fontFamily: 'BLotus',
-                            ),
-                          ),
-                          onTap: () => Navigator.pushNamed(context, '/forgetPassword'),
-                        ),
-                      ),
+                      CheckboxListTile(
+                          title: Text("مرا به خاطر بسپار"),
+                          checkColor: Colors.white,
+                          value: isChecked,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked = value!;
+                            });
+                          },
+                          controlAffinity: ListTileControlAffinity.leading),
                       Container(
                         alignment: Alignment.center,
                         child: SizedBox(
-                          width: 250,
+                          width: 200,
                           height: 40,
                           child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  shape: StadiumBorder(),
-                                primary: Colors.lightBlue
-                              ),
+                                  shape: StadiumBorder()),
                               onPressed: () async {
                                 if (_formLoginKey.currentState!.validate()) {
                                   setState(() {});
                                   Navigator.pushNamed(context, '/home');
                                 }
                               },
-                              child: Text("ورود",style: TextStyle(
-                                fontFamily: 'BLotus',
-                                fontSize: 20,
-                              ),
-                              )),
+                              child: Text("ورود")),
                         ),
                       ),
                     ],
@@ -157,19 +119,12 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: Text("حساب کاربری ندارید؟",
-                      style: TextStyle(
-                        fontFamily: 'BLotus',
-                        fontSize: 15,
-                      )),
+                  child: Text("حساب کاربری ندارید؟"),
                 ),
                 InkWell(
                   child: Text(
                     'ثبت نام',
-                    style: TextStyle(color: Colors.blue,
-                          fontFamily: 'BLotus',
-
-                    ),
+                    style: TextStyle(color: Colors.blue),
                   ),
                   onTap: () => Navigator.pushNamed(context, '/signup'),
                 ),
