@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:project/courses.dart';
 import 'package:project/login_page.dart';
 import 'package:project/signup_page.dart';
 import 'package:project/splash_1.dart';
@@ -34,7 +33,6 @@ class MyApp extends StatelessWidget {
         '/splash3': (context) => const Splash3(),
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignUpPage(),
-        '/courses': (context) => const Courses(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -42,7 +40,7 @@ class MyApp extends StatelessWidget {
       ),
       home:Directionality( // add this
         textDirection: TextDirection.rtl,
-        child :Courses(),
+        child :Splash1(),
       )
 
 
