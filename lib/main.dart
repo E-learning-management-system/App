@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
           OnBoardingView.id: (context) => const OnBoardingView(),
           SplashView.id: (context) => const SplashView(),
           OnBoardingView.id: (context) => const OnBoardingView(),
-          LoginView.id: (context) => const LoginView(),
+          LoginView.id: (context) =>  LoginView(),
           SignUpView.id: (context) => SignUpView(),
           HomeView.id: (context) => const HomeView(),
           ForgetPasswordView.id : (context) => const ForgetPasswordView(),

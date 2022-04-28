@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:project/controllers/signup_controller.dart';
+import 'package:project/views/verify_email_view.dart';
 import 'package:provider/provider.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
@@ -17,11 +18,8 @@ import 'package:project/widgets/text_field_widget.dart';
 class SignUpView extends StatelessWidget {
 
   static const id = '/SignUp';
-  late String _type,_university,_email,_password,_passwordConfirmation;
-  void onChangedEmail(String value) {
-    _email=value;
-  }
-
+  late String _university,_email,_password,_passwordConfirmation;
+  late String _type='t';
 
 
   @override
@@ -142,9 +140,23 @@ class SignUpView extends StatelessWidget {
                           if (controller.formSignupKey.currentState!
                               .validate()) {
                             var res= await controller.SignUpRequest(_type, _university, _email, _password, _passwordConfirmation);
-                            if(res.email){
-                            Navigator.pushNamed(context, '/home');
-                           }
+                            print(res);
+                            if(res){ Navigator.of(context).pushNamed(VerifyEmailView.id);}
+                            else{
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: const Text('خطا'),
+                                  content: const Text('مشکلی در ثبت نام وحود دارد.'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context, '/SignUp'),
+                                      child: const Text('باشه'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
                           }
                         },
                         text: 'ثبت نام',

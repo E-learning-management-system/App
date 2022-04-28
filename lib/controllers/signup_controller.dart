@@ -6,11 +6,12 @@ import 'package:flutter/material.dart';
 
 class SignUpController extends ChangeNotifier
 {
+  late String _email="";
   final String _url='https://api.piazza.markop.ir/signup/';
-
+  String get email=>_email;
   Future SignUpRequest(var type,  var university, var email, var password, var passwordConfirmation)
   async{
-    print("pass:"+password+ "  passc:"+passwordConfirmation);
+
    var response= await http.post(Uri.parse(_url),
         headers: {'Content-type':'application/json'},
         body: jsonEncode({
@@ -23,7 +24,12 @@ class SignUpController extends ChangeNotifier
     );
    
    notifyListeners();
-   return jsonDecode(response.body);
+   print("jsonDecode(response.body)=   "+response.body);
+   if(response.body==email){
+     _email=email;
+     return true;
+   }
+   return false;
   }
 
   String dropdownValue = "استاد";
