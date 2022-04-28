@@ -18,6 +18,9 @@ class TextFormFieldWidget extends StatelessWidget {
   final bool filled ;
   final Color? fillColor;
   final bool noneEnableBorder;
+  final ValueChanged<String>? onChanged;
+
+  get value=>this.value;
 
   const TextFormFieldWidget(
       {required this.hintText,
@@ -35,7 +38,8 @@ class TextFormFieldWidget extends StatelessWidget {
         this.parametersValidate,
         this.actionKeyboard = TextInputAction.next,
         this.fillColor,
-        this.prefixIcon}): super(key: key);
+        this.prefixIcon,
+        this.onChanged,}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +49,7 @@ class TextFormFieldWidget extends StatelessWidget {
       data: theme,
       child: TextFormField(
         cursorColor: theme.primaryColor,
-
+        onChanged: onChanged,
         obscureText: obscureText,
         keyboardType: textInputType,
         textInputAction: actionKeyboard,
@@ -62,6 +66,7 @@ class TextFormFieldWidget extends StatelessWidget {
           hintText: hintText,
           filled: filled,
           fillColor: fillColor,
+
 
           enabledBorder:  noneEnableBorder ?OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey),

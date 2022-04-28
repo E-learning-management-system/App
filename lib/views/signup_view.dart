@@ -1,6 +1,7 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:project/controllers/signup_controller.dart';
-
 import 'package:provider/provider.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
@@ -9,14 +10,18 @@ import 'package:project/views/login_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/text_field_widget.dart';
-import 'package:provider/provider.dart';
 
 
 
 
 class SignUpView extends StatelessWidget {
-  const SignUpView({Key? key}) : super(key: key);
+
   static const id = '/SignUp';
+  late String _type,_university,_email,_password,_passwordConfirmation;
+  void onChangedEmail(String value) {
+    _email=value;
+  }
+
 
 
   @override
@@ -73,6 +78,11 @@ class SignUpView extends StatelessWidget {
                             ),
                             onChanged: (String? newValue) {
                               value.updateValueFormField(newValue!);
+                              if(newValue == "استاد"){
+                                _type="t";
+                              }else if(newValue =="دانشجو"){
+                                _type="s";
+                              }
 
                             },
                             items: <String>["استاد", "دانشجو"]
@@ -88,36 +98,53 @@ class SignUpView extends StatelessWidget {
 
                     _titleWidget('ایمیل', theme),
 
-                    const TextFormFieldWidget(
-                      hintText: 'ایمیل خود را وارد کنید',
-                      functionValidate: Utility.validateTextField,
-                        ),
+                     TextFormFieldWidget(
+                        onChanged:(newValue) {
+                          _email=newValue;
+                        }
+                      ,
+                        hintText: 'ایمیل خود را وارد کنید',
+                        functionValidate: Utility.validateTextField,
+                      ),
+
                     _titleWidget('دانشگاه', theme),
-                    const TextFormFieldWidget(
+                    TextFormFieldWidget(
+                      onChanged:(newValue) {
+                        _university=newValue;
+                      },
                       hintText: 'نام موسسه یا دانشگاه',
                       functionValidate: Utility.validateTextField,
                     ),
 
                     _titleWidget('رمز عبور', theme),
 
-                    const TextFormFieldWidget(
+                     TextFormFieldWidget(
+                       onChanged:(newValue) {
+                         _password=newValue;
+                       },
                       hintText: 'رمز عبور خود را وارد کنید',
                       functionValidate: Utility.validateTextField,
                     ),
 
                     _titleWidget('تکرار رمز عبور', theme),
 
-                    const TextFormFieldWidget(
+                     TextFormFieldWidget(
+                       onChanged:(newValue) {
+                         _passwordConfirmation=newValue;
+                       },
                       hintText: 'تکرار رمز عبور خود را وارد کنید',
                       functionValidate: Utility.validateTextField,
                     ),
                     sizedBox(height: 15),
                     Center(
                       child: ElevationButtonWidget(
-                        call: () {
+                        call: () async{
                           if (controller.formSignupKey.currentState!
                               .validate()) {
+                            var res= await controller.SignUpRequest(_type, _university, _email, _password, _passwordConfirmation);
+                            if(res.email){
                             Navigator.pushNamed(context, '/home');
+                           }
                           }
                         },
                         text: 'ثبت نام',
