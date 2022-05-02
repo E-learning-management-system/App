@@ -1,6 +1,9 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:project/controllers/signup_controller.dart';
-
+import 'package:project/helpers/validator.dart';
+import 'package:project/views/verify_email_view.dart';
 import 'package:provider/provider.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
@@ -9,14 +12,15 @@ import 'package:project/views/login_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/text_field_widget.dart';
-import 'package:provider/provider.dart';
 
 
 
 
 class SignUpView extends StatelessWidget {
-  const SignUpView({Key? key}) : super(key: key);
+
   static const id = '/SignUp';
+  late String _university,_email,_password,_passwordConfirmation;
+  late String _type='t';
 
 
   @override
@@ -58,13 +62,21 @@ class SignUpView extends StatelessWidget {
                                     color: MyColors.pinkAccentHex,
                                     width: 1.5),
                               ),
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                               focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: MyColors.pinkAccentHex,)),
                               filled: true,
-                              contentPadding: EdgeInsets.only(
+                              contentPadding: const EdgeInsets.only(
                                   bottom: 10.0, left: 10.0, right: 10.0),
                             ),
+                            validator: (newValue)
+                            {
+                              if(newValue == value.dropdownValue)
+                                {
+                                  return 'لطفا یک مورد را انتخاب کنید';
+                                }
+                              return null;
+                            },
                             value: value.dropdownValue,
                             icon: const Icon(Icons.keyboard_arrow_down),
                             elevation: 16,
@@ -73,9 +85,14 @@ class SignUpView extends StatelessWidget {
                             ),
                             onChanged: (String? newValue) {
                               value.updateValueFormField(newValue!);
+                              if(newValue == "استاد"){
+                                _type="t";
+                              }else if(newValue =="دانشجو"){
+                                _type="s";
+                              }
 
                             },
-                            items: <String>["استاد", "دانشجو"]
+                            items: <String>["استاد", "دانشجو",value.dropdownValue]
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -88,36 +105,78 @@ class SignUpView extends StatelessWidget {
 
                     _titleWidget('ایمیل', theme),
 
-                    const TextFormFieldWidget(
-                      hintText: 'ایمیل خود را وارد کنید',
-                      functionValidate: Utility.validateTextField,
-                        ),
+                     TextFormFieldWidget(
+                        onChanged:(newValue) {
+                          _email=newValue;
+                        },
+                        hintText: 'ایمیل خود را وارد کنید',
+                        functionValidate: Validator.validateEmail,
+                      ),
+
                     _titleWidget('دانشگاه', theme),
-                    const TextFormFieldWidget(
+                    TextFormFieldWidget(
+                      onChanged:(newValue) {
+                        _university=newValue;
+                      },
                       hintText: 'نام موسسه یا دانشگاه',
-                      functionValidate: Utility.validateTextField,
+                      functionValidate: Validator.validateTextField,
                     ),
 
                     _titleWidget('رمز عبور', theme),
 
-                    const TextFormFieldWidget(
+                     TextFormFieldWidget(
+                       obscureText: true,
+                       onChanged:(newValue) {
+                         _password=newValue;
+                       },
                       hintText: 'رمز عبور خود را وارد کنید',
-                      functionValidate: Utility.validateTextField,
+                      functionValidate: Validator.validatePassword,
                     ),
 
                     _titleWidget('تکرار رمز عبور', theme),
 
-                    const TextFormFieldWidget(
+                     TextFormFieldWidget(
+                       obscureText: true,
+                       onChanged:(newValue) {
+                         _passwordConfirmation=newValue;
+                       },
                       hintText: 'تکرار رمز عبور خود را وارد کنید',
-                      functionValidate: Utility.validateTextField,
+                      functionValidate: (value){
+                         if(value!.isEmpty)
+                           {
+                             return 'لطفا رمز عبور را وارد کنید';
+                           }
+                         if(value!=_password)
+                           {
+                             return 'تکرار رمز عبور با رمز عبور مطابقت ندارد !';
+                           }
+                         return null;
+                      },
                     ),
                     sizedBox(height: 15),
                     Center(
                       child: ElevationButtonWidget(
-                        call: () {
+                        call: () async{
                           if (controller.formSignupKey.currentState!
                               .validate()) {
-                            Navigator.pushNamed(context, '/home');
+                            var res= await controller.SignUpRequest(_type, _university, _email, _password, _passwordConfirmation);
+                            print(res);
+                            if(res){ Navigator.of(context).pushNamed(VerifyEmailView.id);}
+                            else{
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: const Text('خطا'),
+                                  content: const Text('مشکلی در ثبت نام وحود دارد.'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context, '/SignUp'),
+                                      child: const Text('باشه'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
                           }
                         },
                         text: 'ثبت نام',

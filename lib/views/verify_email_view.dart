@@ -1,11 +1,15 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:project/controllers/signup_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/pin_code.dart';
+import 'package:provider/provider.dart';
+
+import '../controllers/verify_email_controller.dart';
 
 class VerifyEmailView extends StatelessWidget {
   const VerifyEmailView({Key? key}) : super(key: key);
@@ -13,6 +17,8 @@ class VerifyEmailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final controller = Provider.of<VerifyEmailController>(context);
+    final email = Provider.of<SignUpController>(context).email;
 
     return Scaffold(
         appBar: const AppbarWidget(
@@ -30,9 +36,9 @@ class VerifyEmailView extends StatelessWidget {
                     width: 200.0, height: 200.0,
                     fit: BoxFit.fill),
                 sizedBox(height: 20),
-                _buildTextEmail(theme),
+                _buildTextEmail(theme, email),
 
-                _buildPinCode(),
+                _buildPinCode(controller,email),
                 sizedBox(height: 25),
                 _buildSendAgain(theme),
                 sizedBox(height: 20),
@@ -40,7 +46,7 @@ class VerifyEmailView extends StatelessWidget {
               ]),
         ));
   }
-  Widget _buildTextEmail(ThemeData theme)
+  Widget _buildTextEmail(ThemeData theme, email)
   {
     return   Padding(
       padding: const EdgeInsets.all(8),
@@ -57,7 +63,7 @@ class VerifyEmailView extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('test@gmial.com',
+                Text(email,
                     style: theme.textTheme.caption!
                         .copyWith(
                         color: MyColors.blueHex,
@@ -102,7 +108,7 @@ class VerifyEmailView extends StatelessWidget {
       ],
     );
   }
-  Widget _buildPinCode()
+  Widget _buildPinCode(controller,email)
   {
     return  Container(
       margin: const EdgeInsets.only(right: 20,
@@ -110,13 +116,14 @@ class VerifyEmailView extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: PinCodeFields(
-          length: 4,
+          length: 8,
           margin: const EdgeInsets.only(right: 10,
               left: 10),
           borderColor: MyColors.greyHex,
-          onComplete: (output) {
+          onComplete: (output) async {
             // Your logic with pin code
-            print(output);
+           var res= await controller.verifyEmailRequest(email,output);
+           print(res.token);
           },
         ),
       ),
