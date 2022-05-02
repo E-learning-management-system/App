@@ -16,6 +16,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final String? parametersValidate;
   final TextInputAction? actionKeyboard;
   final bool filled ;
+  final int? maxLength;
   final Color? fillColor;
   final bool noneEnableBorder;
   final ValueChanged<String>? onChanged;
@@ -37,6 +38,7 @@ class TextFormFieldWidget extends StatelessWidget {
         this.defaultText,
         this.parametersValidate,
         this.actionKeyboard = TextInputAction.next,
+        this.maxLength ,
         this.fillColor,
         this.prefixIcon,
         this.onChanged,}): super(key: key);
@@ -48,6 +50,7 @@ class TextFormFieldWidget extends StatelessWidget {
     return Theme(
       data: theme,
       child: TextFormField(
+        maxLength: maxLength,
         cursorColor: theme.primaryColor,
         onChanged: onChanged,
         obscureText: obscureText,

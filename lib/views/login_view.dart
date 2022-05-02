@@ -3,6 +3,7 @@ import 'package:project/controllers/login_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/utility.dart';
+import 'package:project/helpers/validator.dart';
 import 'package:project/views/forget_password_view.dart';
 import 'package:project/views/home_view.dart';
 import 'package:project/views/signup_view.dart';
@@ -14,6 +15,8 @@ import 'package:provider/provider.dart';
 class LoginView extends StatelessWidget {
   static const id = '/Login';
   late String _email, _password;
+
+  LoginView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +48,16 @@ class LoginView extends StatelessWidget {
                               _email = newValue;
                             },
                             hintText: 'ایمیل خود را وارد کنید',
-                            functionValidate: Utility.validateTextField,
+                            functionValidate: Validator.validateEmail,
                           ),
                           _titleWidget('رمز عبور', theme),
                           TextFormFieldWidget(
+                            obscureText: true,
                             onChanged: (newValue) {
                               _password = newValue;
                             },
                             hintText: 'رمز عبور خود را وارد کنید',
-                            functionValidate: Utility.validateTextField,
+                            functionValidate:  Validator.validatePassword,
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16.0),

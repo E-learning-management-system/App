@@ -116,7 +116,7 @@ class VerifyEmailView extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: PinCodeFields(
-          length: 4,
+          length: 8,
           margin: const EdgeInsets.only(right: 10,
               left: 10),
           borderColor: MyColors.greyHex,

@@ -32,7 +32,7 @@ class SignUpController extends ChangeNotifier
    return false;
   }
 
-  String dropdownValue = "استاد";
+  String dropdownValue = "انتخاب کنید";
   final formSignupKey = GlobalKey<FormState>();
 
   void updateValueFormField(String value) {

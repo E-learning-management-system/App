@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:project/controllers/signup_controller.dart';
+import 'package:project/helpers/validator.dart';
 import 'package:project/views/verify_email_view.dart';
 import 'package:provider/provider.dart';
 import 'package:project/helpers/colors.dart';
@@ -61,13 +62,21 @@ class SignUpView extends StatelessWidget {
                                     color: MyColors.pinkAccentHex,
                                     width: 1.5),
                               ),
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                               focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: MyColors.pinkAccentHex,)),
                               filled: true,
-                              contentPadding: EdgeInsets.only(
+                              contentPadding: const EdgeInsets.only(
                                   bottom: 10.0, left: 10.0, right: 10.0),
                             ),
+                            validator: (newValue)
+                            {
+                              if(newValue == value.dropdownValue)
+                                {
+                                  return 'لطفا یک مورد را انتخاب کنید';
+                                }
+                              return null;
+                            },
                             value: value.dropdownValue,
                             icon: const Icon(Icons.keyboard_arrow_down),
                             elevation: 16,
@@ -83,7 +92,7 @@ class SignUpView extends StatelessWidget {
                               }
 
                             },
-                            items: <String>["استاد", "دانشجو"]
+                            items: <String>["استاد", "دانشجو",value.dropdownValue]
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -99,10 +108,9 @@ class SignUpView extends StatelessWidget {
                      TextFormFieldWidget(
                         onChanged:(newValue) {
                           _email=newValue;
-                        }
-                      ,
+                        },
                         hintText: 'ایمیل خود را وارد کنید',
-                        functionValidate: Utility.validateTextField,
+                        functionValidate: Validator.validateEmail,
                       ),
 
                     _titleWidget('دانشگاه', theme),
@@ -111,27 +119,39 @@ class SignUpView extends StatelessWidget {
                         _university=newValue;
                       },
                       hintText: 'نام موسسه یا دانشگاه',
-                      functionValidate: Utility.validateTextField,
+                      functionValidate: Validator.validateTextField,
                     ),
 
                     _titleWidget('رمز عبور', theme),
 
                      TextFormFieldWidget(
+                       obscureText: true,
                        onChanged:(newValue) {
                          _password=newValue;
                        },
                       hintText: 'رمز عبور خود را وارد کنید',
-                      functionValidate: Utility.validateTextField,
+                      functionValidate: Validator.validatePassword,
                     ),
 
                     _titleWidget('تکرار رمز عبور', theme),
 
                      TextFormFieldWidget(
+                       obscureText: true,
                        onChanged:(newValue) {
                          _passwordConfirmation=newValue;
                        },
                       hintText: 'تکرار رمز عبور خود را وارد کنید',
-                      functionValidate: Utility.validateTextField,
+                      functionValidate: (value){
+                         if(value!.isEmpty)
+                           {
+                             return 'لطفا رمز عبور را وارد کنید';
+                           }
+                         if(value!=_password)
+                           {
+                             return 'تکرار رمز عبور با رمز عبور مطابقت ندارد !';
+                           }
+                         return null;
+                      },
                     ),
                     sizedBox(height: 15),
                     Center(
