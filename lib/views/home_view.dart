@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/controllers/home_controller.dart';
 import 'package:project/models/item_category_model.dart';
+import 'package:project/views/tab_lessons/lessons_view.dart';
 import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:provider/provider.dart';
@@ -279,7 +280,12 @@ class HomeView extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: B_AppBar(),
+      bottomNavigationBar: B_AppBar(
+        onTapLessons: () {
+          print("SAD");
+          Navigator.of(context).pushNamed(LessonsView.id);
+        },
+      ),
     );
   }
   Widget cartGenerator(ItemCategoryModel model) {

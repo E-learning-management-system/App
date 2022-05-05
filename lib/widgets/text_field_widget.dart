@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:project/helpers/constants.dart';
 
 class TextFormFieldWidget extends StatelessWidget {
 
@@ -46,7 +47,7 @@ class TextFormFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    const colorBlack = Colors.black;
+
     return Theme(
       data: theme,
       child: TextFormField(
@@ -58,7 +59,7 @@ class TextFormFieldWidget extends StatelessWidget {
         textInputAction: actionKeyboard,
         focusNode: focusNode,
         style: const TextStyle(
-          color: colorBlack,
+          color: Colors.black,
           fontSize: 16.0,
         ),
         initialValue: defaultText,
@@ -71,18 +72,27 @@ class TextFormFieldWidget extends StatelessWidget {
           fillColor: fillColor,
 
 
-          enabledBorder:  noneEnableBorder ?OutlineInputBorder(
+          enabledBorder:  noneEnableBorder ?
+          OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey),
-          ):null,
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey),
+          ):OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular
+              (borderRadiusTxtField)
           ),
+          focusedBorder:  noneEnableBorder ?OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
+          )  : OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular
+              (borderRadiusTxtField)
+        ),
           hintStyle: const TextStyle(
             color: Colors.grey,
             fontSize: 14.0,
           ),
-          contentPadding: const EdgeInsets.only(
-              top: 12, bottom: 12, left: 8.0, right: 8.0),
+          contentPadding:  EdgeInsets.only(
+              top: 12, bottom: noneEnableBorder?12:0, left: 8.0, right: 8.0),
           isDense: true,
           errorStyle: const TextStyle(
             color: Colors.red,
