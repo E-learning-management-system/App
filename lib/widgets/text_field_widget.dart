@@ -10,6 +10,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final Widget? suffixIcon;
   final String? defaultText;
   final FocusNode? focusNode;
+  final int maxLines;
   final bool obscureText;
   final TextEditingController? controller;
   final String? Function(String? value)? functionValidate;
@@ -22,7 +23,6 @@ class TextFormFieldWidget extends StatelessWidget {
   final bool noneEnableBorder;
   final ValueChanged<String>? onChanged;
 
-  get value=>this.value;
 
   const TextFormFieldWidget(
       {required this.hintText,
@@ -31,6 +31,7 @@ class TextFormFieldWidget extends StatelessWidget {
         this.filled=false,
         this.obscureText = false,
         this.noneEnableBorder=true,
+        this.maxLines = 1,
         this.functionValidate,
         this.suffixIcon,
         this.focusNode,
@@ -55,6 +56,7 @@ class TextFormFieldWidget extends StatelessWidget {
         cursorColor: theme.primaryColor,
         onChanged: onChanged,
         obscureText: obscureText,
+        maxLines: maxLines,
         keyboardType: textInputType,
         textInputAction: actionKeyboard,
         focusNode: focusNode,
@@ -80,7 +82,8 @@ class TextFormFieldWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular
               (borderRadiusTxtField)
           ),
-          focusedBorder:  noneEnableBorder ?OutlineInputBorder(
+          focusedBorder:  noneEnableBorder ?
+          OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey),
           )  : OutlineInputBorder(
             borderSide: BorderSide.none,
@@ -92,7 +95,7 @@ class TextFormFieldWidget extends StatelessWidget {
             fontSize: 14.0,
           ),
           contentPadding:  EdgeInsets.only(
-              top: 12, bottom: noneEnableBorder?12:0, left: 8.0, right: 8.0),
+              top: 12, bottom: noneEnableBorder?12:0, left: 8.0, right: 12.0),
           isDense: true,
           errorStyle: const TextStyle(
             color: Colors.red,

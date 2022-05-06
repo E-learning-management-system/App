@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:project/controllers/create_new_lessons_controller.dart';
 import 'package:project/controllers/home_controller.dart';
 import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/controllers/onboarding_controller.dart';
@@ -13,6 +14,7 @@ import 'package:project/views/forget_password_view.dart';
 
 import 'package:project/views/onboarding_view.dart';
 import 'package:project/views/splash_view.dart';
+import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
 import 'package:project/views/tab_lessons/lessons_view.dart';
 import 'package:project/views/verify_email_view.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +26,7 @@ import 'views/home_view.dart';
 
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<HomeController>(
-          child: HomeView(),
+          child: const HomeView(),
             create: (context) => HomeController(),),
 
         ChangeNotifierProvider<SignUpController>(
@@ -43,11 +45,11 @@ class MyApp extends StatelessWidget {
             create: (context) => SignUpController(),),
 
         ChangeNotifierProvider<OnBoardingController>(
-          child: OnBoardingView(),
+          child: const OnBoardingView(),
             create: (context) => OnBoardingController(),),
 
         ChangeNotifierProvider<VerifyEmailController>(
-          child: VerifyEmailView(),
+          child: const VerifyEmailView(),
             create: (context) => VerifyEmailController(),),
 
 
@@ -58,6 +60,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<LessonsController>(
           child: const LessonsView(),
             create: (context) => LessonsController(),),
+
+        ChangeNotifierProvider<CreateNewLessonsController>(
+          child: const CreateNewLessonsView(),
+            create: (context) => CreateNewLessonsController(),),
 
 
       ],
@@ -82,8 +88,8 @@ class MyApp extends StatelessWidget {
           HomeView.id: (context) => const HomeView(),
           ForgetPasswordView.id : (context) => const ForgetPasswordView(),
           VerifyEmailView.id : (context) => const VerifyEmailView(),
-          LessonsView.id : (context) => const LessonsView()
-
+          LessonsView.id : (context) => const LessonsView(),
+          CreateNewLessonsView.id:(context) => const CreateNewLessonsView()
         },
         title: 'Flutter Demo',
         theme: ThemeApp.theme,

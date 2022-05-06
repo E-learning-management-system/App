@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/models/lessons_item_model.dart';
+import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
 import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
@@ -22,26 +23,7 @@ class LessonsView extends StatelessWidget {
       backgroundColor: Colors.grey.shade200,
       body: Column(
         children: [
-          const Padding(
-            padding:EdgeInsets.only(
-              top: 50,
-              right: 15,
-              left: 15,
-              bottom: 20
-            ),
-            child: SizedBox(
-              height: 40,
-              child: TextFormFieldWidget(
-                hintText: 'جست و جو',
-                noneEnableBorder: false,
-                actionKeyboard: TextInputAction.search,
-                filled: true,
-                fillColor: Colors.white,
-                suffixIcon: Icon(
-                    Icons.search),
-              ),
-            ),
-          ),
+          _buildSearchWidget(),
           Expanded(
             child: ListView.builder(
               itemExtent: 140,
@@ -61,12 +43,35 @@ class LessonsView extends StatelessWidget {
           )
         ],
       ),
-      floatingActionButton: _buildFloatAc(),
+      floatingActionButton: _buildFloatAc(context),
       bottomNavigationBar: B_AppBar(
         fromLessons: true,
         onTapHome: (){
           Navigator.of(context).pop();
         },
+      ),
+    );
+  }
+  Widget _buildSearchWidget()
+  {
+    return  const Padding(
+      padding:EdgeInsets.only(
+          top: 50,
+          right: 15,
+          left: 15,
+          bottom: 20
+      ),
+      child: SizedBox(
+        height: 40,
+        child: TextFormFieldWidget(
+          hintText: 'جست و جو',
+          noneEnableBorder: false,
+          actionKeyboard: TextInputAction.search,
+          filled: true,
+          fillColor: Colors.white,
+          suffixIcon: Icon(
+              Icons.search),
+        ),
       ),
     );
   }
@@ -113,10 +118,12 @@ class LessonsView extends StatelessWidget {
     );
   }
 
-  Widget _buildFloatAc()
+  Widget _buildFloatAc(BuildContext context)
   {
     return FloatingActionButton.extended(
-        onPressed: (){},
+        onPressed: (){
+          Navigator.of(context).pushNamed(CreateNewLessonsView.id);
+        },
         elevation: 1,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadiusButton)
