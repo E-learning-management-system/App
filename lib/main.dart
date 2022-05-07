@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
         builder: (_, widget) {
           return SafeArea(child: widget!);
         },
-        initialRoute: HomeView.id,
+        initialRoute: SplashView.id,
       ),
     );
   }
