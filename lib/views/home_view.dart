@@ -85,7 +85,9 @@ class HomeView extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0, top: 15),
-                    child: Text("دسته بندی"),
+                    child: Text(
+                      "دسته بندی",
+                    ),
                   ),
                   Consumer<HomeController>(
                     builder: (context, controller, child) => Column(

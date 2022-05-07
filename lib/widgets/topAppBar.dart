@@ -61,7 +61,7 @@ class TopAppBar extends StatelessWidget implements PreferredSize {
                       width: 45,
                       child: InkWell(
                         onTap: () => {},
-                        child: Image.asset("assets/images/image1.png",
+                        child: Image.asset("assets/images/ic_profile2.png",
                             width: 45.0, height: 45.0, fit: BoxFit.cover),
                       ),
                     ),
