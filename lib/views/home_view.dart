@@ -4,58 +4,19 @@ import 'package:project/models/item_category_model.dart';
 import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:provider/provider.dart';
+import '../widgets/topAppBar.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
 
   static const id = '/Home';
 
-
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<HomeController>(context);
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(90), // Set this height
-        child: Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'سلام؛',
-                      style: TextStyle(
-                        color: Color(0xff2f2f2f),
-                        fontSize: 16,
-                        fontFamily: 'BLotus',
-                      ),
-                    ),
-                    Text(
-                      'دانیال صابر 👋',
-                      style: TextStyle(
-                        color: Color(0xff181818),
-                        fontSize: 28,
-                        fontFamily: 'BLotus',
-                      ),
-                    ),
-                  ],
-                ),
-                InkWell(
-                  onTap: () => {},
-                  child: Image.asset("assets/images/profile.png",
-                      width: 60.0, height: 60.0, fit: BoxFit.cover),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      appBar: TopAppBar('دانیال صابر', 1, 'ww'),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -124,139 +85,127 @@ class HomeView extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0, top: 15),
-                    child: Text("دسته بندی"),
+                    child: Text(
+                      "دسته بندی",
+                    ),
                   ),
-                Consumer<HomeController>(
-                  builder: (context, controller, child) =>
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ElevationButtonWidget(
-                                  icon: Icons.local_fire_department,
-                                  text: 'همه',
-                                  call: () {
-                                    controller.
-                                    setItemCategory(StatusCategory.All);
-                                  },
-                                  iconColor: controller.status ==
-                                      StatusCategory.All
-                                      ? Colors.lightBlue
-                                      : Colors.white,
-                                  primaryColor: controller.status == StatusCategory.All
-                                      ? Colors.lightBlue
-                                      : Colors.white,
-                                  textColor: controller.status == StatusCategory.All
-                                      ? Colors.white
-                                      : Colors.black,
-                                  bgColorIcon: controller.status != StatusCategory.All
-                                      ? Colors.lightBlue
-                                      : Colors.white,
-                                ),
-                                ElevationButtonWidget(
-                                  icon: Icons.bolt,
-                                  text: 'دروس',
-                                  call: () {
-                                    controller
-                                        .setItemCategory(StatusCategory.Lessons);
-                                  },
-                                  iconColor:
-                                  controller.status ==
-                                      StatusCategory.Lessons
-                                      ? Colors.orange
-                                      : Colors.white,
-                                  primaryColor:
-                                  controller.status == StatusCategory
-                                      .Lessons
-                                      ? Colors.orange
-                                      : Colors.white,
-
-                                  textColor: controller.status ==
-                                      StatusCategory.Lessons
-                                      ? Colors.white
-                                      : Colors.black,
-
-                                  bgColorIcon: controller.status !=
-                                      StatusCategory.Lessons
-                                      ? Colors.orange
-                                      : Colors.white,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ElevationButtonWidget(
-                                  icon: Icons.assignment_rounded,
-                                  text: 'تکالیف',
-                                  call: () {
-                                    controller
-                                        .setItemCategory(
-                                        StatusCategory.HomeWork);
-                                  },
-                                  iconColor:
-                                  controller.status ==
-                                      StatusCategory.HomeWork
-                                      ? Colors.green
-                                      : Colors.white,
-                                  primaryColor:
-                                  controller.status ==
-                                      StatusCategory.HomeWork
-                                      ? Colors.green
-                                      : Colors.white,
-
-                                  textColor: controller.status ==
-                                      StatusCategory.HomeWork
-                                      ? Colors.white
-                                      : Colors.black,
-
-                                  bgColorIcon: controller.status !=
-                                      StatusCategory.HomeWork
-                                      ? Colors.green
-                                      : Colors.white,
-                                ),
-                                ElevationButtonWidget(
-                                    icon: Icons.assignment_rounded,
-                                    text: 'آخرین مباحث',
-                                    call: () {
-                                      controller
-                                          .setItemCategory(
-                                          StatusCategory.LastTopics);
-                                    },
-                                    iconColor:
-                                    controller.status ==
-                                        StatusCategory.LastTopics
-                                        ? Color(0xff4b2b99)
+                  Consumer<HomeController>(
+                    builder: (context, controller, child) => Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevationButtonWidget(
+                                icon: Icons.local_fire_department,
+                                text: 'همه',
+                                call: () {
+                                  controller
+                                      .setItemCategory(StatusCategory.All);
+                                },
+                                iconColor:
+                                    controller.status == StatusCategory.All
+                                        ? Colors.lightBlue
                                         : Colors.white,
-                                    primaryColor:
-                                    controller.status ==
-                                        StatusCategory.LastTopics
-                                        ? Color(0xff4b2b99)
+                                primaryColor:
+                                    controller.status == StatusCategory.All
+                                        ? Colors.lightBlue
                                         : Colors.white,
-
-                                    textColor: controller.status ==
-                                        StatusCategory.LastTopics
+                                textColor:
+                                    controller.status == StatusCategory.All
                                         ? Colors.white
                                         : Colors.black,
-
-                                    bgColorIcon: controller.status !=
-                                        StatusCategory.LastTopics
-                                        ? Color(0xff4b2b99)
-                                        : Colors.white
-                                ),
-                              ],
-                            ),
+                                bgColorIcon:
+                                    controller.status != StatusCategory.All
+                                        ? Colors.lightBlue
+                                        : Colors.white,
+                              ),
+                              ElevationButtonWidget(
+                                icon: Icons.bolt,
+                                text: 'دروس',
+                                call: () {
+                                  controller
+                                      .setItemCategory(StatusCategory.Lessons);
+                                },
+                                iconColor:
+                                    controller.status == StatusCategory.Lessons
+                                        ? Colors.orange
+                                        : Colors.white,
+                                primaryColor:
+                                    controller.status == StatusCategory.Lessons
+                                        ? Colors.orange
+                                        : Colors.white,
+                                textColor:
+                                    controller.status == StatusCategory.Lessons
+                                        ? Colors.white
+                                        : Colors.black,
+                                bgColorIcon:
+                                    controller.status != StatusCategory.Lessons
+                                        ? Colors.orange
+                                        : Colors.white,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                )
-
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevationButtonWidget(
+                                icon: Icons.assignment_rounded,
+                                text: 'تکالیف',
+                                call: () {
+                                  controller
+                                      .setItemCategory(StatusCategory.HomeWork);
+                                },
+                                iconColor:
+                                    controller.status == StatusCategory.HomeWork
+                                        ? Colors.green
+                                        : Colors.white,
+                                primaryColor:
+                                    controller.status == StatusCategory.HomeWork
+                                        ? Colors.green
+                                        : Colors.white,
+                                textColor:
+                                    controller.status == StatusCategory.HomeWork
+                                        ? Colors.white
+                                        : Colors.black,
+                                bgColorIcon:
+                                    controller.status != StatusCategory.HomeWork
+                                        ? Colors.green
+                                        : Colors.white,
+                              ),
+                              ElevationButtonWidget(
+                                  icon: Icons.assignment_rounded,
+                                  text: 'آخرین مباحث',
+                                  call: () {
+                                    controller.setItemCategory(
+                                        StatusCategory.LastTopics);
+                                  },
+                                  iconColor: controller.status ==
+                                          StatusCategory.LastTopics
+                                      ? Color(0xff4b2b99)
+                                      : Colors.white,
+                                  primaryColor: controller.status ==
+                                          StatusCategory.LastTopics
+                                      ? Color(0xff4b2b99)
+                                      : Colors.white,
+                                  textColor: controller.status ==
+                                          StatusCategory.LastTopics
+                                      ? Colors.white
+                                      : Colors.black,
+                                  bgColorIcon: controller.status !=
+                                          StatusCategory.LastTopics
+                                      ? Color(0xff4b2b99)
+                                      : Colors.white),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
@@ -266,13 +215,13 @@ class HomeView extends StatelessWidget {
               builder: (context, value, child) {
                 print("AGAIN BUILD ${value.listModel.length}");
                 return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children:
-                      value.listModel.map((e) => cartGenerator(e)).toList(),
-                ),
-              );
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children:
+                        value.listModel.map((e) => cartGenerator(e)).toList(),
+                  ),
+                );
               },
             ),
             // ),
@@ -282,6 +231,7 @@ class HomeView extends StatelessWidget {
       bottomNavigationBar: B_AppBar(),
     );
   }
+
   Widget cartGenerator(ItemCategoryModel model) {
     return Card(
       color: model.bgColor,
@@ -297,9 +247,7 @@ class HomeView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                    child: Image.asset(model.urlImage)
-                ),
+                Container(child: Image.asset(model.urlImage)),
                 Text(
                   model.title,
                   style: TextStyle(

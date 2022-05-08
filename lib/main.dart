@@ -20,7 +20,6 @@ import 'views/signup_view.dart';
 
 import 'views/home_view.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -32,60 +31,53 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<HomeController>(
           child: HomeView(),
-            create: (context) => HomeController(),),
-
+          create: (context) => HomeController(),
+        ),
         ChangeNotifierProvider<SignUpController>(
           child: SignUpView(),
-            create: (context) => SignUpController(),),
-
+          create: (context) => SignUpController(),
+        ),
         ChangeNotifierProvider<OnBoardingController>(
           child: OnBoardingView(),
-            create: (context) => OnBoardingController(),),
-
+          create: (context) => OnBoardingController(),
+        ),
         ChangeNotifierProvider<VerifyEmailController>(
           child: VerifyEmailView(),
-            create: (context) => VerifyEmailController(),),
-
-
+          create: (context) => VerifyEmailController(),
+        ),
         ChangeNotifierProvider<LoginController>(
           child: LoginView(),
-            create: (context) => LoginController(),),
-
-
+          create: (context) => LoginController(),
+        ),
       ],
       child: MaterialApp(
-          localizationsDelegates: [
-            GlobalCupertinoLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          supportedLocales: [
-            Locale("fa", "IR"), // OR Locale('ar', 'AE') OR Other RTL locales
-          ],
-          locale: Locale("fa", "IR"),
-
+        localizationsDelegates: [
+          GlobalCupertinoLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale("fa", "IR"), // OR Locale('ar', 'AE') OR Other RTL locales
+        ],
+        locale: Locale("fa", "IR"),
         debugShowCheckedModeBanner: false,
         routes: {
           OnBoardingView.id: (context) => const OnBoardingView(),
           SplashView.id: (context) => const SplashView(),
           OnBoardingView.id: (context) => const OnBoardingView(),
-          LoginView.id: (context) =>  LoginView(),
+          LoginView.id: (context) => LoginView(),
           SignUpView.id: (context) => SignUpView(),
           HomeView.id: (context) => const HomeView(),
-          ForgetPasswordView.id : (context) => const ForgetPasswordView(),
-          VerifyEmailView.id : (context) => const VerifyEmailView()
-
+          ForgetPasswordView.id: (context) => const ForgetPasswordView(),
+          VerifyEmailView.id: (context) => const VerifyEmailView()
         },
         title: 'Flutter Demo',
         theme: ThemeApp.theme,
-          builder: (_,widget){
-            return SafeArea(child: widget!);
-          },
-          initialRoute: SplashView.id,
-
-
+        builder: (_, widget) {
+          return SafeArea(child: widget!);
+        },
+        initialRoute: SplashView.id,
       ),
     );
   }
 }
-
