@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
+
 class B_AppBar extends StatelessWidget {
-  const B_AppBar({Key? key}) : super(key: key);
+  const B_AppBar({
+    Key? key,
+    this.onTapLessons,
+    this.onTapHome,
+    this.fromLessons = false,
+  }) : super(key: key);
+  final void Function()? onTapLessons;
+  final void Function()? onTapHome;
+  final bool fromLessons;
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +21,11 @@ class B_AppBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             ElevatedButton(
-                onPressed: () => {},
+                onPressed: ()=>{},
                 style: ElevatedButton.styleFrom(
                   shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                      borderRadius: BorderRadius.all(Radius.circular(30))
+                  ),
                   primary: Colors.lightBlue,
                 ),
                 child: Row(
@@ -26,9 +36,10 @@ class B_AppBar extends StatelessWidget {
                       child: Text(
                         'خانه',
                         style:
-                            TextStyle(fontFamily: 'Vazir', color: Colors.white),
+                        TextStyle(fontFamily: 'Vazir', color: Colors.white),
                       ),
                     ),
+
                   ],
                 )),
             InkWell(

@@ -6,7 +6,7 @@ class MyColors {
 
   static Color blueHex = HexColor.fromHex('#2a70e2');
   static Color blueAccentHex = HexColor.fromHex('51c3fe');
-  static Color bgColor = HexColor.fromHex('f8fbff');
+  static Color bgColor = HexColor.fromHex('f5fbff');
   static Color pinkAccentHex = HexColor.fromHex('fc75b1');
   static Color orange = HexColor.fromHex('ff876c');
   static Color blueDark = HexColor.fromHex('6c5cff');
