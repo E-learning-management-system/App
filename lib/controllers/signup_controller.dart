@@ -24,8 +24,9 @@ class SignUpController extends ChangeNotifier
     );
    
    notifyListeners();
-   print("jsonDecode(response.body)=   "+response.body);
-   if(response.body==email){
+   print("jsonDecode(response.body)=   "+jsonDecode(response.body));
+   print ("email="+email);
+   if(jsonDecode(response.body)==email){
      _email=email;
      return true;
    }

@@ -123,7 +123,7 @@ class VerifyEmailView extends StatelessWidget {
           onComplete: (output) async {
             // Your logic with pin code
            var res= await controller.verifyEmailRequest(email,output);
-           print(res.token);
+           print(controller.token);
           },
         ),
       ),

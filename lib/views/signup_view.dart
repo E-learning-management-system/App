@@ -71,7 +71,7 @@ class SignUpView extends StatelessWidget {
                             ),
                             validator: (newValue)
                             {
-                              if(newValue == value.dropdownValue)
+                              if(newValue == "انتخاب کنید")
                                 {
                                   return 'لطفا یک مورد را انتخاب کنید';
                                 }
@@ -92,7 +92,7 @@ class SignUpView extends StatelessWidget {
                               }
 
                             },
-                            items: <String>["استاد", "دانشجو",value.dropdownValue]
+                            items: <String>["استاد", "دانشجو","انتخاب کنید"]
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
