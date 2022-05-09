@@ -38,7 +38,7 @@ class VerifyEmailView extends StatelessWidget {
                 sizedBox(height: 20),
                 _buildTextEmail(theme, email),
 
-                _buildPinCode(controller,email),
+                _buildPinCode(controller,email,context),
                 sizedBox(height: 25),
                 _buildSendAgain(theme),
                 sizedBox(height: 20),
@@ -108,7 +108,7 @@ class VerifyEmailView extends StatelessWidget {
       ],
     );
   }
-  Widget _buildPinCode(controller,email)
+  Widget _buildPinCode(controller,email,context)
   {
     return  Container(
       margin: const EdgeInsets.only(right: 20,
@@ -123,7 +123,23 @@ class VerifyEmailView extends StatelessWidget {
           onComplete: (output) async {
             // Your logic with pin code
            var res= await controller.verifyEmailRequest(email,output);
-           print(controller.token);
+           if(controller.token.isNotEmpty){
+   Navigator.of(context).pushNamed('/Home');}
+  else{
+  showDialog<String>(
+  context: context,
+  builder: (BuildContext context) => AlertDialog(
+  title: const Text('خطا'),
+  content: const Text('کد وارد شده اشتباه است.'),
+  actions: <Widget>[
+  TextButton(
+  onPressed: () => Navigator.pop(context, VerifyEmailView.id),
+  child: const Text('باشه'),
+  ),
+  ],
+  ),
+  );
+  }
           },
         ),
       ),
