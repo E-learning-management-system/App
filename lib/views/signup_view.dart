@@ -71,7 +71,7 @@ class SignUpView extends StatelessWidget {
                             ),
                             validator: (newValue)
                             {
-                              if(newValue == value.dropdownValue)
+                              if(newValue == "انتخاب کنید")
                                 {
                                   return 'لطفا یک مورد را انتخاب کنید';
                                 }
@@ -92,7 +92,7 @@ class SignUpView extends StatelessWidget {
                               }
 
                             },
-                            items: <String>["استاد", "دانشجو",value.dropdownValue]
+                            items: <String>["استاد", "دانشجو","انتخاب کنید"]
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -155,33 +155,42 @@ class SignUpView extends StatelessWidget {
                     ),
                     sizedBox(height: 15),
                     Center(
-                      child: ElevationButtonWidget(
-                        call: () async{
-                          if (controller.formSignupKey.currentState!
-                              .validate()) {
-                            var res= await controller.SignUpRequest(_type, _university, _email, _password, _passwordConfirmation);
-                            print(res);
-                            if(res){ Navigator.of(context).pushNamed(VerifyEmailView.id);}
-                            else{
-                              showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: const Text('خطا'),
-                                  content: const Text('مشکلی در ثبت نام وحود دارد.'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context, '/SignUp'),
-                                      child: const Text('باشه'),
-                                    ),
-                                  ],
-                                ),
-                              );
+                      child: Consumer<SignUpController>(
+                        builder: (context, value, child) {
+                          if(value.isLoading)
+                            {
+                              return const CircularProgressIndicator();
                             }
-                          }
+                          return ElevationButtonWidget(
+                            call: () async{
+                              if (value.formSignupKey.currentState!
+                                  .validate()) {
+                                var res= await value.SignUpRequest(_type, _university, _email, _password, _passwordConfirmation);
+                                print(res);
+                                if(res){ Navigator.of(context).pushNamed(VerifyEmailView.id);}
+                                else{
+                                  showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) => AlertDialog(
+                                      title: const Text('خطا'),
+                                      content: const Text('مشکلی در ثبت نام وحود دارد.'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () => Navigator.pop(context, '/SignUp'),
+                                          child: const Text('باشه'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            text: 'ثبت نام',
+                            primaryColor: MyColors.pinkAccentHex,
+                            borderRadius: 20,
+                          );
                         },
-                        text: 'ثبت نام',
-                        primaryColor: MyColors.pinkAccentHex,
-                        borderRadius: 20,
+
                       ),
                     )
                   ],

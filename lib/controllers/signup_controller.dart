@@ -9,10 +9,13 @@ class SignUpController extends ChangeNotifier
   late String _email="";
   final String _url='https://api.piazza.markop.ir/signup/';
   String get email=>_email;
+  bool isLoading = false;
+
   Future SignUpRequest(var type,  var university, var email, var password, var passwordConfirmation)
   async{
-
-   var response= await http.post(Uri.parse(_url),
+     isLoading = true;
+     notifyListeners();
+     var response= await http.post(Uri.parse(_url),
         headers: {'Content-type':'application/json'},
         body: jsonEncode({
              "type":type,
@@ -22,10 +25,11 @@ class SignUpController extends ChangeNotifier
              "password_confirmation":passwordConfirmation,
         }),
     );
-   
-   notifyListeners();
-   print("jsonDecode(response.body)=   "+response.body);
-   if(response.body==email){
+     isLoading = false;
+     notifyListeners();
+   // print("jsonDecode(response.body)=   "+jsonDecode(response.body));
+   print ("email="+email);
+   if(jsonDecode(response.body)==email){
      _email=email;
      return true;
    }

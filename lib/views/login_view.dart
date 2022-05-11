@@ -74,35 +74,44 @@ class LoginView extends StatelessWidget {
                             ),
                           ),
                           Center(
-                            child: ElevationButtonWidget(
-                              call: () async {
-                                if (controller.formLoginKey.currentState!
-                                    .validate()) {
-                                  var res = await controller.loginRequest(
-                                      _email, _password);
-                                  if (res) {
-                                    Navigator.of(context)
-                                        .pushNamed(HomeView.id);
-                                  } else { showDialog<String>(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              AlertDialog(
-                                            title: const Text('خطا'),
-                                            content: const Text(
-                                                'مشکلی در ورود وجود دارد.'),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(
-                                                    context, '/Login'),
-                                                child: const Text('باشه'),
-                                              ),
-                                            ],
-                                          ),
-                                        );
+                            child: Consumer<LoginController>(
+                              builder: (context, value, child) {
+                                if(value.isLoading)
+                                  {
+                                    return const CircularProgressIndicator();
                                   }
-                                }
+                                return  ElevationButtonWidget(
+                                  call: () async {
+                                    if (controller.formLoginKey.currentState!
+                                        .validate()) {
+                                      var res = await controller.loginRequest(
+                                          _email, _password);
+                                      if (res) {
+                                        Navigator.of(context)
+                                            .pushNamed(HomeView.id);
+                                      } else { showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                              title: const Text('خطا'),
+                                              content: const Text(
+                                                  'مشکلی در ورود وجود دارد.'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () => Navigator.pop(
+                                                      context, '/Login'),
+                                                  child: const Text('باشه'),
+                                                ),
+                                              ],
+                                            ),
+                                      );
+                                      }
+                                    }
+                                  },
+                                  primaryColor: MyColors.blueAccentHex,
+                                );
                               },
-                              primaryColor: MyColors.blueAccentHex,
+
                             ),
                           )
                         ],
