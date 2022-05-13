@@ -64,11 +64,26 @@ class CreateNewLessonsView extends StatelessWidget {
           Center(
             child: ElevationButtonWidget(
               width: 140,
-              call: (){
+              call: () async {
                 if(controller.form.currentState!.validate())
                   {
-                    print('its Good');
-                    return;
+                   var res= await controller.createNewLessonsRequest();
+                   if(res){ Navigator.of(context).pushNamed('/lessons_view');}
+                   else{
+                     showDialog<String>(
+                       context: context,
+                       builder: (BuildContext context) => AlertDialog(
+                         title: const Text('خطا'),
+                         content: const Text('مشکلی در افزودن درس وحود دارد.'),
+                         actions: <Widget>[
+                           TextButton(
+                             onPressed: () => Navigator.pop(context, '/create_new_lessons'),
+                             child: const Text('باشه'),
+                           ),
+                         ],
+                       ),
+                     );
+                   }
                   }
 
               },
