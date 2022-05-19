@@ -148,10 +148,21 @@ class VerifyEmailView extends StatelessWidget {
 
   Widget _buildButtonVerify(ThemeData theme)
   {
-    return ElevationButtonWidget(
-        call: (){},
-      text: 'تایید',
-      primaryColor: MyColors.blueDark,
+    return Consumer<VerifyEmailController>(
+      builder: (context, value, child) {
+        if(value.isLoading)
+          {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        return ElevationButtonWidget(
+          call: (){},
+          text: 'تایید',
+          primaryColor: MyColors.blueDark,
+
+        );
+      },
 
     );
   }
