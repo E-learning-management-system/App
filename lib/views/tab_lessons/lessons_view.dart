@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:project/controllers/lessons_controller.dart';
+import 'package:project/controllers/verify_email_controller.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/models/lessons_item_model.dart';
 import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
@@ -16,9 +17,12 @@ class LessonsView extends StatelessWidget {
   static const String id = '/lessons_view';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) async{
+    final token = Provider.of<VerifyEmailController>(context).token;
     final controller = Provider.of<LessonsController>(context);
     final theme = Theme.of(context).textTheme;
+    await controller.getLessonsRequest(token);
+
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       body: Column(
@@ -27,12 +31,12 @@ class LessonsView extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               itemExtent: 140,
-                itemCount: controller.data.length,
+                itemCount: controller.listOfLessons.length,
                 padding: const EdgeInsets.only(right: 20,
                 left: 20,
                 bottom: 20),
                 itemBuilder: (context, index) {
-                final data = controller.data[index];
+                final data = controller.listOfLessons[index];
 
                   return _buildItemLessons(
                     index: index+1,
@@ -95,20 +99,20 @@ class LessonsView extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(data.name,
+                Text(data.title,
                 style: theme.headline6!.copyWith(
                   color: Colors.white
                 )),
                 const SizedBox(
                   height: 15,
                 ),
-                Text('تاریخ امتحان : ${data.date}',
+                Text('تاریخ امتحان : ${data.examDate}',
                 style: theme.caption!.copyWith(
                     color: Colors.white
                 ),)
               ],
             ),
-            Image.asset('${data.url}$index.png'
+            Image.asset('img_1.png'
             ,height: 100,
             width: 100,),
 
