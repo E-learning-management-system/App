@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:project/helpers/sharedPreferences.dart';
 
 class CreateNewLessonsController extends ChangeNotifier
 {
@@ -13,6 +14,7 @@ class CreateNewLessonsController extends ChangeNotifier
   String? endDate;
   String? dateExam;
   final String _url='https://api.piazza.markop.ir/soren/newcourse/';
+  final _token=sharedPreferences.getString('token');
   final form = GlobalKey<FormState>();
 
   Future showMyDatePicker(BuildContext context,bool? isStartDate)async
@@ -41,7 +43,8 @@ class CreateNewLessonsController extends ChangeNotifier
   async{
 
     var response= await http.post(Uri.parse(_url),
-      headers: {'Content-type':'application/json'},
+      headers: { "content-type": "application/json",
+        "Authorization": "Token " + _token,},
       body: jsonEncode({
         "title":cnNameLessons,
         "description":cnDesc,
@@ -52,7 +55,7 @@ class CreateNewLessonsController extends ChangeNotifier
     );
 
     notifyListeners();
-    print("jsonDecode(response.body)=   "+jsonDecode(response.body));
+    print("jsonDecode(new lesson)=   "+jsonDecode(response.body));
     final Map<String, dynamic> data = json.decode(response.body);
     if(data.containsKey("id")){
       return true;

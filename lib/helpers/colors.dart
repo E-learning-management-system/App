@@ -22,3 +22,13 @@ extension HexColor on Color {
     return Color(int.parse(buffer.toString(), radix: 16));
   }
 }
+
+final listOfColors=
+[ MyColors.orange,
+  MyColors.blueDark,
+  MyColors.greyHex,
+  MyColors.purpleHex,
+  MyColors.blueHex,
+  MyColors.pinkAccentHex,
+  MyColors.appBarColor,
+  MyColors.blueAccentHex,];

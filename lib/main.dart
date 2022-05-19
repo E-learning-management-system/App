@@ -55,9 +55,10 @@ class MyApp extends StatelessWidget {
           child: LoginView(),
             create: (context) => LoginController(),),
 
+
         ChangeNotifierProvider<LessonsController>(
           child: const LessonsView(),
-            create: (context) => LessonsController(),),
+          create: (context) => LessonsController(),),
 
         ChangeNotifierProvider<CreateNewLessonsController>(
           child: const CreateNewLessonsView(),

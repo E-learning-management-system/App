@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:project/helpers/sharedPreferences.dart';
 class LoginController extends ChangeNotifier
 {
 
@@ -21,7 +22,13 @@ class LoginController extends ChangeNotifier
     notifyListeners();
     Map<String, dynamic> res = jsonDecode(response.body);
     _token=res.containsKey("token")?jsonDecode(response.body).token:"";
-    return _token.isNotEmpty ?true:false;
+    if( _token.isNotEmpty){
+      sharedPreferences.setString("token", _token);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
   final formLoginKey = GlobalKey<FormState>();
 

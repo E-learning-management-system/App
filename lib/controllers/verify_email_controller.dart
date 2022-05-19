@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:project/helpers/sharedPreferences.dart';
 
 class VerifyEmailController extends ChangeNotifier
 {
@@ -9,6 +10,7 @@ class VerifyEmailController extends ChangeNotifier
   final String _url='https://api.piazza.markop.ir/signup/verification/';
   late String _token="";
   String get token=>_token;
+
 
   Future verifyEmailRequest( var email, var code)
   async{
@@ -25,8 +27,15 @@ class VerifyEmailController extends ChangeNotifier
 
     Map<String, dynamic> res = jsonDecode(response.body);
     _token=res.containsKey("token")?res["token"]:"";
+
     notifyListeners();
-    return _token.isNotEmpty ?true:false;
+    if( _token.isNotEmpty){
+      sharedPreferences.setString("token", _token);
+          return true;
+    }
+    else {
+      return false;
+    }
   }
 
 }
