@@ -17,11 +17,10 @@ class LessonsView extends StatelessWidget {
   static const String id = '/lessons_view';
 
   @override
-  Widget build(BuildContext context) async{
-    final token = Provider.of<VerifyEmailController>(context).token;
+  Widget build(BuildContext context){
     final controller = Provider.of<LessonsController>(context);
     final theme = Theme.of(context).textTheme;
-    await controller.getLessonsRequest(token);
+
 
     return Scaffold(
       backgroundColor: Colors.grey.shade200,

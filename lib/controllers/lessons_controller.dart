@@ -14,6 +14,9 @@ class LessonsController extends ChangeNotifier
   final List<LessonsItemModel> _listOfLessons = [];
   get listOfLessons=>_listOfLessons;
   final _token=sharedPreferences.getString('token');
+  LessonsController(){
+    getLessonsRequest().then((value) => {print("lessons load")} );
+  }
 
   Future getLessonsRequest()
   async{
