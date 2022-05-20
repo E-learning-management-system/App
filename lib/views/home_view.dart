@@ -280,12 +280,12 @@ class HomeView extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: B_AppBar(
-        onTapLessons: () {
-          print("SAD");
-          Navigator.of(context).pushNamed(LessonsView.id);
-        },
-      ),
+      // bottomNavigationBar: B_AppBar(
+      //   onTapLessons: () {
+      //     print("SAD");
+      //     Navigator.of(context).pushNamed(LessonsView.id);
+      //   },
+      // ),
     );
   }
   Widget cartGenerator(ItemCategoryModel model) {
@@ -304,7 +304,7 @@ class HomeView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                    child: Image.asset(model.urlImage)
+                    child: Image.asset(model.date!)
                 ),
                 Text(
                   model.title,

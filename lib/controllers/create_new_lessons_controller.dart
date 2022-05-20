@@ -1,7 +1,7 @@
 
 
 import 'package:flutter/cupertino.dart';
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+import 'package:jalali_table_calendar/jalali_table_calendar.dart';
 
 class CreateNewLessonsController extends ChangeNotifier
 {
@@ -15,20 +15,14 @@ class CreateNewLessonsController extends ChangeNotifier
 
   Future showMyDatePicker(BuildContext context,bool? isStartDate)async
   {
-    Jalali? picked = await showPersianDatePicker(
-      context: context,
-      initialDate: Jalali.now(),
-      firstDate: Jalali(1401, 1),
-      lastDate: Jalali(1450, 9),
-    );
-    final date =picked!.formatCompactDate();
+    String? date = await jalaliCalendarPicker(context: context,
+        selectedFormat:'yyyy/m/d' );
     print(date);
     if(isStartDate==true){
       startDate =date;
     }else if (isStartDate ==false) {
       endDate = date;
     }else {
-      print('asdsa');
       dateExam = date;
     }
     notifyListeners();

@@ -1,21 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:project/controllers/calendar_controller.dart';
 import 'package:project/controllers/create_new_lessons_controller.dart';
+import 'package:project/controllers/create_new_subject_controller.dart';
+import 'package:project/controllers/final_lessons_controller.dart';
 import 'package:project/controllers/home_controller.dart';
+import 'package:project/controllers/item_lessons_controller.dart';
+import 'package:project/controllers/last_topic_controller.dart';
 import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/controllers/onboarding_controller.dart';
+import 'package:project/controllers/profile_controller.dart';
+import 'package:project/controllers/record_home_work_controller.dart';
 import 'package:project/controllers/signup_controller.dart';
 import 'package:project/controllers/verify_email_controller.dart';
-
 import 'package:project/helpers/them_app.dart';
 import 'package:project/controllers/login_controller.dart';
-
+import 'package:project/views/base_view/base_view.dart';
 import 'package:project/views/forget_password_view.dart';
-
 import 'package:project/views/onboarding_view.dart';
 import 'package:project/views/splash_view.dart';
+import 'package:project/views/tab_calendar/calendar_view.dart';
 import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
+import 'package:project/views/tab_lessons/create_new_subject.dart';
+import 'package:project/views/tab_lessons/final_lessons_view.dart';
+import 'package:project/views/tab_lessons/item_lessons_view.dart';
+import 'package:project/views/tab_lessons/last_topic_view.dart';
 import 'package:project/views/tab_lessons/lessons_view.dart';
+import 'package:project/views/tab_lessons/record_home_work_view.dart';
+import 'package:project/views/tab_profile/profile_view.dart';
 import 'package:project/views/verify_email_view.dart';
 import 'package:provider/provider.dart';
 
@@ -65,6 +77,34 @@ class MyApp extends StatelessWidget {
           child: const CreateNewLessonsView(),
             create: (context) => CreateNewLessonsController(),),
 
+        ChangeNotifierProvider<FinalLessonsController>(
+          child: const FinalLessonsView(),
+            create: (context) => FinalLessonsController(),),
+
+        ChangeNotifierProvider<ItemLessonsController>(
+          child: const ItemLessonsView(),
+            create: (context) => ItemLessonsController(),),
+
+        ChangeNotifierProvider<ProfileController>(
+          child: const ProfileView(),
+            create: (context) => ProfileController(),),
+
+        ChangeNotifierProvider<LastTopicController>(
+          child: const LastTopicView(),
+            create: (context) => LastTopicController(),),
+
+        ChangeNotifierProvider<CreateNewSubjectController>(
+          child: const CreateNewSubjectView(),
+            create: (context) => CreateNewSubjectController(),),
+
+        ChangeNotifierProvider<RecordHomeWorkController>(
+          child: const RecordHomeWorkView(),
+            create: (context) => RecordHomeWorkController(),),
+
+        ChangeNotifierProvider<CalendarController>(
+          child:  CalendarView(),
+            create: (context) => CalendarController(),),
+
 
       ],
       child: MaterialApp(
@@ -73,10 +113,10 @@ class MyApp extends StatelessWidget {
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
           ],
-          supportedLocales: [
-            Locale("fa", "IR"), // OR Locale('ar', 'AE') OR Other RTL locales
+          supportedLocales: const [
+            Locale("fa", "IR"),
           ],
-          locale: Locale("fa", "IR"),
+          locale: const Locale("fa", "IR"),
 
         debugShowCheckedModeBanner: false,
         routes: {
@@ -89,14 +129,26 @@ class MyApp extends StatelessWidget {
           ForgetPasswordView.id : (context) => const ForgetPasswordView(),
           VerifyEmailView.id : (context) => const VerifyEmailView(),
           LessonsView.id : (context) => const LessonsView(),
-          CreateNewLessonsView.id:(context) => const CreateNewLessonsView()
+          CreateNewLessonsView.id:(context) => const CreateNewLessonsView(),
+          FinalLessonsView.id:(context) => const FinalLessonsView(),
+          ItemLessonsView.id:(context) => const ItemLessonsView(),
+          ProfileView.id:(context) => const ProfileView(),
+          LastTopicView.id:(context) => const LastTopicView(),
+          CreateNewSubjectView.id:(context) => const CreateNewSubjectView(),
+          RecordHomeWorkView.id:(context) => const RecordHomeWorkView(),
+          CalendarView.id:(context) =>  CalendarView(),
+          BaseView.id:(context) => const BaseView(),
         },
         title: 'Flutter Demo',
         theme: ThemeApp.theme,
           builder: (_,widget){
-            return SafeArea(child: widget!);
+            return Container(
+              color: Colors.white,
+              child: SafeArea(
+              child: widget!),
+            );
           },
-          initialRoute: SplashView.id,
+          initialRoute: BaseView.id,
 
 
       ),

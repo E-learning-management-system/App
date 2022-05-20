@@ -12,19 +12,19 @@ class HomeController extends ChangeNotifier {
       for (int i = 1; i < 3; i++) ...[
         ItemCategoryModel(
             title: 'درس ریاضی مهندسی',
-            urlImage: 'assets/images/image_2.PNG',
+            date: 'assets/images/image_2.PNG',
             bgColor: Colors.orange),
       ],
       for (int i = 1; i < 3; i++) ...[
         ItemCategoryModel(
             title: 'تکلیف کامپایلر',
-            urlImage: 'assets/images/image_3.PNG',
+            date: 'assets/images/image_3.PNG',
             bgColor: Colors.green),
       ],
     for (int i = 1; i < 3; i++) ...[
       ItemCategoryModel(
           title: 'مبحث سری فوریه',
-          urlImage: 'assets/images/image_4.PNG',
+          date: 'assets/images/image_4.PNG',
           bgColor: Colors.deepPurpleAccent),
     ]
     ];
@@ -39,7 +39,7 @@ class HomeController extends ChangeNotifier {
       for (int i = 1; i < 6; i++) ...[
         ItemCategoryModel(
             title: 'درس ریاضی مهندسی',
-            urlImage: 'assets/images/image_2.PNG',
+            date: 'assets/images/image_2.PNG',
             bgColor: Colors.orange),
       ]
     ];
@@ -53,7 +53,7 @@ class HomeController extends ChangeNotifier {
       for (int i = 1; i < 6; i++) ...[
         ItemCategoryModel(
             title: 'تکلیف کامپایلر',
-            urlImage: 'assets/images/image_3.PNG',
+            date: 'assets/images/image_3.PNG',
             bgColor: Colors.green),
       ]
     ];
@@ -67,7 +67,7 @@ class HomeController extends ChangeNotifier {
       for (int i = 1; i < 6; i++) ...[
         ItemCategoryModel(
             title: 'مبحث سری فوریه',
-            urlImage: 'assets/images/image_4.PNG',
+            date: 'assets/images/image_4.PNG',
             bgColor: Colors.deepPurpleAccent),
       ]
     ];
@@ -97,4 +97,4 @@ class HomeController extends ChangeNotifier {
   }
 }
 
-enum StatusCategory { Init,All, Lessons, HomeWork, LastTopics }
+enum StatusCategory { Init,All, Lessons, HomeWork, LastTopics , BookMark }

@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:project/controllers/create_new_lessons_controller.dart';
+import 'package:project/views/tab_lessons/final_lessons_view.dart';
+import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +15,10 @@ class CreateNewLessonsView extends StatelessWidget {
     final controller = Provider.of<CreateNewLessonsController>(context);
     final theme = Theme.of(context).textTheme;
     return Scaffold(
+      appBar: const AppbarWidget(
+        text: 'دروس - درس جدید',
+        showIc: true,
+      ),
       body: _buildBody(
           textTheme: theme,
           controller: controller,
@@ -26,7 +32,7 @@ class CreateNewLessonsView extends StatelessWidget {
   {
     
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 30,
+      padding: const EdgeInsets.only(top: 15,
       right: 15,left: 15,
       bottom: 30),
       child: Column(
@@ -40,7 +46,7 @@ class CreateNewLessonsView extends StatelessWidget {
                 _buildTitle('نام درس', textTheme),
                 _buildTextField(text: 'نام درس را وارد کنید',
                     controller: controller.cnNameLessons),
-
+                sizedBox(height: 8),
                 _buildTitle('توضیحات', textTheme),
                 _buildTextField(text: 'توضیحات را وارد کنید',
                     controller: controller.cnDesc,
@@ -67,7 +73,8 @@ class CreateNewLessonsView extends StatelessWidget {
               call: (){
                 if(controller.form.currentState!.validate())
                   {
-                    print('its Good');
+                   Navigator.pushNamed(context,
+                       FinalLessonsView.id);
                     return;
                   }
 

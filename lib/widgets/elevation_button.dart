@@ -14,6 +14,7 @@ class ElevationButtonWidget extends StatelessWidget {
   final Color? bgColorIcon;
   final double borderRadius;
   final double fontSize;
+  final double elevation;
 
   const ElevationButtonWidget(
       {Key? key,
@@ -28,6 +29,7 @@ class ElevationButtonWidget extends StatelessWidget {
        this.textColor = Colors.white,
         this.borderRadius = 18.0,
         this.fontSize = 15,
+        this.elevation = 1,
          this.bgColorIcon,
      })
       : super(key: key);
@@ -47,14 +49,17 @@ class ElevationButtonWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(borderRadius),
           ),
           primary: primaryColor,
-          shadowColor: primaryColor
+          shadowColor: primaryColor,
+          elevation: elevation
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: icon!=null?
+              MainAxisAlignment.start: MainAxisAlignment.center,
           children: [
            Visibility(
              visible: icon!=null,
              child: Container(
+               margin: EdgeInsets.only(left: 8),
                 child: Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Icon(

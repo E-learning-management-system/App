@@ -5,6 +5,7 @@ import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/models/lessons_item_model.dart';
 import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
+import 'package:project/views/tab_lessons/item_lessons_view.dart';
 import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
@@ -37,19 +38,20 @@ class LessonsView extends StatelessWidget {
                   return _buildItemLessons(
                     index: index+1,
                     data: data,
-                    theme: theme
+                    theme: theme,
+                    context: context
                       );
                 },),
           )
         ],
       ),
       floatingActionButton: _buildFloatAc(context),
-      bottomNavigationBar: B_AppBar(
-        fromLessons: true,
-        onTapHome: (){
-          Navigator.of(context).pop();
-        },
-      ),
+      // bottomNavigationBar: B_AppBar(
+      //   fromLessons: true,
+      //   onTapHome: (){
+      //     Navigator.of(context).pop();
+      //   },
+      // ),
     );
   }
   Widget _buildSearchWidget()
@@ -79,40 +81,44 @@ class LessonsView extends StatelessWidget {
   Widget _buildItemLessons({
     required LessonsItemModel data,
     required int index,
-  required TextTheme theme})
+  required TextTheme theme,
+  required BuildContext context})
   {
 
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadiusButton)
-      ),
-      color: data.bgColor,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(data.name,
-                style: theme.headline6!.copyWith(
-                  color: Colors.white
-                )),
-                const SizedBox(
-                  height: 15,
-                ),
-                Text('تاریخ امتحان : ${data.date}',
-                style: theme.caption!.copyWith(
+    return InkWell(
+      onTap: ()=>Navigator.pushNamed(context, ItemLessonsView.id ),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadiusButton)
+        ),
+        color: data.bgColor,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(data.name,
+                  style: theme.headline6!.copyWith(
                     color: Colors.white
-                ),)
-              ],
-            ),
-            Image.asset('${data.url}$index.png'
-            ,height: 100,
-            width: 100,),
+                  )),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text('تاریخ امتحان : ${data.date}',
+                  style: theme.caption!.copyWith(
+                      color: Colors.white
+                  ),)
+                ],
+              ),
+              Image.asset('${data.url}$index.png'
+              ,height: 100,
+              width: 100,),
 
-          ],
+            ],
+          ),
         ),
       ),
     );
