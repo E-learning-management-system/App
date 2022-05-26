@@ -14,7 +14,7 @@ class CreateNewLessonsController extends ChangeNotifier
   String? endDate;
   String? dateExam;
   final String _url='https://api.piazza.markop.ir/soren/newcourse/';
-  final _token=sharedPreferences.getString('token');
+  final _token=sharedPreferences.getToken('token');
   final form = GlobalKey<FormState>();
 
   Future showMyDatePicker(BuildContext context,bool? isStartDate)async
