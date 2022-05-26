@@ -16,6 +16,7 @@ class HomeView extends StatelessWidget {
 
   static const id = '/Home';
 
+
   @override
   Widget build(BuildContext context) {
     final Lessons = Provider.of<LessonsController>(context);
@@ -223,26 +224,25 @@ class HomeView extends StatelessWidget {
               builder: (context, value, child) {
                 print("AGAIN BUILD ${value.listModel.length}");
                 return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children:
-                       value.listModel.isNotEmpty?
-                       value.listModel.map((e) => cartGenerator(e)).toList():[emptyGenerator()],
-                  ),
-                );
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children:
+                      value.listModel.map((e) => cartGenerator(e)).toList(),
+                ),
+              );
               },
             ),
             // ),
           ],
         ),
       ),
-      bottomNavigationBar: B_AppBar(
-        onTapLessons: () {
-          print("SAD");
-          Navigator.of(context).pushNamed(LessonsView.id);
-        },
-      ),
+      // bottomNavigationBar: B_AppBar(
+      //   onTapLessons: () {
+      //     print("SAD");
+      //     Navigator.of(context).pushNamed(LessonsView.id);
+      //   },
+      // ),
     );
   }
 

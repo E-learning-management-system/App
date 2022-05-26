@@ -6,6 +6,7 @@ import 'package:project/controllers/verify_email_controller.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/models/lessons_item_model.dart';
 import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
+import 'package:project/views/tab_lessons/item_lessons_view.dart';
 import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
@@ -40,19 +41,20 @@ class LessonsView extends StatelessWidget {
                   return _buildItemLessons(
                     index: index+1,
                     data: data,
-                    theme: theme
+                    theme: theme,
+                    context: context
                       );
                 },),
           )
         ],
       ),
       floatingActionButton: _buildFloatAc(context),
-      bottomNavigationBar: B_AppBar(
-        fromLessons: true,
-        onTapHome: (){
-          Navigator.of(context).pop();
-        },
-      ),
+      // bottomNavigationBar: B_AppBar(
+      //   fromLessons: true,
+      //   onTapHome: (){
+      //     Navigator.of(context).pop();
+      //   },
+      // ),
     );
   }
   Widget _buildSearchWidget()
@@ -82,7 +84,8 @@ class LessonsView extends StatelessWidget {
   Widget _buildItemLessons({
     required LessonsItemModel data,
     required int index,
-  required TextTheme theme})
+  required TextTheme theme,
+  required BuildContext context})
   {
 
     return Card(
@@ -115,7 +118,8 @@ class LessonsView extends StatelessWidget {
             ,height: 100,
             width: 100,),
 
-          ],
+            ],
+          ),
         ),
       ),
     );

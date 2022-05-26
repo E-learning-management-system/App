@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:project/controllers/calendar_controller.dart';
 import 'package:project/controllers/create_new_lessons_controller.dart';
 import 'package:project/controllers/exercise_controller.dart';
+import 'package:project/controllers/create_new_subject_controller.dart';
+import 'package:project/controllers/final_lessons_controller.dart';
 import 'package:project/controllers/home_controller.dart';
+import 'package:project/controllers/item_lessons_controller.dart';
+import 'package:project/controllers/last_topic_controller.dart';
 import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/controllers/onboarding_controller.dart';
+import 'package:project/controllers/profile_controller.dart';
+import 'package:project/controllers/record_home_work_controller.dart';
 import 'package:project/controllers/signup_controller.dart';
 import 'package:project/controllers/subject_controller.dart';
 import 'package:project/controllers/verify_email_controller.dart';
 
 import 'package:project/helpers/them_app.dart';
 import 'package:project/controllers/login_controller.dart';
-
+import 'package:project/views/base_view/base_view.dart';
 import 'package:project/views/forget_password_view.dart';
 import 'package:project/views/home_view.dart';
 
@@ -24,6 +31,8 @@ import 'package:provider/provider.dart';
 
 import 'views/login_view.dart';
 import 'views/signup_view.dart';
+
+import 'views/home_view.dart';
 
 
 void main() {
@@ -79,10 +88,10 @@ class MyApp extends StatelessWidget {
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
           ],
-          supportedLocales: [
-            Locale("fa", "IR"), // OR Locale('ar', 'AE') OR Other RTL locales
+          supportedLocales: const [
+            Locale("fa", "IR"),
           ],
-          locale: Locale("fa", "IR"),
+          locale: const Locale("fa", "IR"),
 
         debugShowCheckedModeBanner: false,
         routes: {
@@ -95,14 +104,28 @@ class MyApp extends StatelessWidget {
           ForgetPasswordView.id : (context) => const ForgetPasswordView(),
           VerifyEmailView.id : (context) => const VerifyEmailView(),
           LessonsView.id : (context) => const LessonsView(),
-          CreateNewLessonsView.id:(context) => const CreateNewLessonsView()
+          CreateNewLessonsView.id:(context) => const CreateNewLessonsView(),
+          FinalLessonsView.id:(context) => const FinalLessonsView(),
+          ItemLessonsView.id:(context) => const ItemLessonsView(),
+          ProfileView.id:(context) => const ProfileView(),
+          LastTopicView.id:(context) => const LastTopicView(),
+          CreateNewSubjectView.id:(context) => const CreateNewSubjectView(),
+          RecordHomeWorkView.id:(context) => const RecordHomeWorkView(),
+          CalendarView.id:(context) =>  CalendarView(),
+          BaseView.id:(context) => const BaseView(),
         },
         title: 'Flutter Demo',
         theme: ThemeApp.theme,
-        builder: (_, widget) {
-          return SafeArea(child: widget!);
-        },
-        initialRoute: SplashView.id,
+          builder: (_,widget){
+            return Container(
+              color: Colors.white,
+              child: SafeArea(
+              child: widget!),
+            );
+          },
+          initialRoute: BaseView.id,
+
+
       ),
     );
   }

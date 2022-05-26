@@ -68,6 +68,10 @@ class TextFormFieldWidget extends StatelessWidget {
         onFieldSubmitted: funOnSubmitted,
         decoration: InputDecoration(
           prefixIcon: prefixIcon,
+          suffixIconConstraints: BoxConstraints(
+              minHeight: 24,
+              minWidth: 24
+          ),
           suffixIcon: suffixIcon,
           hintText: hintText,
           filled: filled,

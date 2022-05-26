@@ -4,6 +4,7 @@ import 'package:project/models/item_category_model.dart';
 import 'package:project/helpers/sharedPreferences.dart';
 
 class HomeController extends ChangeNotifier {
+  // List<Widget> listItems = [];
   var status = StatusCategory.Init;
   final formSearchKey = GlobalKey<FormState>();
   List<ItemCategoryModel> listModel = [];
@@ -59,6 +60,7 @@ class HomeController extends ChangeNotifier {
       ]
     ];
     status = StatusCategory.HomeWork;
+
     notifyListeners();
   }
 
@@ -97,4 +99,4 @@ class HomeController extends ChangeNotifier {
   }
 }
 
-enum StatusCategory { Init,All, Lessons, HomeWork, LastTopics }
+enum StatusCategory { Init,All, Lessons, HomeWork, LastTopics , BookMark }

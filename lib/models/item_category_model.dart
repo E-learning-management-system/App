@@ -4,8 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/helpers/colors.dart';
 
-class ItemCategoryModel{
-
+class ItemCategoryModel {
   final String title;
   String urlImage='assets/images/image_2.PNG';
   Color bgColor=MyColors.orange;
