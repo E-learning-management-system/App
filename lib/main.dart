@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:project/controllers/create_new_lessons_controller.dart';
+import 'package:project/controllers/exercise_controller.dart';
 import 'package:project/controllers/home_controller.dart';
 import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/controllers/onboarding_controller.dart';
 import 'package:project/controllers/signup_controller.dart';
+import 'package:project/controllers/subject_controller.dart';
 import 'package:project/controllers/verify_email_controller.dart';
 
 import 'package:project/helpers/them_app.dart';
 import 'package:project/controllers/login_controller.dart';
 
 import 'package:project/views/forget_password_view.dart';
+import 'package:project/views/home_view.dart';
 
 import 'package:project/views/onboarding_view.dart';
 import 'package:project/views/splash_view.dart';
@@ -21,8 +24,6 @@ import 'package:provider/provider.dart';
 
 import 'views/login_view.dart';
 import 'views/signup_view.dart';
-
-import 'views/home_view.dart';
 
 
 void main() {
@@ -59,6 +60,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<LessonsController>(
           child: const LessonsView(),
           create: (context) => LessonsController(),),
+        ChangeNotifierProvider<ExercisesController>(
+          child: const HomeView(),
+          create: (context) => ExercisesController(),),
+        ChangeNotifierProvider<SubjectsController>(
+          child: const HomeView(),
+          create: (context) => SubjectsController(),),
 
         ChangeNotifierProvider<CreateNewLessonsController>(
           child: const CreateNewLessonsView(),

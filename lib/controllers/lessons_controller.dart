@@ -13,7 +13,7 @@ class LessonsController extends ChangeNotifier
   final String _url='https://api.piazza.markop.ir/soren/courses/';
   final List<LessonsItemModel> _listOfLessons = [];
   get listOfLessons=>_listOfLessons;
-  final _token=sharedPreferences.getString('token');
+  final _token=sharedPreferences.getToken('token');
   LessonsController(){
     getLessonsRequest().then((value) => {print("lessons load")} );
   }
@@ -35,6 +35,7 @@ class LessonsController extends ChangeNotifier
           _listOfLessons.add(LessonsItemModel.fromJson(value));
         });
         print(_listOfLessons);
+        sharedPreferences.setLessons(_listOfLessons);
             }
     }
     notifyListeners();

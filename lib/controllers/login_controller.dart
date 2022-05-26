@@ -23,11 +23,12 @@ class LoginController extends ChangeNotifier
       }),
     );
     isLoading=false;
-    notifyListeners();
     Map<String, dynamic> res = jsonDecode(response.body);
-    _token=res.containsKey("token")?jsonDecode(response.body).token:"";
+    _token=res.containsKey("token")?res["token"]:"";
+
+    notifyListeners();
     if( _token.isNotEmpty){
-      sharedPreferences.setString("token", _token);
+      sharedPreferences.setToken("token", _token);
       return true;
     }
     else {

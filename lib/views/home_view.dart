@@ -1,10 +1,14 @@
+
 import 'package:flutter/material.dart';
 import 'package:project/controllers/home_controller.dart';
+import 'package:project/controllers/lessons_controller.dart';
+import 'package:project/controllers/subject_controller.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/views/tab_lessons/lessons_view.dart';
 import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:provider/provider.dart';
+import 'package:project/controllers/exercise_controller.dart';
 import '../widgets/topAppBar.dart';
 
 class HomeView extends StatelessWidget {
@@ -14,6 +18,9 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Lessons = Provider.of<LessonsController>(context);
+    final Exercise = Provider.of<ExercisesController>(context);
+    final Subjects = Provider.of<SubjectsController>(context);
     final controller = Provider.of<HomeController>(context);
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -220,7 +227,8 @@ class HomeView extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children:
-                        value.listModel.map((e) => cartGenerator(e)).toList(),
+                       value.listModel.isNotEmpty?
+                       value.listModel.map((e) => cartGenerator(e)).toList():[emptyGenerator()],
                   ),
                 );
               },
@@ -266,6 +274,16 @@ class HomeView extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+  Widget emptyGenerator() {
+    return const Text(
+      "موردی برای نمایش موجود نیست.",
+      style: TextStyle(
+        color: Color.fromARGB(255, 253, 251, 251),
+        fontFamily: 'Vazir',
+        fontSize: 16,
       ),
     );
   }

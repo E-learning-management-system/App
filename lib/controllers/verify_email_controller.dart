@@ -33,7 +33,7 @@ class VerifyEmailController extends ChangeNotifier
 
     notifyListeners();
     if( _token.isNotEmpty){
-      sharedPreferences.setString("token", _token);
+      sharedPreferences.setToken("token", _token);
           return true;
     }
     else {

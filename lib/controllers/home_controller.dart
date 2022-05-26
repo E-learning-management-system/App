@@ -1,46 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:project/models/item_category_model.dart';
 
+import 'package:project/helpers/sharedPreferences.dart';
+
 class HomeController extends ChangeNotifier {
-  // List<Widget> listItems = [];
   var status = StatusCategory.Init;
   final formSearchKey = GlobalKey<FormState>();
   List<ItemCategoryModel> listModel = [];
 
   void setAllCategory() {
-    listModel = [
-      for (int i = 1; i < 3; i++) ...[
-        ItemCategoryModel(
-            title: 'درس ریاضی مهندسی',
-            urlImage: 'assets/images/image_2.PNG',
-            bgColor: Colors.orange),
-      ],
-      for (int i = 1; i < 3; i++) ...[
-        ItemCategoryModel(
-            title: 'تکلیف کامپایلر',
-            urlImage: 'assets/images/image_3.PNG',
-            bgColor: Colors.green),
-      ],
-    for (int i = 1; i < 3; i++) ...[
-      ItemCategoryModel(
-          title: 'مبحث سری فوریه',
-          urlImage: 'assets/images/image_4.PNG',
-          bgColor: Colors.deepPurpleAccent),
-    ]
-    ];
+    List<String>? lesson= sharedPreferences.getLessons();
+    List<String>? exercise= sharedPreferences.getExercises();
+    List<String>? subject= sharedPreferences.getSubjects();
+    if(lesson != null){
+      for (var i in lesson){
+        listModel.add(ItemCategoryModel(title: i, category: 'Lesson'));
+      }
+    }
+   if(exercise != null){
+     for (var i in exercise){
+       listModel.add(ItemCategoryModel(title: i, category: 'Exercise'));
+     }
+   }
+    if(subject!= null){
+      for (var i in subject){
+        listModel.add(ItemCategoryModel(title: i, category: 'Subject'));
+      }
+    }
 
-
+    if(listModel.isNotEmpty){
+      listModel.shuffle();
+    }
     status = StatusCategory.All;
     notifyListeners();
   }
 
   void setLessons() {
+   List<String> myList= sharedPreferences.getLessons();
     listModel = [
-      for (int i = 1; i < 6; i++) ...[
+      for (String i in myList) ...[
         ItemCategoryModel(
-            title: 'درس ریاضی مهندسی',
-            urlImage: 'assets/images/image_2.PNG',
-            bgColor: Colors.orange),
+            title: i,
+            category: 'Lesson'),
       ]
     ];
     status = StatusCategory.Lessons;
@@ -49,26 +50,25 @@ class HomeController extends ChangeNotifier {
   }
 
   void setHomeWork() {
+    List<String> myList= sharedPreferences.getExercises();
     listModel = [
-      for (int i = 1; i < 6; i++) ...[
+      for (String i in myList) ...[
         ItemCategoryModel(
-            title: 'تکلیف کامپایلر',
-            urlImage: 'assets/images/image_3.PNG',
-            bgColor: Colors.green),
+            title: i,
+            category: 'Exercise'),
       ]
     ];
     status = StatusCategory.HomeWork;
-
     notifyListeners();
   }
 
   void setLastTopics() {
+    List<String> myList= sharedPreferences.getSubjects();
     listModel = [
-      for (int i = 1; i < 6; i++) ...[
+      for (String i in myList) ...[
         ItemCategoryModel(
-            title: 'مبحث سری فوریه',
-            urlImage: 'assets/images/image_4.PNG',
-            bgColor: Colors.deepPurpleAccent),
+            title: i,
+            category: 'Subject'),
       ]
     ];
     status = StatusCategory.LastTopics;
