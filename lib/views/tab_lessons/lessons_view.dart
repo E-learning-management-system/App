@@ -121,8 +121,7 @@ class LessonsView extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildFloatAc(BuildContext context)

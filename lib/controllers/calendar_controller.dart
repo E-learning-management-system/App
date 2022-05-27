@@ -13,9 +13,10 @@ class CalendarController extends ChangeNotifier
     for (int i = 0; i < 3; i++) ...[
       ItemCategoryModel(
           title: 'تمرین سری اول کامپایلر',
-          date: '1400/11/25',
-          bgColor:  i==0? Colors.cyan.withOpacity(0.2) : i==1? Colors.blue.withOpacity(0.2) :
-      Colors.pinkAccent.withOpacity(0.2)),
+      category: 'Exercise',)
+      //     date: '1400/11/25',
+      //     bgColor:  i==0? Colors.cyan.withOpacity(0.2) : i==1? Colors.blue.withOpacity(0.2) :
+      // Colors.pinkAccent.withOpacity(0.2)),
     ]
   ];
 

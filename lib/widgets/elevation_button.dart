@@ -34,23 +34,6 @@ class ElevationButtonWidget extends StatelessWidget {
      })
       : super(key: key);
 
-
-  const ElevationButtonWidget({
-    Key? key,
-    this.width = 170,
-    this.height = 40,
-    this.fontFamily = 'Vazir',
-    this.icon,
-    this.text = 'ورود',
-    required this.call,
-    this.iconColor,
-    this.primaryColor = Colors.blue,
-    this.textColor = Colors.white,
-    this.borderRadius = 18.0,
-    this.fontSize = 15,
-    this.bgColorIcon,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(

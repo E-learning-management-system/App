@@ -72,7 +72,7 @@ class CalendarView extends StatelessWidget {
                 sizedBox(
                   height: 20
                 ),
-                Text('مهلت : ${data.date}')
+                Text('مهلت : ')
               ],
             ),
           ),

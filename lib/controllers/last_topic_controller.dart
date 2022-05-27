@@ -9,20 +9,14 @@ class LastTopicController extends ChangeNotifier
     for (int i = 0; i < 3; i++) ...[
       ItemCategoryModel(
           title: 'زمان امتحان کی هست ؟ ',
-          date: '1400/11/25',
-          name: 'دانیال صابر',
-          countComment: 15,
-          nameLesson: 'این تنهای یک پیغام تست است یک پیام تستتستتستتستتستتستتست تست',
-          bgColor: Colors.white),
+          category: 'Subject'),
     ]
   ];
   var listComments = [
     for (int i = 0; i < 3; i++) ...[
       ItemCategoryModel(
           title: 'زمان امتحان کی هستزمان امتحان کی هستزمان امتحان کی هست ؟ ',
-          date: '1400/11/25',
-          name: 'علی',
-          bgColor: Colors.white),
+         category: 'Subject'),
     ]
   ];
 
@@ -38,9 +32,7 @@ class LastTopicController extends ChangeNotifier
    {
      final data = ItemCategoryModel(
          title: textEditController.text,
-         bgColor: Colors.white,
-        name: 'علی',
-     date: '1400/11/25');
+         category: 'subjects');
      listComments.add(data);
      textEditController.clear();
      notifyListeners();

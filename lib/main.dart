@@ -24,15 +24,17 @@ import 'package:project/views/home_view.dart';
 
 import 'package:project/views/onboarding_view.dart';
 import 'package:project/views/splash_view.dart';
+import 'package:project/views/tab_calendar/calendar_view.dart';
 import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
+import 'package:project/views/tab_lessons/create_new_subject.dart';
+import 'package:project/views/tab_lessons/final_lessons_view.dart';
 import 'package:project/views/tab_lessons/lessons_view.dart';
+import 'package:project/views/tab_lessons/record_home_work_view.dart';
 import 'package:project/views/verify_email_view.dart';
 import 'package:provider/provider.dart';
-
 import 'views/login_view.dart';
 import 'views/signup_view.dart';
 
-import 'views/home_view.dart';
 
 
 void main() {
@@ -106,9 +108,9 @@ class MyApp extends StatelessWidget {
           LessonsView.id : (context) => const LessonsView(),
           CreateNewLessonsView.id:(context) => const CreateNewLessonsView(),
           FinalLessonsView.id:(context) => const FinalLessonsView(),
-          ItemLessonsView.id:(context) => const ItemLessonsView(),
-          ProfileView.id:(context) => const ProfileView(),
-          LastTopicView.id:(context) => const LastTopicView(),
+          // ItemLessonsView.id:(context) => const ItemLessonsView(),
+          // ProfileView.id:(context) => const ProfileView(),
+          // LastTopicView.id:(context) => const LastTopicView(),
           CreateNewSubjectView.id:(context) => const CreateNewSubjectView(),
           RecordHomeWorkView.id:(context) => const RecordHomeWorkView(),
           CalendarView.id:(context) =>  CalendarView(),

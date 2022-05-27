@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:project/controllers/login_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
-import 'package:project/helpers/utility.dart';
 import 'package:project/helpers/validator.dart';
 import 'package:project/views/forget_password_view.dart';
 import 'package:project/views/home_view.dart';

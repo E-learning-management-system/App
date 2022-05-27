@@ -9,10 +9,11 @@ class ItemCategoryModel {
   String urlImage='assets/images/image_2.PNG';
   Color bgColor=MyColors.orange;
   final String category;
+  bool? isExpanded;
 
   ItemCategoryModel(
   {required this.title, required this.category,
-    }){
+    this.isExpanded = false,}){
     if(category=='Lesson'){
       bgColor=MyColors.orange;
       urlImage='assets/images/image_2.PNG';
