@@ -13,30 +13,29 @@ class LessonsController extends ChangeNotifier
   final String _url='https://api.piazza.markop.ir/soren/courses/';
   final List<LessonsItemModel> _listOfLessons = [];
   get listOfLessons=>_listOfLessons;
-  final _token=sharedPreferences.getToken('token');
-  LessonsController(){
-    getLessonsRequest().then((value) => {print("lessons load")} );
-  }
+  late String _token;
 
   Future getLessonsRequest()
   async{
-
+    _listOfLessons.clear();
+    _token=await sharedPreferences.getToken('token');
     var response= await http.get(Uri.parse(_url),
       headers: { "content-type": "application/json",
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(list of lesson)=   "+jsonDecode(response.body));
-    final Map<String, dynamic> data = json.decode(response.body);
+    print("jsonDecode(list of lesson)=   "+ (response.body));
+    final Map<String, dynamic> data = jsonDecode(response.body);
     if(data.containsKey("results")){
-      final Map<String, dynamic> list = json.decode(data["results"]);
-      for(var v in list.values) {
-        v.asMap().forEach((i, value) {
-          _listOfLessons.add(LessonsItemModel.fromJson(value));
-        });
-        print(_listOfLessons);
-        sharedPreferences.setLessons(_listOfLessons);
+      final List< dynamic> list = data["results"];
+      for(var v in list) {
+        // print(v.runtimeType);
+      
+          _listOfLessons.add(LessonsItemModel.fromJson(Map<String,dynamic>.from(v)));
+
             }
+      print(_listOfLessons);
+      sharedPreferences.setLessons(_listOfLessons);
     }
     notifyListeners();
     return false;

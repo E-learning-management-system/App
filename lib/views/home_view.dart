@@ -1,11 +1,12 @@
 
+
 import 'package:flutter/material.dart';
 import 'package:project/controllers/home_controller.dart';
 import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/controllers/subject_controller.dart';
+import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/models/item_category_model.dart';
-import 'package:project/views/tab_lessons/lessons_view.dart';
-import 'package:project/widgets/bottomAppBar.dart';
+import 'package:project/views/login_view.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:provider/provider.dart';
 import 'package:project/controllers/exercise_controller.dart';
@@ -18,13 +19,21 @@ class HomeView extends StatelessWidget {
 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)  {
     final Lessons = Provider.of<LessonsController>(context);
     final Exercise = Provider.of<ExercisesController>(context);
     final Subjects = Provider.of<SubjectsController>(context);
     final controller = Provider.of<HomeController>(context);
     double screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
+
+    Future <List<ItemCategoryModel>> getMyList()async{
+      return controller.listModel;
+    }
+
+    Future <List<ItemCategoryModel>> myList= getMyList();
+
+if(sharedPreferences.isLogin) {
+  return Scaffold(
       appBar: TopAppBar('دانیال صابر', 1, 'ww'),
       body: SingleChildScrollView(
         child: Column(
@@ -109,8 +118,11 @@ class HomeView extends StatelessWidget {
                               ElevationButtonWidget(
                                 icon: Icons.local_fire_department,
                                 text: 'همه',
-                                call: () {
-                                  controller
+                                call: ()async {
+                                  await Lessons.getLessonsRequest();
+                                  await Subjects.getSubjectsRequest();
+                                  await Exercise.getExercisesRequest();
+                                 await controller
                                       .setItemCategory(StatusCategory.All);
                                 },
                                 iconColor:
@@ -133,8 +145,9 @@ class HomeView extends StatelessWidget {
                               ElevationButtonWidget(
                                 icon: Icons.bolt,
                                 text: 'دروس',
-                                call: () {
-                                  controller
+                                call: () async{
+                                  await Lessons.getLessonsRequest();
+                                 await controller
                                       .setItemCategory(StatusCategory.Lessons);
                                 },
                                 iconColor:
@@ -165,8 +178,9 @@ class HomeView extends StatelessWidget {
                               ElevationButtonWidget(
                                 icon: Icons.assignment_rounded,
                                 text: 'تکالیف',
-                                call: () {
-                                  controller
+                                call: () async{
+                                  await Exercise.getExercisesRequest();
+                                 await controller
                                       .setItemCategory(StatusCategory.HomeWork);
                                 },
                                 iconColor:
@@ -189,8 +203,9 @@ class HomeView extends StatelessWidget {
                               ElevationButtonWidget(
                                   icon: Icons.assignment_rounded,
                                   text: 'آخرین مباحث',
-                                  call: () {
-                                    controller.setItemCategory(
+                                  call: () async{
+                                    await Subjects.getSubjectsRequest();
+                                    await controller.setItemCategory(
                                         StatusCategory.LastTopics);
                                   },
                                   iconColor: controller.status ==
@@ -218,32 +233,49 @@ class HomeView extends StatelessWidget {
                 ],
               ),
             ),
-            // ListView(
-            //   scrollDirection: Axis.horizontal,
-            Consumer<HomeController>(
-              builder: (context, value, child) {
-                print("AGAIN BUILD ${value.listModel.length}");
-                return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children:
-                      value.listModel.map((e) => cartGenerator(e)).toList(),
-                ),
-              );
+
+
+            // Consumer<HomeController>(
+            //     builder: (context, value, child) {
+            //     print("AGAIN BUILD ${value.listModel.length}");
+            //     return SingleChildScrollView(
+            //     scrollDirection: Axis.horizontal,
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //       children:
+            //           value.listModel.map((e) => cartGenerator(e)).toList(),
+            //     ),
+            //   );
+            //   },
+            // ),
+
+
+            FutureBuilder<List<ItemCategoryModel>>(
+              future:myList ,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return  SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children:
+                                snapshot.data!.map((e) => cartGenerator(e)).toList()
+                          ),
+                  );
+                } else {
+                  return Text('awaiting the future');
+                }
               },
             ),
             // ),
           ],
         ),
       ),
-      // bottomNavigationBar: B_AppBar(
-      //   onTapLessons: () {
-      //     print("SAD");
-      //     Navigator.of(context).pushNamed(LessonsView.id);
-      //   },
-      // ),
     );
+} else{
+  Navigator.pushReplacementNamed(context, LoginView.id);
+  return const Text('لطفا کمی صبر کنید.');
+}
   }
 
   Widget cartGenerator(ItemCategoryModel model) {

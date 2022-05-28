@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/controllers/verify_email_controller.dart';
 import 'package:project/helpers/constants.dart';
+import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/models/lessons_item_model.dart';
+import 'package:project/views/login_view.dart';
 import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
 import 'package:project/views/tab_lessons/item_lessons_view.dart';
 import 'package:project/widgets/bottomAppBar.dart';
@@ -22,8 +24,8 @@ class LessonsView extends StatelessWidget {
     final controller = Provider.of<LessonsController>(context);
     final theme = Theme.of(context).textTheme;
 
-
-    return Scaffold(
+if(sharedPreferences.isLogin) {
+  return Scaffold(
       backgroundColor: Colors.grey.shade200,
       body: Column(
         children: [
@@ -31,20 +33,20 @@ class LessonsView extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               itemExtent: 140,
-                itemCount: controller.listOfLessons.length,
-                padding: const EdgeInsets.only(right: 20,
-                left: 20,
-                bottom: 20),
-                itemBuilder: (context, index) {
+              itemCount: controller.listOfLessons.length,
+              padding: const EdgeInsets.only(right: 20,
+                  left: 20,
+                  bottom: 20),
+              itemBuilder: (context, index) {
                 final data = controller.listOfLessons[index];
 
-                  return _buildItemLessons(
+                return _buildItemLessons(
                     index: index+1,
                     data: data,
                     theme: theme,
                     context: context
-                      );
-                },),
+                );
+              },),
           )
         ],
       ),
@@ -56,6 +58,11 @@ class LessonsView extends StatelessWidget {
       //   },
       // ),
     );
+} else{
+  Navigator.pushReplacementNamed(context, LoginView.id);
+  return const Text('لطفا کمی صبر کنید.');
+
+}
   }
   Widget _buildSearchWidget()
   {

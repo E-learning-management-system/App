@@ -29,6 +29,7 @@ class LoginController extends ChangeNotifier
     notifyListeners();
     if( _token.isNotEmpty){
       sharedPreferences.setToken("token", _token);
+      sharedPreferences.setLogin();
       return true;
     }
     else {

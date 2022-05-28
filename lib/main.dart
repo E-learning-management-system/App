@@ -46,9 +46,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<HomeController>(
-          child: HomeView(),
-            create: (context) => HomeController(),),
 
         ChangeNotifierProvider<SignUpController>(
           child: SignUpView(),
@@ -81,7 +78,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<CreateNewLessonsController>(
           child: const CreateNewLessonsView(),
             create: (context) => CreateNewLessonsController(),),
-
+        ChangeNotifierProvider<HomeController>(
+          child: HomeView(),
+          create: (context) => HomeController(),),
 
       ],
       child: MaterialApp(
@@ -125,7 +124,7 @@ class MyApp extends StatelessWidget {
               child: widget!),
             );
           },
-          initialRoute: BaseView.id,
+          initialRoute: SplashView.id,
 
 
       ),

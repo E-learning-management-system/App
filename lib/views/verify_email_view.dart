@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:project/controllers/signup_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
+import 'package:project/views/base_view/base_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/pin_code.dart';
@@ -124,7 +125,7 @@ class VerifyEmailView extends StatelessWidget {
             // Your logic with pin code
            var res= await controller.verifyEmailRequest(email,output);
            if(controller.token.isNotEmpty){
-   Navigator.of(context).pushNamed('/Home');}
+   Navigator.of(context).pushNamed(BaseView.id);}
   else{
   showDialog<String>(
   context: context,

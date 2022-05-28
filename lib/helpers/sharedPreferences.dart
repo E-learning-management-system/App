@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:project/models/lessons_item_model.dart';
 
 class SharedPreferencesTable{
+  bool isLogin=false;
   SharedPreferencesTable(){
     setInitial();
   }
@@ -18,6 +19,10 @@ class SharedPreferencesTable{
   getToken(key){
     return token.getString(key);
   }
+  setLogin(){
+    isLogin=true;
+  }
+
 
   setInitial()async{
     pref= (await SharedPreferences.getInstance());

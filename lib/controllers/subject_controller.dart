@@ -24,23 +24,24 @@ class SubjectsController extends ChangeNotifier
 
   Future getSubjectsRequest()
   async{
-
+    _listOfSubjects.clear();
+    _token=await sharedPreferences.getToken('token');
     var response= await http.get(Uri.parse(_url),
       headers: { "content-type": "application/json",
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(list of subjects)=   "+jsonDecode(response.body));
-    final Map<String, dynamic> data = json.decode(response.body);
+    print("jsonDecode(list of subjects)=   "+(response.body));
+    final Map<String, dynamic> data = jsonDecode(response.body);
     if(data.containsKey("results")){
-      final Map<String, dynamic> list = json.decode(data["results"]);
-      for(var v in list.values) {
-        v.asMap().forEach((i, value) {
-          _listOfSubjects.add(SubjectsItemModel.fromJson(value));
-        });
-        print(_listOfSubjects);
-        sharedPreferences.setSubjects(_listOfSubjects);
+      final List< dynamic> list = data["results"];
+      for(var v in list) {
+
+          _listOfSubjects.add(SubjectsItemModel.fromJson(Map<String,dynamic>.from(v)));
+
       }
+      print(_listOfSubjects.toList());
+      sharedPreferences.setSubjects(_listOfSubjects);
     }
     notifyListeners();
     return false;

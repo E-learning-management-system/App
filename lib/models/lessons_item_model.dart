@@ -31,7 +31,7 @@ class LessonsItemModel {
        id=item["id"];
        title=item["title"];
        description=item["description"];
-       teacher=item["teacher"];
+       teacher=item["teacher"].runtimeType==String?item["teacher"]:'';
        startDate=item["start_date"];
        endDate=item["end_date"];
        examDate=item["exam_date"];}

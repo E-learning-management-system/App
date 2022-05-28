@@ -3,6 +3,7 @@ import 'package:project/controllers/login_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/validator.dart';
+import 'package:project/views/base_view/base_view.dart';
 import 'package:project/views/forget_password_view.dart';
 import 'package:project/views/home_view.dart';
 import 'package:project/views/signup_view.dart';
@@ -87,7 +88,7 @@ class LoginView extends StatelessWidget {
                                           _email, _password);
                                       if (res) {
                                         Navigator.of(context)
-                                            .pushNamed(HomeView.id);
+                                            .pushNamed(BaseView.id);
                                       } else { showDialog<String>(
                                         context: context,
                                         builder: (BuildContext context) =>

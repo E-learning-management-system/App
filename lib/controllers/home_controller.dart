@@ -9,10 +9,11 @@ class HomeController extends ChangeNotifier {
   final formSearchKey = GlobalKey<FormState>();
   List<ItemCategoryModel> listModel = [];
 
-  void setAllCategory() {
-    List<String>? lesson= sharedPreferences.getLessons();
-    List<String>? exercise= sharedPreferences.getExercises();
-    List<String>? subject= sharedPreferences.getSubjects();
+ setAllCategory() async{
+
+    List<String>? lesson=await  sharedPreferences.getLessons();
+    List<String>? exercise=await sharedPreferences.getExercises();
+    List<String>? subject=await sharedPreferences.getSubjects();
     if(lesson != null){
       for (var i in lesson){
         listModel.add(ItemCategoryModel(title: i, category: 'Lesson'));
@@ -36,10 +37,10 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setLessons() {
-   List<String> myList= sharedPreferences.getLessons();
+ setLessons()async {
+   List<String>? myList=await sharedPreferences.getLessons();
     listModel = [
-      for (String i in myList) ...[
+      for (String i in myList!) ...[
         ItemCategoryModel(
             title: i,
             category: 'Lesson'),
@@ -50,8 +51,8 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setHomeWork() {
-    List<String> myList= sharedPreferences.getExercises();
+ setHomeWork()async {
+    List<String> myList=await sharedPreferences.getExercises();
     listModel = [
       for (String i in myList) ...[
         ItemCategoryModel(
@@ -64,8 +65,8 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setLastTopics() {
-    List<String> myList= sharedPreferences.getSubjects();
+ setLastTopics()async {
+    List<String> myList=await sharedPreferences.getSubjects();
     listModel = [
       for (String i in myList) ...[
         ItemCategoryModel(
@@ -77,21 +78,21 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setItemCategory(StatusCategory status) {
+ setItemCategory(StatusCategory status) async{
     if (status == StatusCategory.All) {
-      setAllCategory();
+      await setAllCategory();
       return;
     }
     if (status == StatusCategory.Lessons) {
-      setLessons();
+      await setLessons();
       return;
     }
     if (status == StatusCategory.HomeWork) {
-      setHomeWork();
+      await setHomeWork();
       return;
     }
     if (status == StatusCategory.LastTopics) {
-      setLastTopics();
+      await setLastTopics();
       return;
     } else {
       listModel = [];
