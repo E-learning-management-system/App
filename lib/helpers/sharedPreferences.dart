@@ -66,7 +66,7 @@ class SharedPreferencesTable{
   setType(String type){
     pref?.setString('type', type);
   }
-  getType(String type){
+  getType(){
    return pref?.getString('type');
   }
 

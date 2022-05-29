@@ -30,7 +30,7 @@ class ProfileModel {
 
   ProfileModel.fromJson(Map<String,dynamic> item){
     id=item["id"];
-    name=item["name"];
+    name=item["name"].runtimeType==String?item['name']:'';
     email=item["email"];
     university=item["university"].runtimeType==String?item["university"]:'';
     type=item["type"];

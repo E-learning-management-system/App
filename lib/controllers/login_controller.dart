@@ -46,11 +46,11 @@ class LoginController extends ChangeNotifier
       headers: { "content-type": "application/json",
         "Authorization": "Token " + _token,},
     );
-    print("jsonDecode(list of lesson)=   "+ (response.body));
     final Map<String, dynamic> data = jsonDecode(response.body);
     if(data.containsKey("id")){
       profile=ProfileModel.fromJson(data);
       sharedPreferences.setType(data['type']);
+      print(sharedPreferences.getType());
       return profile;
     }
     return false;
