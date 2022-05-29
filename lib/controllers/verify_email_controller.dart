@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project/helpers/sharedPreferences.dart';
 
+import '../models/profile_model.dart';
+
 class VerifyEmailController extends ChangeNotifier
 {
 
@@ -35,6 +37,7 @@ class VerifyEmailController extends ChangeNotifier
     if( _token.isNotEmpty){
       sharedPreferences.setToken("token", _token);
       sharedPreferences.setLogin();
+     await getProfile();
           return true;
     }
     else {
@@ -42,4 +45,21 @@ class VerifyEmailController extends ChangeNotifier
     }
   }
 
+  getProfile()async{
+    var url='https://api.piazza.markop.ir/profile/';
+    ProfileModel profile;
+    var response= await http.get(Uri.parse(url),
+      headers: { "content-type": "application/json",
+        "Authorization": "Token " + _token,},
+    );
+    print("jsonDecode(list of lesson)=   "+ (response.body));
+    final Map<String, dynamic> data = jsonDecode(response.body);
+    if(data.containsKey("id")){
+      profile=ProfileModel.fromJson(data);
+      sharedPreferences.setType(data['type']);
+      return profile;
+    }
+    return false;
+  }
 }
+
