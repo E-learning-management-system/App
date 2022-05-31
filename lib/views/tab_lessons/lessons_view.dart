@@ -2,11 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:project/controllers/lessons_controller.dart';
+import 'package:project/controllers/verify_email_controller.dart';
+import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
+import 'package:project/helpers/sharedPreferences.dart';
+import 'package:project/helpers/utility.dart';
 import 'package:project/models/lessons_item_model.dart';
+import 'package:project/views/login_view.dart';
 import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
 import 'package:project/views/tab_lessons/item_lessons_view.dart';
+import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/bottomAppBar.dart';
+import 'package:project/widgets/empty_view_widget.dart';
 import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -17,31 +24,52 @@ class LessonsView extends StatelessWidget {
   static const String id = '/lessons_view';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     final controller = Provider.of<LessonsController>(context);
     final theme = Theme.of(context).textTheme;
-    return Scaffold(
+
+if(sharedPreferences.isLogin) {
+  return Scaffold(
       backgroundColor: Colors.grey.shade200,
+      appBar: const AppbarWidget(
+        text: 'دروس',
+        showIc: true,
+        shoeIcPop: false,
+        elevation: 0,
+      ),
       body: Column(
         children: [
           _buildSearchWidget(),
           Expanded(
-            child: ListView.builder(
-              itemExtent: 140,
-                itemCount: controller.data.length,
+            child: FutureBuilder(
+              future: controller.getLessonsRequest(),
+              builder: (context, snapshot) {
+                if(snapshot.connectionState == ConnectionState.waiting)
+                {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if(!snapshot.hasData)
+                  {
+                    return const EmptyViewWidget();
+                  }
+                return ListView.builder(
+                itemExtent: 140,
+                itemCount: controller.listOfLessons.length,
                 padding: const EdgeInsets.only(right: 20,
-                left: 20,
-                bottom: 20),
+                    left: 20,
+                    bottom: 20),
                 itemBuilder: (context, index) {
-                final data = controller.data[index];
+                  final data = controller.listOfLessons[index];
 
                   return _buildItemLessons(
-                    index: index+1,
-                    data: data,
-                    theme: theme,
-                    context: context
-                      );
-                },),
+                      index: index+1,
+                      data: data,
+                      theme: theme,
+                      context: context
+                  );
+                },);
+              },
+            ),
           )
         ],
       ),
@@ -53,16 +81,16 @@ class LessonsView extends StatelessWidget {
       //   },
       // ),
     );
+} else{
+  Navigator.pushReplacementNamed(context, LoginView.id);
+  return const Text('لطفا کمی صبر کنید.');
+
+}
   }
   Widget _buildSearchWidget()
   {
     return  const Padding(
-      padding:EdgeInsets.only(
-          top: 50,
-          right: 15,
-          left: 15,
-          bottom: 20
-      ),
+      padding:EdgeInsets.all(15),
       child: SizedBox(
         height: 40,
         child: TextFormFieldWidget(
@@ -85,60 +113,76 @@ class LessonsView extends StatelessWidget {
   required BuildContext context})
   {
 
-    return InkWell(
-      onTap: ()=>Navigator.pushNamed(context, ItemLessonsView.id ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, ItemLessonsView.id);
+      },
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadiusButton)
         ),
-        color: data.bgColor,
+        color: Utility.randomColor(),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(data.name,
-                  style: theme.headline6!.copyWith(
-                    color: Colors.white
-                  )),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Text('تاریخ امتحان : ${data.date}',
-                  style: theme.caption!.copyWith(
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(data.title,
+                    style: theme.bodySmall!.copyWith(
                       color: Colors.white
-                  ),)
-                ],
+                    )),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Visibility(
+                      visible: sharedPreferences.getType() == 't',
+                      child: Text('تاریخ امتحان : ${Utility.convertToPersian(data.examDate)}',
+                      style: theme.caption!.copyWith(
+                          color: Colors.white
+                      ),),
+                      replacement: Text(data.description,
+                        style: theme.caption!.copyWith(
+                            color: Colors.white
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
-              Image.asset('${data.url}$index.png'
+              Image.asset(Utility.randomImage()
               ,height: 100,
               width: 100,),
 
-            ],
+              ],
+            ),
           ),
         ),
-      ),
     );
   }
 
   Widget _buildFloatAc(BuildContext context)
   {
-    return FloatingActionButton.extended(
-        onPressed: (){
-          Navigator.of(context).pushNamed(CreateNewLessonsView.id);
-        },
-        elevation: 1,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadiusButton)
-        ),
-        icon: const Icon(
-          Icons.add,
-          size: 18,
-        ),
-        label: const Text('درس جدید'));
+    if(sharedPreferences.getType() == 't')
+      {
+        return FloatingActionButton.extended(
+            onPressed: (){
+              Navigator.of(context).pushNamed(CreateNewLessonsView.id);
+            },
+            elevation: 1,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(borderRadiusButton)
+            ),
+            icon: const Icon(
+              Icons.add,
+              size: 18,
+            ),
+            label: const Text('درس جدید'));
+      }
+   return const SizedBox();
   }
 
 

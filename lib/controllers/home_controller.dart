@@ -1,46 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:project/models/item_category_model.dart';
 
+import 'package:project/helpers/sharedPreferences.dart';
+
 class HomeController extends ChangeNotifier {
   // List<Widget> listItems = [];
   var status = StatusCategory.Init;
   final formSearchKey = GlobalKey<FormState>();
   List<ItemCategoryModel> listModel = [];
 
-  void setAllCategory() {
-    listModel = [
-      for (int i = 1; i < 3; i++) ...[
-        ItemCategoryModel(
-            title: 'درس ریاضی مهندسی',
-            date: 'assets/images/image_2.PNG',
-            bgColor: Colors.orange),
-      ],
-      for (int i = 1; i < 3; i++) ...[
-        ItemCategoryModel(
-            title: 'تکلیف کامپایلر',
-            date: 'assets/images/image_3.PNG',
-            bgColor: Colors.green),
-      ],
-    for (int i = 1; i < 3; i++) ...[
-      ItemCategoryModel(
-          title: 'مبحث سری فوریه',
-          date: 'assets/images/image_4.PNG',
-          bgColor: Colors.deepPurpleAccent),
-    ]
-    ];
+ setAllCategory() async{
 
+    List<String>? lesson=await  sharedPreferences.getLessons();
+    List<String>? exercise=await sharedPreferences.getExercises();
+    List<String>? subject=await sharedPreferences.getSubjects();
+    if(lesson != null){
+      for (var i in lesson){
+        listModel.add(ItemCategoryModel(title: i, category: 'Lesson'));
+      }
+    }
+   if(exercise != null){
+     for (var i in exercise){
+       listModel.add(ItemCategoryModel(title: i, category: 'Exercise'));
+     }
+   }
+    if(subject!= null){
+      for (var i in subject){
+        listModel.add(ItemCategoryModel(title: i, category: 'Subject'));
+      }
+    }
 
+    if(listModel.isNotEmpty){
+      listModel.shuffle();
+    }
     status = StatusCategory.All;
     notifyListeners();
   }
 
-  void setLessons() {
+ setLessons()async {
+   List<String>? myList=await sharedPreferences.getLessons();
     listModel = [
-      for (int i = 1; i < 6; i++) ...[
+      for (String i in myList!) ...[
         ItemCategoryModel(
-            title: 'درس ریاضی مهندسی',
-            date: 'assets/images/image_2.PNG',
-            bgColor: Colors.orange),
+            title: i,
+            category: 'Lesson'),
       ]
     ];
     status = StatusCategory.Lessons;
@@ -48,13 +51,13 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setHomeWork() {
+ setHomeWork()async {
+    List<String> myList=await sharedPreferences.getExercises();
     listModel = [
-      for (int i = 1; i < 6; i++) ...[
+      for (String i in myList) ...[
         ItemCategoryModel(
-            title: 'تکلیف کامپایلر',
-            date: 'assets/images/image_3.PNG',
-            bgColor: Colors.green),
+            title: i,
+            category: 'Exercise'),
       ]
     ];
     status = StatusCategory.HomeWork;
@@ -62,34 +65,34 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setLastTopics() {
+ setLastTopics()async {
+    List<String> myList=await sharedPreferences.getSubjects();
     listModel = [
-      for (int i = 1; i < 6; i++) ...[
+      for (String i in myList) ...[
         ItemCategoryModel(
-            title: 'مبحث سری فوریه',
-            date: 'assets/images/image_4.PNG',
-            bgColor: Colors.deepPurpleAccent),
+            title: i,
+            category: 'Subject'),
       ]
     ];
     status = StatusCategory.LastTopics;
     notifyListeners();
   }
 
-  void setItemCategory(StatusCategory status) {
+ setItemCategory(StatusCategory status) async{
     if (status == StatusCategory.All) {
-      setAllCategory();
+      await setAllCategory();
       return;
     }
     if (status == StatusCategory.Lessons) {
-      setLessons();
+      await setLessons();
       return;
     }
     if (status == StatusCategory.HomeWork) {
-      setHomeWork();
+      await setHomeWork();
       return;
     }
     if (status == StatusCategory.LastTopics) {
-      setLastTopics();
+      await setLastTopics();
       return;
     } else {
       listModel = [];
@@ -97,4 +100,5 @@ class HomeController extends ChangeNotifier {
   }
 }
 
-enum StatusCategory { Init,All, Lessons, HomeWork, LastTopics , BookMark }
+enum StatusCategory { Init,All, Lessons, HomeWork, LastTopics , BookMark ,
+Sp}

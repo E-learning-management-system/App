@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:project/controllers/last_topic_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
+import 'package:project/helpers/sharedPreferences.dart';
+import 'package:project/models/book_mark_model.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/views/tab_lessons/create_new_subject.dart';
 import 'package:project/widgets/app_bar_widget.dart';
@@ -25,20 +27,23 @@ class LastTopicView extends StatelessWidget {
         showIc: true,
       ),
       body: _buildBody(theme: theme, controller: controller),
-      floatingActionButton:  FloatingActionButton.extended(
-        backgroundColor: Colors.green,
-          onPressed: (){
-          Navigator.pushNamed(context, CreateNewSubjectView.id);
-          },
-          elevation: 1,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(borderRadiusButton)
-          ),
-          icon: const Icon(
-            Icons.add,
-            size: 18,
-          ),
-          label: const Text('پست جدید')),
+      floatingActionButton:  Visibility(
+        visible: sharedPreferences.getType() == 't',
+        child: FloatingActionButton.extended(
+          backgroundColor: Colors.green,
+            onPressed: (){
+            Navigator.pushNamed(context, CreateNewSubjectView.id);
+            },
+            elevation: 1,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(borderRadiusButton)
+            ),
+            icon: const Icon(
+              Icons.add,
+              size: 18,
+            ),
+            label: const Text('پست جدید')),
+      ),
     );
   }
 
@@ -85,7 +90,7 @@ class LastTopicView extends StatelessWidget {
   }
   Widget _buildItemList(
   {required TextTheme theme,
-      required ItemCategoryModel data,
+      required BookMarkModel data,
       required LastTopicController value,
     required int index
   })
@@ -113,20 +118,21 @@ class LastTopicView extends StatelessWidget {
   }
   Widget _buildNotExpanded(
   { required TextTheme theme,
-    required ItemCategoryModel data,
+    required BookMarkModel data,
     required LastTopicController controller,
    required int index})
   {
     return Positioned(
       bottom: 0,
       left: 0,
+      height: 190,
       right: 0,
       child: GestureDetector(
         onTap: (){
           controller.changeExpanded(index);
         },
         child: Card(
-          color: data.bgColor,
+          color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.only(
               top: 12,
@@ -145,7 +151,9 @@ class LastTopicView extends StatelessWidget {
                 ),
                 Container(
                     margin: const EdgeInsets.only(right: 15),
-                    child: Text(data.nameLesson!)),
+                    child: Text(data.desc,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,)),
                 const SizedBox(
                   height: 15,
                 ),
@@ -164,7 +172,7 @@ class LastTopicView extends StatelessWidget {
                             right: 4,
                             left: 8
                         ),
-                        child: Text(data.name!)),
+                        child: Text(data.name)),
                     Container(
                       width: 1,
                       height: 20,
@@ -188,7 +196,7 @@ class LastTopicView extends StatelessWidget {
                             right: 4,
                             left: 8
                         ),
-                        child: Text(data.countComment.toString()+'  کامنت')),
+                        child: Text(data.countCm.toString()+'  کامنت')),
                     Container(
                       width: 1,
                       height: 20,
@@ -198,10 +206,8 @@ class LastTopicView extends StatelessWidget {
                         color: Colors.grey.shade400,
                       ),
                     ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Text(data.date!,
+                    SizedBox(width: 8,),
+                    Text(data.date,
                       style: theme.bodySmall,)
 
                   ],
@@ -301,7 +307,7 @@ class LastTopicView extends StatelessWidget {
 
   Widget _buildIsExpanded(
       { required TextTheme theme,
-        required ItemCategoryModel data,
+        required BookMarkModel data,
         required LastTopicController controller,
         required int index}){
     return Positioned(
@@ -314,11 +320,11 @@ class LastTopicView extends StatelessWidget {
           controller.changeExpanded(index);
         },
         child: Card(
-          color: data.bgColor,
+          color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.only(
-              top: 12,
-              bottom: 12,
+              top: 20,
+              bottom: 5,
               right: 15,
               left: 15
             ),
@@ -337,7 +343,9 @@ class LastTopicView extends StatelessWidget {
                   ],
                 ),
                sizedBox(height: 8),
-                Text(data.nameLesson!),
+                Text(data.desc,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,),
                  sizedBox(height: 15,),
                 _dividerWith(),
                  sizedBox(height: 15,),
@@ -346,8 +354,8 @@ class LastTopicView extends StatelessWidget {
                 ),),
                 Center(
                   child: Container(
-                      margin: EdgeInsets.only(top: 12,bottom: 20),
-                      child: Text('هنوز پاسخی داده نشده ')),
+                      margin: const EdgeInsets.only(top: 12,bottom: 20),
+                      child: const Text('هنوز پاسخی داده نشده ')),
                 ),
                 _dividerWith(),
                 sizedBox(height: 12),
@@ -410,7 +418,7 @@ class LastTopicView extends StatelessWidget {
       ),
     );
   }
-  _itemComment(TextTheme theme,ItemCategoryModel data)
+  _itemComment(TextTheme theme,BookMarkModel data)
   {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -437,7 +445,7 @@ class LastTopicView extends StatelessWidget {
                     height: 24,
                     width: 24,),
                   sizedBox(width: 8),
-                  Text(data.name!,
+                  Text(data.name,
                     style: theme.subtitle2!.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 13,
@@ -449,7 +457,7 @@ class LastTopicView extends StatelessWidget {
                 ],
               ),
               sizedBox(height: 8),
-              Text(data.date!,style: theme.overline!.copyWith(
+              Text(data.date,style: theme.overline!.copyWith(
                 color: Colors.grey
 
               ),)

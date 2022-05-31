@@ -1,20 +1,25 @@
-
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:project/controllers/home_controller.dart';
-import 'package:project/models/item_category_model.dart';
+
+import 'package:project/models/lessons_item_model.dart';
+import 'package:project/widgets/app_bar_widget.dart';
+import 'package:project/widgets/elevation_button.dart';
+import 'package:project/widgets/text_field_widget.dart';
 
 class ItemLessonsController extends ChangeNotifier{
 
   var status = StatusCategory.LastTopics;
-  List<ItemCategoryModel> listModel = [
+  List<LessonsItemModel> listModel = [
     for (int i = 0; i < 3; i++) ...[
-      ItemCategoryModel(
-          title: 'مبحث اول',
-          date: '1400/11/25',
-          nameLesson: 'انتگرال یگانه',
-          bgColor: Colors.primaries[Random().nextInt(Colors.primaries.length)]),
+      LessonsItemModel(
+        description: 'انتگرال یگانه',
+        title: 'مبحث اول',
+        endDate: '1400/11/25',
+        examDate: '',
+        id: i,
+        startDate: '',
+        teacher: ''
+      ),
     ]
   ];
 
@@ -24,11 +29,15 @@ class ItemLessonsController extends ChangeNotifier{
   void setHomeWork() {
     listModel = [
       for (int i = 0; i < 3; i++) ...[
-        ItemCategoryModel(
+        LessonsItemModel(
+            description: 'این یک موضوع است',
             title: 'تکلیف اول',
-            date: '1400/11/25',
-            nameLesson: 'این یک موضوع است',
-            bgColor: Colors.primaries[Random().nextInt(Colors.primaries.length)]),
+            endDate: '1400/11/25',
+            examDate: '',
+            id: i,
+            startDate: '',
+            teacher: ''
+        ),
       ]
     ];
     status = StatusCategory.HomeWork;
@@ -37,11 +46,15 @@ class ItemLessonsController extends ChangeNotifier{
   void setLastTopics() {
     listModel = [
       for (int i = 0; i < 3; i++) ...[
-        ItemCategoryModel(
+        LessonsItemModel(
+            description: 'انتگرال یگانه',
             title: 'مبحث اول',
-            date: '1400/11/25',
-            nameLesson: 'انتگرال یگانه',
-            bgColor: Colors.primaries[Random().nextInt(Colors.primaries.length)]),
+            endDate: '1400/11/25',
+            examDate: '',
+            id: i,
+            startDate: '',
+            teacher: ''
+        ),
       ]
     ];
     status = StatusCategory.LastTopics;
@@ -51,17 +64,38 @@ class ItemLessonsController extends ChangeNotifier{
   {
     listModel = [
       for (int i = 0; i < 3; i++) ...[
-        ItemCategoryModel(
+        LessonsItemModel(
             title: 'زمان امتحان کی هست ؟ ',
-            date: '1400/11/25',
+            endDate: '1400/11/25',
             name: 'دانیال صابر',
-            countComment: 15,
-            nameLesson: 'این تنهای یک پیغام تست است یک پیام تستتستتستتستتستتستتست تست',
-            bgColor: Colors.white),
+            countCm: 15,
+            description: 'این تنهای یک پیغام تست است یک پیام تستتستتستتستتستتستتست تست',
+            id: i,
+            startDate: '',
+            teacher: '',
+            examDate: ''
+            ),
       ]
     ];
     status = StatusCategory.BookMark;
     notifyListeners();
+  }
+
+  void setUsers()
+  {
+    listModel = [
+      for (int i = 0; i < 3; i++) ...[
+        LessonsItemModel(
+            description: 'انتگرال یگانه',
+            title: 'دانیال صابر',
+            endDate: '1400/11/25',
+            examDate: '',
+            id: 4,
+            startDate: '',
+            teacher: ''
+        ),
+      ]
+    ];
   }
 
   void setItemCategory(StatusCategory status) {
@@ -78,8 +112,36 @@ class ItemLessonsController extends ChangeNotifier{
       setLastTopics();
       return;
     } else {
+      this.status = status;
+      setUsers();
+      notifyListeners();
     }
   }
+
+
+  void openDialog(BuildContext context)
+  {
+    showDialog(context: context,
+        builder: (cnt)
+        => AlertDialog(
+          scrollable: false,
+          title: Text('نام مبحث'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormFieldWidget(hintText: 'نام موضوع را وارد کنید'),
+              sizedBox(height: 15),
+              ElevationButtonWidget(
+                  call: (){},
+                text: 'ایجاد',
+              )
+            ],
+          ),
+        )
+
+        );
+  }
+
 
 
 }

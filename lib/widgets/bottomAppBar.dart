@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class B_AppBar extends StatelessWidget {
   const B_AppBar({
     Key? key,
@@ -19,64 +20,35 @@ class B_AppBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            fromLessons
-                ? InkWell(
-                    onTap: (){
-                     onTapHome!.call();
-                    },
-                    child: const Icon(
-                      Icons.home,
-                      color: Colors.lightBlue,
-                    ),
-                  )
-                : ElevatedButton(
-                    onPressed: () => {},
-                    style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      primary: Colors.lightBlue,
-                    ),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.home),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10.0),
-                          child: Text(
-                            'خانه',
-                            style: TextStyle(
-                                fontFamily: 'Vazir', color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    )),
-            fromLessons
-                ? ElevatedButton(
-                    onPressed: () => {},
-                    style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      primary: Colors.lightBlue,
-                    ),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.menu_book_outlined),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10.0),
-                          child: Text(
-                            'دروس',
-                            style: TextStyle(
-                                fontFamily: 'Vazir', color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ))
-                : InkWell(
-                    onTap: onTapLessons,
-                    child: const Icon(
-                      Icons.menu_book_outlined,
-                      color: Colors.lightBlue,
-                    ),
+            ElevatedButton(
+                onPressed: ()=>{},
+                style: ElevatedButton.styleFrom(
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30))
                   ),
+                  primary: Colors.lightBlue,
+                ),
+                child: Row(
+                  children: const [
+                    Icon(Icons.home),
+                    Padding(
+                      padding: EdgeInsets.only(right: 10.0),
+                      child: Text(
+                        'خانه',
+                        style:
+                        TextStyle(fontFamily: 'Vazir', color: Colors.white),
+                      ),
+                    ),
+
+                  ],
+                )),
+            InkWell(
+              onTap: () => {},
+              child: const Icon(
+                Icons.menu_book_outlined,
+                color: Colors.lightBlue,
+              ),
+            ),
             InkWell(
               onTap: () => {},
               child: const Icon(

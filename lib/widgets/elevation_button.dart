@@ -34,15 +34,13 @@ class ElevationButtonWidget extends StatelessWidget {
      })
       : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
       height: height,
       child: ElevatedButton(
-        onPressed:  call,
+        onPressed: call,
         style: ElevatedButton.styleFrom(
           minimumSize: Size(width, height),
           shape: RoundedRectangleBorder(
@@ -62,11 +60,7 @@ class ElevationButtonWidget extends StatelessWidget {
                margin: EdgeInsets.only(left: 8),
                 child: Padding(
                   padding: const EdgeInsets.all(5.0),
-                  child: Icon(
-                    icon,
-                    size: 15,
-                    color: iconColor
-                  ),
+                  child: Icon(icon, size: 15, color: iconColor),
                 ),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,

@@ -4,7 +4,9 @@ import 'package:project/controllers/home_controller.dart';
 import 'package:project/controllers/item_lessons_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
+import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/models/item_category_model.dart';
+import 'package:project/models/lessons_item_model.dart';
 import 'package:project/views/tab_lessons/last_topic_view.dart';
 import 'package:project/views/tab_lessons/record_home_work_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
@@ -22,12 +24,14 @@ class ItemLessonsView extends StatelessWidget {
     final theme = Theme.of(context).textTheme;
     return _buildBody(
       controller: controller,
-      theme: theme
+      theme: theme,
+      context: context
     );
   }
   Widget _buildBody(
       {required TextTheme theme,
-        required ItemLessonsController controller}) {
+        required ItemLessonsController controller,
+      required BuildContext context}) {
     return Scaffold(
       appBar: const AppbarWidget(
           text: 'ریاضی 2',
@@ -41,9 +45,31 @@ class ItemLessonsView extends StatelessWidget {
           _buildListItems(theme)
         ],
       ),
-      // bottomNavigationBar: B_AppBar(
-      //   fromLessons: true,
-      // ),
+      floatingActionButton:   Visibility(
+        visible: sharedPreferences.getType() == 't' &&
+        controller.status == StatusCategory.LastTopics ||
+        controller.status == StatusCategory.HomeWork,
+        child: FloatingActionButton.extended(
+            backgroundColor: MyColors.blueHex,
+            onPressed: (){
+              if(controller.status == StatusCategory.HomeWork)
+                {
+                Navigator.pushNamed(context,RecordHomeWorkView.id);
+                  return;
+                }
+              controller.openDialog(context);
+            },
+            elevation: 1,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(borderRadiusButton)
+            ),
+            icon: const Icon(
+              Icons.add,
+              size: 18,
+            ),
+            label: controller.status == StatusCategory.HomeWork?
+            const Text('تکلیف جدید'):const Text('مبحث جدید')),
+      ),
     );
 
   }
@@ -114,7 +140,6 @@ class ItemLessonsView extends StatelessWidget {
                     ),
                     ElevationButtonWidget(
                       width: 150,
-
                       icon: Icons.assignment_rounded,
                       text: 'تکالیف',
                       call: () {
@@ -145,15 +170,16 @@ class ItemLessonsView extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ElevationButtonWidget(
-                      width: 200,
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(right: 8),
+                    child: ElevationButtonWidget(
+                      width: 175,
                       icon: Icons.bookmark,
                       text: 'پست های ذخیره شده',
+                      fontSize: 13,
                       call: () {
                         controller.setItemCategory(StatusCategory.BookMark);
                       },
@@ -178,11 +204,46 @@ class ItemLessonsView extends StatelessWidget {
                           ? Colors.orange
                           : Colors.white,
                     ),
+                  ),
+                  sizedBox(width: 8),
+
+
+                  Visibility(
+                    visible: sharedPreferences.getType() == 't',
+                    child: ElevationButtonWidget(
+                      width: 140,
+                      icon: Icons.person,
+                      text: 'دانشجویان حاضر',
+                      fontSize: 10,
+                      call: () {
+                        controller.setItemCategory(StatusCategory.Sp);
+                      },
+                      iconColor:
+                      controller.status ==
+                          StatusCategory.Sp
+                          ? Colors.pink
+                          : Colors.white,
+                      primaryColor:
+                      controller.status == StatusCategory
+                          .Sp
+                          ? Colors.pink
+                          : Colors.white,
+
+                      textColor: controller.status ==
+                          StatusCategory.Sp
+                          ? Colors.white
+                          : Colors.black,
+
+                      bgColorIcon: controller.status !=
+                          StatusCategory.Sp
+                          ? Colors.pink
+                          : Colors.white,
+                    ),
+                  ),
 
 
 
-                  ],
-                ),
+                ],
               ),
 
             ],
@@ -205,15 +266,17 @@ class ItemLessonsView extends StatelessWidget {
                 {
                   return _buildBookMark(theme,data);
                 }
+              if(value.status == StatusCategory.Sp)
+                {
+                  return _buildUsers(theme,data);
+                }
               return GestureDetector(
                 onTap: (){
                   if(value.status == StatusCategory.LastTopics)
                     {
                       Navigator.pushNamed(context, LastTopicView.id);
                     }
-                  else if(value.status == StatusCategory.HomeWork){
-                    Navigator.pushNamed(context,RecordHomeWorkView.id);
-                  }
+
                 },
                 child: SizedBox(
                   height: 120,
@@ -241,7 +304,7 @@ class ItemLessonsView extends StatelessWidget {
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold
                               )),
-                              Text(data.date!,
+                              Text(data.endDate,
                                   style: theme.subtitle2!.
                                   copyWith(
                                       color: Colors.white,
@@ -252,7 +315,7 @@ class ItemLessonsView extends StatelessWidget {
                           SizedBox(
                             height: 12,
                           ),
-                          Text(data.nameLesson!,
+                          Text(data.description,
                           style: theme.headline6!.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.normal
@@ -268,10 +331,10 @@ class ItemLessonsView extends StatelessWidget {
     );
   }
 
-  Widget _buildBookMark(TextTheme theme, ItemCategoryModel data)
+  Widget _buildBookMark(TextTheme theme, LessonsItemModel data)
   {
     return Card(
-      color: data.bgColor,
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.only(
           top: 12,
@@ -301,7 +364,7 @@ class ItemLessonsView extends StatelessWidget {
             ),
             Container(
                 margin: const EdgeInsets.only(right: 15),
-                child: Text(data.nameLesson!)),
+                child: Text(data.description)),
             const SizedBox(
               height: 15,
             ),
@@ -355,7 +418,7 @@ class ItemLessonsView extends StatelessWidget {
                         right: 4,
                         left: 8
                     ),
-                    child: Text(data.countComment.toString()+'  کامنت')),
+                    child: Text(data.countCm.toString()+'  کامنت')),
                 Container(
                   width: 1,
                   height: 20,
@@ -368,7 +431,7 @@ class ItemLessonsView extends StatelessWidget {
                 SizedBox(
                   width: 8,
                 ),
-                Text(data.date!,
+                Text(data.endDate,
                 style: theme.bodySmall,)
 
               ],
@@ -379,4 +442,36 @@ class ItemLessonsView extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildUsers(TextTheme theme, LessonsItemModel data)
+  {
+    return Card(
+      color: data.bgColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 8,
+          bottom: 8,
+        ),
+        child: Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(right: 12),
+                child: Image.asset('$baseUrlImage/ic_profile.png',
+                height: 50,
+                width: 50,)),
+            Container(
+              margin: EdgeInsets.only(right: 15),
+              child: Text(data.title,
+                  style: theme.bodyLarge!.copyWith(
+                    color: Colors.white
+                  )),
+            ),
+
+          ],
+        ),
+      ),
+    );
+  }
+
 }

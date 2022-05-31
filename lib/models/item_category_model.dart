@@ -1,20 +1,30 @@
+
+
+
 import 'package:flutter/material.dart';
+import 'package:project/helpers/colors.dart';
 
 class ItemCategoryModel {
   final String title;
-  final String? date;
-  final String? nameLesson;
-  final Color bgColor;
-  final String? name;
-  final int? countComment;
-   bool? isExpanded;
+  String urlImage='assets/images/image_2.PNG';
+  Color bgColor=MyColors.orange;
+  final String category;
+  bool? isExpanded;
 
   ItemCategoryModel(
-      {this.isExpanded = false,
-      required this.title,
-      this.date,
-      required this.bgColor,
-      this.nameLesson,
-      this.name,
-      this.countComment});
+  {required this.title, required this.category,
+    this.isExpanded = false,}){
+    if(category=='Lesson'){
+      bgColor=MyColors.orange;
+      urlImage='assets/images/image_2.PNG';
+    }
+    if(category=='Exercise'){
+      bgColor=MyColors.blueHex;
+      urlImage='assets/images/image_3.PNG';
+    }
+    if(category=='Subject'){
+      bgColor=MyColors.purpleHex;
+      urlImage='assets/images/image_4.PNG';
+    }
+  }
 }

@@ -23,6 +23,7 @@ class FinalLessonsController extends ChangeNotifier
       {
         listItems.add(textEditController2.text);
         notifyListeners();
+        FocusManager.instance.primaryFocus?.unfocus();
         textEditController2.clear();
       }
     return;
