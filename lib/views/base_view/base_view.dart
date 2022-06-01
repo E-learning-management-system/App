@@ -2,6 +2,8 @@
 
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:project/helpers/sharedPreferences.dart';
+import 'package:project/views/home_professor_view.dart';
 import 'package:project/views/home_view.dart';
 import 'package:project/views/tab_calendar/calendar_view.dart';
 import 'package:project/views/tab_lessons/lessons_view.dart';
@@ -17,9 +19,15 @@ class BaseView extends StatefulWidget {
 class _BaseViewState extends State<BaseView> {
   int selectIndex = 1;
   final myViews = [
-   const HomeView(),
+
+    if(sharedPreferences.getType() == 't')
+      ...[
+        const HomeProfessorView()
+       ] else ...[
+      const HomeView()
+    ],
     const LessonsView(),
-    CalendarView()
+    const CalendarView()
   ];
   final styleText = const TextStyle(
     fontSize: 16,

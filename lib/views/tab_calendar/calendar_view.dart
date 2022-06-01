@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jalali_table_calendar/jalali_table_calendar.dart';
 import 'package:project/controllers/calendar_controller.dart';
+import 'package:project/helpers/utility.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -43,7 +44,7 @@ class CalendarView extends StatelessWidget {
             return SizedBox();
           },
           onDaySelected: (date) {
-            print(controller.convertToPersian(date.toString()));
+            print(Utility.convertToPersian(date.toString()));
           }),
     );
   }
@@ -59,20 +60,27 @@ class CalendarView extends StatelessWidget {
       itemBuilder: (context, index) {
         final data= controller.listModel[index];
         return Card(
-           color: data.bgColor,
-
+           color: Utility.randomColor(),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15)
+          ),
           margin: const EdgeInsets.only(top: 20),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(12.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(data.title,style: theme.headline6,),
-                sizedBox(
-                  height: 20
-                ),
-                Text('مهلت : ')
+
+                Row(
+                  children: [
+                    Text('مهلت : ',style: theme.bodyLarge,),
+                    sizedBox(width: 8),
+                    Text(data.date,style: theme.bodyLarge,),
+
+                  ],
+                )
               ],
             ),
           ),

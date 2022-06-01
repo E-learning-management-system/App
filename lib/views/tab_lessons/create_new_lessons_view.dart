@@ -70,11 +70,11 @@ class CreateNewLessonsView extends StatelessWidget {
           Center(
             child: ElevationButtonWidget(
               width: 140,
-              call: () async {
+              call: (){
                 if(controller.form.currentState!.validate())
                   {
                    var res= await controller.createNewLessonsRequest();
-                   if(res){ Navigator.of(context).pushNamed('/lessons_view');}
+                   if(res){ Navigator.of(context).pushNamed(FinalLessonsView.id);}
                    else{
                      showDialog<String>(
                        context: context,

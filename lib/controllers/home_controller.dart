@@ -100,4 +100,5 @@ class HomeController extends ChangeNotifier {
   }
 }
 
-enum StatusCategory { Init,All, Lessons, HomeWork, LastTopics , BookMark }
+enum StatusCategory { Init,All, Lessons, HomeWork, LastTopics , BookMark ,
+Sp}

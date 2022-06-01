@@ -23,6 +23,7 @@ class LoginController extends ChangeNotifier
         "password":password,
       }),
     );
+    print(response.body);
     isLoading=false;
     Map<String, dynamic> res = jsonDecode(response.body);
     _token=res.containsKey("token")?res["token"]:"";
@@ -35,6 +36,7 @@ class LoginController extends ChangeNotifier
       return true;
     }
     else {
+      isLoading=false;
       return false;
     }
   }

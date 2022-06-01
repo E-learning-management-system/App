@@ -2,6 +2,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:project/helpers/utility.dart';
 import 'package:project/models/lessons_item_model.dart';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
@@ -30,11 +31,10 @@ class LessonsController extends ChangeNotifier
       final List< dynamic> list = data["results"];
       for(var v in list) {
         // print(v.runtimeType);
-      
+
           _listOfLessons.add(LessonsItemModel.fromJson(Map<String,dynamic>.from(v)));
 
             }
-      print(_listOfLessons);
       sharedPreferences.setLessons(_listOfLessons);
     }
     notifyListeners();

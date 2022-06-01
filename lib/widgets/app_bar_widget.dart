@@ -7,11 +7,13 @@ class AppbarWidget extends StatelessWidget implements PreferredSize{
   final double elevation;
   final bool centerTitle;
   final bool showIc;
+  final bool shoeIcPop;
   const AppbarWidget({Key? key,
     required this.text,
     this.elevation = 1,
     this.centerTitle=true,
-    this.showIc=false
+    this.showIc=false,
+    this.shoeIcPop = true
   }) : super(key: key);
 
   @override
@@ -19,13 +21,18 @@ class AppbarWidget extends StatelessWidget implements PreferredSize{
     return AppBar(
       centerTitle: centerTitle,
       elevation: elevation,
-      leading: IconButton(
-        splashRadius: 20,
-        onPressed: (){
-          Navigator.pop(context);
-        },
-         icon: Icon(Icons.arrow_back_rounded),
-          ),
+      leading: Visibility(
+        visible: shoeIcPop,
+        replacement: SizedBox(),
+        child: IconButton(
+          splashRadius: 20,
+          onPressed: (){
+            Navigator.pop(context);
+          },
+           icon: Icon(Icons.arrow_back_rounded),
+            ),
+      ),
+      leadingWidth: shoeIcPop?45 : 0,
       title: Row(
         children: [
           Visibility(

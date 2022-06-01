@@ -34,6 +34,8 @@ import 'package:project/views/verify_email_view.dart';
 import 'package:provider/provider.dart';
 import 'views/login_view.dart';
 import 'views/signup_view.dart';
+import 'views/tab_lessons/item_lessons_view.dart';
+import 'views/tab_lessons/last_topic_view.dart';
 
 
 
@@ -78,9 +80,34 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<CreateNewLessonsController>(
           child: const CreateNewLessonsView(),
             create: (context) => CreateNewLessonsController(),),
+
         ChangeNotifierProvider<HomeController>(
           child: HomeView(),
           create: (context) => HomeController(),),
+
+        ChangeNotifierProvider<CalendarController>(
+          child: const CalendarView(),
+          create: (context) => CalendarController(),),
+
+        ChangeNotifierProvider<ItemLessonsController>(
+          child: const ItemLessonsView(),
+          create: (context) => ItemLessonsController(),),
+
+        ChangeNotifierProvider<LastTopicController>(
+          child: const LastTopicView(),
+          create: (context) => LastTopicController(),),
+
+        ChangeNotifierProvider<CreateNewSubjectController>(
+          child: const CreateNewSubjectView(),
+          create: (context) => CreateNewSubjectController(),),
+
+        ChangeNotifierProvider<RecordHomeWorkController>(
+          child: const RecordHomeWorkView(),
+          create: (context) => RecordHomeWorkController(),),
+
+        ChangeNotifierProvider<FinalLessonsController>(
+          child: const FinalLessonsView(),
+          create: (context) => FinalLessonsController(),),
 
       ],
       child: MaterialApp(
@@ -107,9 +134,8 @@ class MyApp extends StatelessWidget {
           LessonsView.id : (context) => const LessonsView(),
           CreateNewLessonsView.id:(context) => const CreateNewLessonsView(),
           FinalLessonsView.id:(context) => const FinalLessonsView(),
-          // ItemLessonsView.id:(context) => const ItemLessonsView(),
-          // ProfileView.id:(context) => const ProfileView(),
-          // LastTopicView.id:(context) => const LastTopicView(),
+           ItemLessonsView.id:(context) => const ItemLessonsView(),
+           LastTopicView.id:(context) => const LastTopicView(),
           CreateNewSubjectView.id:(context) => const CreateNewSubjectView(),
           RecordHomeWorkView.id:(context) => const RecordHomeWorkView(),
           CalendarView.id:(context) =>  CalendarView(),

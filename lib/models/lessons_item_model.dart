@@ -14,6 +14,8 @@ class LessonsItemModel {
   String  endDate="";
   String  examDate="";
   Color? bgColor;
+  int? countCm;
+  String? name;
   LessonsItemModel({
     required this.id,
     required this.title,
@@ -22,6 +24,8 @@ class LessonsItemModel {
     required this.startDate,
     required this.endDate,
     required this.examDate,
+     this.countCm,
+     this.name
   }){
     int num= id %(listOfColors.length);
     bgColor=listOfColors[num];
