@@ -19,6 +19,7 @@ dependencies:
   encrypted_shared_preferences: ^3.0.0
   shared_preferences: ^2.0.15
 
+  
   file_picker: ^4.5.1
   flutter_summernote: ^1.0.0
   bottom_navy_bar: ^6.0.0

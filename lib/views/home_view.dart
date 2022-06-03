@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:project/controllers/home_controller.dart';
 import 'package:project/controllers/lessons_controller.dart';
@@ -17,265 +15,263 @@ class HomeView extends StatelessWidget {
 
   static const id = '/Home';
 
-
   @override
-  Widget build(BuildContext context)  {
+  Widget build(BuildContext context) {
     final Lessons = Provider.of<LessonsController>(context);
     final Exercise = Provider.of<ExercisesController>(context);
     final Subjects = Provider.of<SubjectsController>(context);
     final controller = Provider.of<HomeController>(context);
     double screenWidth = MediaQuery.of(context).size.width;
 
-    Future <List<ItemCategoryModel>> getMyList()async{
+    Future<List<ItemCategoryModel>> getMyList() async {
       return controller.listModel;
     }
 
-    Future <List<ItemCategoryModel>> myList= getMyList();
+    Future<List<ItemCategoryModel>> myList = getMyList();
 
-if(sharedPreferences.isLogin) {
-  return Scaffold(
-      appBar: TopAppBar('دانیال صابر', 1, 'ww'),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Form(
-                    key: controller.formSearchKey,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: (screenWidth - 50) * 0.8,
-                          height: 50,
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.search,
-                                textDirection: TextDirection.ltr,
+    if (sharedPreferences.isLogin) {
+      return Scaffold(
+        appBar: TopAppBar('دانیال صابر', 1, 'ww'),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Form(
+                      key: controller.formSearchKey,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: (screenWidth - 50) * 0.8,
+                            height: 50,
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  textDirection: TextDirection.ltr,
+                                ),
+                                hintTextDirection: TextDirection.rtl,
+                                border: InputBorder.none,
+                                hintText: "جست و جو",
+                                hintStyle: Theme.of(context)
+                                    .textTheme
+                                    .caption!
+                                    .copyWith(color: Colors.grey),
+                                fillColor: Colors.white,
+                                filled: true,
                               ),
-                              hintTextDirection: TextDirection.rtl,
-                              border: InputBorder.none,
-                              hintText: "جست و جو",
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .caption!
-                                  .copyWith(color: Colors.grey),
-                              fillColor: Colors.white,
-                              filled: true,
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10.0),
-                          child: Container(
-                            // alignment: Alignment.center,
-                            child: SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    primary: Colors.lightBlue),
-                                onPressed: () async {
-                                  // if () {
-                                  //   setState(() {});
-                                  //   Navigator.pushNamed(context, '/search');
-                                  // }
-                                },
-                                child: Icon(
-                                  Icons.tune,
-                                  size: 18,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: Container(
+                              // alignment: Alignment.center,
+                              child: SizedBox(
+                                width: 50,
+                                height: 50,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      primary: Colors.lightBlue),
+                                  onPressed: () async {
+                                    // if () {
+                                    //   setState(() {});
+                                    //   Navigator.pushNamed(context, '/search');
+                                    // }
+                                  },
+                                  child: Icon(
+                                    Icons.tune,
+                                    size: 18,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0, top: 15),
-                    child: Text(
-                      "دسته بندی",
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0, top: 15),
+                      child: Text(
+                        "دسته بندی",
+                      ),
                     ),
-                  ),
-                  Consumer<HomeController>(
-                    builder: (context, controller, child) => Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ElevationButtonWidget(
-                                icon: Icons.local_fire_department,
-                                text: 'همه',
-                                call: ()async {
-                                  await Lessons.getLessonsRequest();
-                                  await Subjects.getSubjectsRequest();
-                                  await Exercise.getExercisesRequest();
-                                 await controller
-                                      .setItemCategory(StatusCategory.All);
-                                },
-                                iconColor:
-                                    controller.status == StatusCategory.All
-                                        ? Colors.lightBlue
-                                        : Colors.white,
-                                primaryColor:
-                                    controller.status == StatusCategory.All
-                                        ? Colors.lightBlue
-                                        : Colors.white,
-                                textColor:
-                                    controller.status == StatusCategory.All
-                                        ? Colors.white
-                                        : Colors.black,
-                                bgColorIcon:
-                                    controller.status != StatusCategory.All
-                                        ? Colors.lightBlue
-                                        : Colors.white,
-                              ),
-                              ElevationButtonWidget(
-                                icon: Icons.bolt,
-                                text: 'دروس',
-                                call: () async{
-                                  await Lessons.getLessonsRequest();
-                                 await controller
-                                      .setItemCategory(StatusCategory.Lessons);
-                                },
-                                iconColor:
-                                    controller.status == StatusCategory.Lessons
-                                        ? Colors.orange
-                                        : Colors.white,
-                                primaryColor:
-                                    controller.status == StatusCategory.Lessons
-                                        ? Colors.orange
-                                        : Colors.white,
-                                textColor:
-                                    controller.status == StatusCategory.Lessons
-                                        ? Colors.white
-                                        : Colors.black,
-                                bgColorIcon:
-                                    controller.status != StatusCategory.Lessons
-                                        ? Colors.orange
-                                        : Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ElevationButtonWidget(
-                                icon: Icons.assignment_rounded,
-                                text: 'تکالیف',
-                                call: () async{
-                                  await Exercise.getExercisesRequest();
-                                 await controller
-                                      .setItemCategory(StatusCategory.HomeWork);
-                                },
-                                iconColor:
-                                    controller.status == StatusCategory.HomeWork
-                                        ? Colors.green
-                                        : Colors.white,
-                                primaryColor:
-                                    controller.status == StatusCategory.HomeWork
-                                        ? Colors.green
-                                        : Colors.white,
-                                textColor:
-                                    controller.status == StatusCategory.HomeWork
-                                        ? Colors.white
-                                        : Colors.black,
-                                bgColorIcon:
-                                    controller.status != StatusCategory.HomeWork
-                                        ? Colors.green
-                                        : Colors.white,
-                              ),
-                              ElevationButtonWidget(
-                                  icon: Icons.assignment_rounded,
-                                  text: 'آخرین مباحث',
-                                  call: () async{
+                    Consumer<HomeController>(
+                      builder: (context, controller, child) => Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevationButtonWidget(
+                                  icon: Icons.local_fire_department,
+                                  text: 'همه',
+                                  call: () async {
+                                    await Lessons.getLessonsRequest();
                                     await Subjects.getSubjectsRequest();
+                                    await Exercise.getExercisesRequest();
+                                    await controller
+                                        .setItemCategory(StatusCategory.All);
+                                  },
+                                  iconColor:
+                                      controller.status == StatusCategory.All
+                                          ? Colors.lightBlue
+                                          : Colors.white,
+                                  primaryColor:
+                                      controller.status == StatusCategory.All
+                                          ? Colors.lightBlue
+                                          : Colors.white,
+                                  textColor:
+                                      controller.status == StatusCategory.All
+                                          ? Colors.white
+                                          : Colors.black,
+                                  bgColorIcon:
+                                      controller.status != StatusCategory.All
+                                          ? Colors.lightBlue
+                                          : Colors.white,
+                                ),
+                                ElevationButtonWidget(
+                                  icon: Icons.bolt,
+                                  text: 'دروس',
+                                  call: () async {
+                                    await Lessons.getLessonsRequest();
                                     await controller.setItemCategory(
-                                        StatusCategory.LastTopics);
+                                        StatusCategory.Lessons);
                                   },
                                   iconColor: controller.status ==
-                                          StatusCategory.LastTopics
-                                      ? Color(0xff4b2b99)
+                                          StatusCategory.Lessons
+                                      ? Colors.orange
                                       : Colors.white,
                                   primaryColor: controller.status ==
-                                          StatusCategory.LastTopics
-                                      ? Color(0xff4b2b99)
+                                          StatusCategory.Lessons
+                                      ? Colors.orange
                                       : Colors.white,
                                   textColor: controller.status ==
-                                          StatusCategory.LastTopics
+                                          StatusCategory.Lessons
                                       ? Colors.white
                                       : Colors.black,
                                   bgColorIcon: controller.status !=
-                                          StatusCategory.LastTopics
-                                      ? Color(0xff4b2b99)
-                                      : Colors.white),
-                            ],
+                                          StatusCategory.Lessons
+                                      ? Colors.orange
+                                      : Colors.white,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevationButtonWidget(
+                                  icon: Icons.assignment_rounded,
+                                  text: 'تکالیف',
+                                  call: () async {
+                                    await Exercise.getExercisesRequest();
+                                    await controller.setItemCategory(
+                                        StatusCategory.HomeWork);
+                                  },
+                                  iconColor: controller.status ==
+                                          StatusCategory.HomeWork
+                                      ? Colors.green
+                                      : Colors.white,
+                                  primaryColor: controller.status ==
+                                          StatusCategory.HomeWork
+                                      ? Colors.green
+                                      : Colors.white,
+                                  textColor: controller.status ==
+                                          StatusCategory.HomeWork
+                                      ? Colors.white
+                                      : Colors.black,
+                                  bgColorIcon: controller.status !=
+                                          StatusCategory.HomeWork
+                                      ? Colors.green
+                                      : Colors.white,
+                                ),
+                                ElevationButtonWidget(
+                                    icon: Icons.assignment_rounded,
+                                    text: 'آخرین مباحث',
+                                    call: () async {
+                                      await Subjects.getSubjectsRequest();
+                                      await controller.setItemCategory(
+                                          StatusCategory.LastTopics);
+                                    },
+                                    iconColor: controller.status ==
+                                            StatusCategory.LastTopics
+                                        ? Color(0xff4b2b99)
+                                        : Colors.white,
+                                    primaryColor: controller.status ==
+                                            StatusCategory.LastTopics
+                                        ? Color(0xff4b2b99)
+                                        : Colors.white,
+                                    textColor: controller.status ==
+                                            StatusCategory.LastTopics
+                                        ? Colors.white
+                                        : Colors.black,
+                                    bgColorIcon: controller.status !=
+                                            StatusCategory.LastTopics
+                                        ? Color(0xff4b2b99)
+                                        : Colors.white),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
 
+              // Consumer<HomeController>(
+              //     builder: (context, value, child) {
+              //     print("AGAIN BUILD ${value.listModel.length}");
+              //     return SingleChildScrollView(
+              //     scrollDirection: Axis.horizontal,
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //       children:
+              //           value.listModel.map((e) => cartGenerator(e)).toList(),
+              //     ),
+              //   );
+              //   },
+              // ),
 
-            // Consumer<HomeController>(
-            //     builder: (context, value, child) {
-            //     print("AGAIN BUILD ${value.listModel.length}");
-            //     return SingleChildScrollView(
-            //     scrollDirection: Axis.horizontal,
-            //     child: Row(
-            //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //       children:
-            //           value.listModel.map((e) => cartGenerator(e)).toList(),
-            //     ),
-            //   );
-            //   },
-            // ),
-
-
-            FutureBuilder<List<ItemCategoryModel>>(
-              future:myList ,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return  SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children:
-                                snapshot.data!.map((e) => cartGenerator(e)).toList()
-                          ),
-                  );
-                } else {
-                  return Text('awaiting the future');
-                }
-              },
-            ),
-            // ),
-          ],
+              FutureBuilder<List<ItemCategoryModel>>(
+                future: myList,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: snapshot.data!
+                              .map((e) => cartGenerator(e))
+                              .toList()),
+                    );
+                  } else {
+                    return Text('awaiting the future');
+                  }
+                },
+              ),
+              // ),
+            ],
+          ),
         ),
-      ),
-    );
-} else{
-  Navigator.pushReplacementNamed(context, LoginView.id);
-  return const Text('لطفا کمی صبر کنید.');
-}
+      );
+    } else {
+      Navigator.pushReplacementNamed(context, LoginView.id);
+      return const Text('لطفا کمی صبر کنید.');
+    }
   }
 
   Widget cartGenerator(ItemCategoryModel model) {
@@ -309,6 +305,7 @@ if(sharedPreferences.isLogin) {
       ),
     );
   }
+
   Widget emptyGenerator() {
     return const Text(
       "موردی برای نمایش موجود نیست.",

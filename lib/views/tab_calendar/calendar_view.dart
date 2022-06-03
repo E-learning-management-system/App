@@ -27,7 +27,7 @@ class CalendarView extends StatelessWidget {
       children: [
         _buildCalendar(context, controller),
         sizedBox(height: 12),
-        _buildListView(controller,textTheme)
+        _buildListView(controller, textTheme)
       ],
     );
   }
@@ -49,21 +49,18 @@ class CalendarView extends StatelessWidget {
     );
   }
 
-  Widget _buildListView(CalendarController controller,TextTheme theme) {
-    return Expanded(child: ListView.builder(
-      padding: const EdgeInsets.only(top: 15,
-      right: 12,
-      left: 12,
-      bottom: 15),
+  Widget _buildListView(CalendarController controller, TextTheme theme) {
+    return Expanded(
+        child: ListView.builder(
+      padding: const EdgeInsets.only(top: 15, right: 12, left: 12, bottom: 15),
       itemExtent: 120,
       itemCount: controller.listModel.length,
       itemBuilder: (context, index) {
-        final data= controller.listModel[index];
+        final data = controller.listModel[index];
         return Card(
-           color: Utility.randomColor(),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15)
-          ),
+          color: Utility.randomColor(),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           margin: const EdgeInsets.only(top: 20),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -71,14 +68,21 @@ class CalendarView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(data.title,style: theme.headline6,),
-
+                Text(
+                  data.title,
+                  style: theme.headline6,
+                ),
                 Row(
                   children: [
-                    Text('مهلت : ',style: theme.bodyLarge,),
+                    Text(
+                      'مهلت : ',
+                      style: theme.bodyLarge,
+                    ),
                     sizedBox(width: 8),
-                    Text(data.date,style: theme.bodyLarge,),
-
+                    Text(
+                      data.date,
+                      style: theme.bodyLarge,
+                    ),
                   ],
                 )
               ],
