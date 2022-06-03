@@ -56,8 +56,8 @@ class ExercisesController extends ChangeNotifier
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(list of subjects)=   "+jsonDecode(response.body));
-    final Map<String, dynamic> data = json.decode(response.body);
+    print("jsonDecode(list of subjects)=   "+const Utf8Decoder().convert(response.bodyBytes));
+    final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("results")){
       List<ExerciseItemModel> list1=[];
       final Map<String, dynamic> list = json.decode(data["results"]);

@@ -25,8 +25,8 @@ class LessonsController extends ChangeNotifier
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(list of lesson)=   "+ (response.body));
-    final Map<String, dynamic> data = jsonDecode(response.body);
+    print("jsonDecode(list of lesson)=   "+ Utf8Decoder().convert(response.bodyBytes));
+    final Map<String, dynamic> data = jsonDecode(Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("results")){
       final List< dynamic> list = data["results"];
       for(var v in list) {
@@ -36,8 +36,11 @@ class LessonsController extends ChangeNotifier
 
             }
       sharedPreferences.setLessons(_listOfLessons);
+      // notifyListeners();
+      return true;
+
     }
-    notifyListeners();
+
     return false;
   }
 

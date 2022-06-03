@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:project/controllers/home_controller.dart';
+import 'package:project/controllers/lessons_controller.dart';
+import 'package:project/controllers/subject_controller.dart';
 import 'package:project/helpers/utility.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/widgets/app_bar_widget.dart';
@@ -13,13 +15,22 @@ class HomeProfessorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<HomeController>(context);
+    final controller = Provider.of<HomeController>(context,listen: false);
+    final Lessons = Provider.of<LessonsController>(context);
+    final Subjects = Provider.of<SubjectsController>(context);
     final theme = Theme.of(context).textTheme;
-    controller.listModel = [
-      for (int i = 0; i < 3; i++) ...[
-        ItemCategoryModel(title: 'تست', category: 'Lesson'),
-      ]
-    ];
+   myLessons() async{
+     await Lessons.getLessonsRequest();
+     await controller
+         .setItemCategory(StatusCategory.Lessons);
+     return controller.listModel;
+   }
+    mySubjects() async{
+      await Subjects.getSubjectsRequest();
+      await controller
+          .setItemCategory(StatusCategory.LastTopics);
+      return controller.listModel;
+    }
     return Scaffold(
       appBar: TopAppBar('دانیال صابر', 1, 'ww'),
       body: SingleChildScrollView(
@@ -55,30 +66,57 @@ class HomeProfessorView extends StatelessWidget {
           ),
           SizedBox(
             height: 180,
-            child: ListView.builder(
-              itemExtent: 200,
-              itemCount: controller.listModel.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                final data = controller.listModel[index];
-
-                return cartGenerator(data);
+            child:
+            FutureBuilder<List<ItemCategoryModel>>(
+              future:myLessons() ,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children:
+                        snapshot.data!.map((e) =>
+                            cartGenerator(e)).toList()
+                    ),
+                  );
+                } else {
+                  return Text('awaiting the future');
+                }
               },
             ),
+            // ListView.builder(
+            //   itemExtent: 200,
+            //   itemCount: controller.listModel.length,
+            //   scrollDirection: Axis.horizontal,
+            //   itemBuilder:(context, index) {
+              //    final data = controller.listModel[index];
+              //
+              //   return cartGenerator(data);
+              // },
+            // ),
           ),
           sizedBox(height: 12),
           Text('اخرین مباحث',
             style: theme.headline6,),
           SizedBox(
             height: 180,
-            child: ListView.builder(
-              itemExtent: 200,
-              itemCount: controller.listModel.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                final data = controller.listModel[index];
-
-                return cartGenerator(data);
+            child:  FutureBuilder<List<ItemCategoryModel>>(
+              future:mySubjects() ,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children:
+                        snapshot.data!.map((e) =>
+                            cartGenerator(e)).toList()
+                    ),
+                  );
+                } else {
+                  return const Text('awaiting the future');
+                }
               },
             ),
           ),

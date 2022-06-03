@@ -1,15 +1,14 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:project/helpers/sharedPreferences.dart';
 
 class FinalLessonsController extends ChangeNotifier
 {
 
-  final textEditController = TextEditingController(text: 'مدار های منطقی');
   final textEditController2 = TextEditingController();
   final ScrollController scrollController = ScrollController();
-  List<String> listItems = ['testet@gmail.com',
-    'testet@gmail.com'];
+  List<String> listItems = [];
 
 
   void removeItem(int index)

@@ -34,7 +34,7 @@ class HomeController extends ChangeNotifier {
       listModel.shuffle();
     }
     status = StatusCategory.All;
-    notifyListeners();
+    // notifyListeners();
   }
 
  setLessons()async {
@@ -48,7 +48,7 @@ class HomeController extends ChangeNotifier {
     ];
     status = StatusCategory.Lessons;
 
-    notifyListeners();
+    // notifyListeners();
   }
 
  setHomeWork()async {
@@ -62,7 +62,7 @@ class HomeController extends ChangeNotifier {
     ];
     status = StatusCategory.HomeWork;
 
-    notifyListeners();
+    // notifyListeners();
   }
 
  setLastTopics()async {
@@ -75,7 +75,7 @@ class HomeController extends ChangeNotifier {
       ]
     ];
     status = StatusCategory.LastTopics;
-    notifyListeners();
+    // notifyListeners();
   }
 
  setItemCategory(StatusCategory status) async{

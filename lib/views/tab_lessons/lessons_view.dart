@@ -25,7 +25,7 @@ class LessonsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    final controller = Provider.of<LessonsController>(context);
+    final controller = Provider.of<LessonsController>(context, listen: false);
     final theme = Theme.of(context).textTheme;
 
 if(sharedPreferences.isLogin) {

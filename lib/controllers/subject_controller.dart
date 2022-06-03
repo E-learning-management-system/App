@@ -31,8 +31,8 @@ class SubjectsController extends ChangeNotifier
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(list of subjects)=   "+(response.body));
-    final Map<String, dynamic> data = jsonDecode(response.body);
+    print("jsonDecode(list of subjects)=   "+Utf8Decoder().convert(response.bodyBytes));
+    final Map<String, dynamic> data = jsonDecode(Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("results")){
       final List< dynamic> list = data["results"];
       for(var v in list) {
@@ -42,8 +42,9 @@ class SubjectsController extends ChangeNotifier
       }
       print(_listOfSubjects.toList());
       sharedPreferences.setSubjects(_listOfSubjects);
+      return true;
     }
-    notifyListeners();
+    // notifyListeners();
     return false;
   }
 

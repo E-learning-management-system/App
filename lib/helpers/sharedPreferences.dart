@@ -2,7 +2,6 @@
 
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:project/models/exercise_item_model.dart';
-import 'package:project/models/profile_model.dart';
 import 'package:project/models/subject_item_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:project/models/lessons_item_model.dart';
@@ -28,7 +27,12 @@ class SharedPreferencesTable{
   setInitial()async{
     pref= (await SharedPreferences.getInstance());
   }
-
+ setLessonTitle(String value){
+    pref?.setString('lessonTitle', value);
+ }
+  getTitle(){
+    return pref?.getString('lessonTitle');
+  }
   setLessons(List<LessonsItemModel> listOfLessons){
     List<String> myList=[];
     for(var v in listOfLessons){

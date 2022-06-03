@@ -70,7 +70,7 @@ class CreateNewLessonsView extends StatelessWidget {
           Center(
             child: ElevationButtonWidget(
               width: 140,
-              call: (){
+              call: ()async{
                 if(controller.form.currentState!.validate())
                   {
                    var res= await controller.createNewLessonsRequest();

@@ -1,7 +1,10 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:project/controllers/final_lessons_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
+import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/text_field_widget.dart';
@@ -40,7 +43,7 @@ class FinalLessonsView extends StatelessWidget {
                 style: theme.subtitle1,
               ),
             ),
-            _buildTextField(controller: controller.textEditController),
+            Text(SharedPreferencesTable().getTitle()),
             const SizedBox(
               height: 30,
             ),
