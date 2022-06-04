@@ -318,8 +318,11 @@ class ItemLessonsView extends StatelessWidget {
                           Text(data.description,
                           style: theme.headline6!.copyWith(
                             color: Colors.white,
-                            fontWeight: FontWeight.normal
-                          ),)
+                            fontWeight: FontWeight.normal,
+                          ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )
                         ],
                       ),
                     ),
@@ -349,7 +352,9 @@ class ItemLessonsView extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.only(right: 15),
                   child: Text(data.title,
-                  style: theme.headline6),
+                  style: theme.bodyText1,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,),
                 ),
                 IconButton(onPressed: (){},
                     icon: const Icon(
@@ -364,7 +369,9 @@ class ItemLessonsView extends StatelessWidget {
             ),
             Container(
                 margin: const EdgeInsets.only(right: 15),
-                child: Text(data.description)),
+                child: Text(data.description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,)),
             const SizedBox(
               height: 15,
             ),

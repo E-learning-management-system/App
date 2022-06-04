@@ -120,7 +120,9 @@ class LessonsView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(data.title,
-                        style: theme.bodySmall!.copyWith(color: Colors.white)),
+                        style: theme.bodySmall!.copyWith(color: Colors.white),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,),
                     const SizedBox(
                       height: 15,
                     ),

@@ -71,30 +71,22 @@ class HomeProfessorView extends StatelessWidget {
               future:myLessons() ,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return  SingleChildScrollView(
+                  return   ListView.builder(
+                    itemExtent: 250,
+                    itemCount: snapshot.data!.length,
                     scrollDirection: Axis.horizontal,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children:
-                        snapshot.data!.map((e) =>
-                            cartGenerator(e)).toList()
-                    ),
+                    itemBuilder:(context, index) {
+                      final data = controller.listModel[index];
+
+                      return cartGenerator(data);
+                    },
                   );
                 } else {
-                  return Text('awaiting the future');
+                  return const Center(child: CircularProgressIndicator(),);
                 }
               },
             ),
-            // ListView.builder(
-            //   itemExtent: 200,
-            //   itemCount: controller.listModel.length,
-            //   scrollDirection: Axis.horizontal,
-            //   itemBuilder:(context, index) {
-              //    final data = controller.listModel[index];
-              //
-              //   return cartGenerator(data);
-              // },
-            // ),
+
           ),
           sizedBox(height: 12),
           Text('اخرین مباحث',
@@ -105,17 +97,18 @@ class HomeProfessorView extends StatelessWidget {
               future:mySubjects() ,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return  SingleChildScrollView(
+                  return   ListView.builder(
+                    itemExtent: 250,
+                    itemCount: snapshot.data!.length,
                     scrollDirection: Axis.horizontal,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children:
-                        snapshot.data!.map((e) =>
-                            cartGenerator(e)).toList()
-                    ),
+                    itemBuilder:(context, index) {
+                      final data = controller.listModel[index];
+
+                      return cartGenerator(data);
+                    },
                   );
                 } else {
-                  return const Text('awaiting the future');
+                  return const Center(child: CircularProgressIndicator(),);
                 }
               },
             ),
@@ -147,6 +140,7 @@ class HomeProfessorView extends StatelessWidget {
                   fontFamily: 'Vazir',
                   fontSize: 16,
                 ),
+                maxLines: 1,
               ),
             ],
           ),
