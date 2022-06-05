@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/controllers/verify_email_controller.dart';
@@ -27,7 +29,7 @@ class LessonsView extends StatelessWidget {
     if (sharedPreferences.isLogin) {
       return Scaffold(
         backgroundColor: Colors.grey.shade200,
-        appBar: const AppbarWidget(
+        appBar: AppbarWidget(
           text: 'دروس',
           showIc: true,
           shoeIcPop: false,
@@ -104,7 +106,11 @@ class LessonsView extends StatelessWidget {
       required BuildContext context}) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, ItemLessonsView.id);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+            builder: (context) => ItemLessonsView(lesson:data),
+        ),);
       },
       child: Card(
         shape: RoundedRectangleBorder(

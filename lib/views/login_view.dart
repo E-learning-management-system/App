@@ -23,7 +23,7 @@ class LoginView extends StatelessWidget {
     final controller = context.watch<LoginController>();
     final theme = Theme.of(context);
     return Scaffold(
-        appBar: const AppbarWidget(
+        appBar: AppbarWidget(
           text: 'ورود',
           elevation: 0.5,
         ),

@@ -32,7 +32,7 @@ class HomeProfessorView extends StatelessWidget {
       return controller.listModel;
     }
     return Scaffold(
-      appBar: TopAppBar('دانیال صابر', 1, 'ww'),
+      appBar: TopAppBar('استاد', 1, 'ww'),
       body: SingleChildScrollView(
         padding: EdgeInsets.only(right: 12, left: 12,
         bottom: 20),

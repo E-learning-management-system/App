@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:project/helpers/constants.dart';
 
 class AppbarWidget extends StatelessWidget implements PreferredSize{
-  final String text;
+  final String? text;
   final double elevation;
   final bool centerTitle;
   final bool showIc;
   final bool shoeIcPop;
-  const AppbarWidget({Key? key,
+  AppbarWidget({Key? key,
     required this.text,
     this.elevation = 1,
     this.centerTitle=true,
@@ -42,7 +42,7 @@ class AppbarWidget extends StatelessWidget implements PreferredSize{
             height: 20,),
           ),
           sizedBox(width: 8),
-          Text(text),
+          Text(text!),
 
         ],
       ),

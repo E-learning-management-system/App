@@ -17,7 +17,7 @@ class RecordHomeWorkView extends StatelessWidget {
     final controller = Provider.of<RecordHomeWorkController>(context);
     final theme = Theme.of(context).textTheme;
     return Scaffold(
-      appBar: const AppbarWidget(
+      appBar:  AppbarWidget(
         text: 'ریاضی 2 - تکلیف 1',
         centerTitle: false,
         showIc: true,

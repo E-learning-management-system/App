@@ -8,8 +8,10 @@ import 'package:project/models/lessons_item_model.dart';
 
 class SharedPreferencesTable{
   bool isLogin=false;
+  late Map<String,int> lessons;
   SharedPreferencesTable(){
     setInitial();
+    lessons={'test':0};
   }
   SharedPreferences? pref;
   EncryptedSharedPreferences token = EncryptedSharedPreferences();
@@ -27,7 +29,7 @@ class SharedPreferencesTable{
   setInitial()async{
     pref= (await SharedPreferences.getInstance());
   }
- setLessonTitle(String value){
+  setLessonTitle(String value){
     pref?.setString('lessonTitle', value);
  }
   getTitle(){
@@ -37,6 +39,7 @@ class SharedPreferencesTable{
     List<String> myList=[];
     for(var v in listOfLessons){
      myList.add(v.title);
+     lessons[v.title]=v.id;
     }
 
     pref?.setStringList('Lessons', myList);
@@ -57,9 +60,14 @@ class SharedPreferencesTable{
 
     pref?.setStringList('Subjects', myList);
   }
-
+  addLessons(String title,int id){
+    lessons[title]=id;
+  }
   getLessons(){
     return pref?.getStringList('Lessons');
+  }
+  getLessonId(String title){
+    return lessons[title];
   }
   getSubjects(){
     return pref?.getStringList('Subjects');

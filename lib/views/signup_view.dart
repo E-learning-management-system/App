@@ -28,7 +28,7 @@ class SignUpView extends StatelessWidget {
     final controller = Provider.of<SignUpController>(context);
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: const AppbarWidget(
+      appBar: AppbarWidget(
         text: 'ثبت نام',
         elevation: 0.5,
       ),

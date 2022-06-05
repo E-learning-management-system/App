@@ -1,10 +1,12 @@
 
 
+
 import 'package:flutter/cupertino.dart';
 import 'package:project/controllers/final_lessons_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/sharedPreferences.dart';
+import 'package:project/views/tab_lessons/lessons_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/text_field_widget.dart';
@@ -15,18 +17,23 @@ class FinalLessonsView extends StatelessWidget {
   const FinalLessonsView({Key? key}) : super(key: key);
   static const String id = '/final_lessons';
 
+  Future<String> getTitle()async{
+    return await sharedPreferences.getTitle();
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<FinalLessonsController>(context);
     final theme = Theme.of(context).textTheme;
-    return _buildBody(theme: theme, controller: controller);
+    return _buildBody(theme: theme, controller: controller, context: context);
   }
 
   Widget _buildBody(
       {required TextTheme theme,
-      required FinalLessonsController controller}) {
+      required FinalLessonsController controller,
+      required BuildContext context}) {
     return Scaffold(
-      appBar: const AppbarWidget(
+      appBar: AppbarWidget(
         text: 'دروس - درس جدید',
         showIc: true,
       ),
@@ -43,7 +50,19 @@ class FinalLessonsView extends StatelessWidget {
                 style: theme.subtitle1,
               ),
             ),
-            Text(SharedPreferencesTable().getTitle()),
+            FutureBuilder<String>(
+              future: getTitle(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return  Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 4.0, 18.0, 4.0),
+                child: Text(snapshot.data!, style: theme.titleLarge,));
+
+                } else {
+                   return const Center(child: CircularProgressIndicator(),);
+                }
+              },
+            ),
             const SizedBox(
               height: 30,
             ),
@@ -54,7 +73,45 @@ class FinalLessonsView extends StatelessWidget {
             ),
             Center(
               child: ElevationButtonWidget(
-                call: (){},
+                call: ()async{
+               var res= await controller.addStudentRequest();
+               if(res){
+                 showDialog<String>(
+                   context: context,
+                   builder: (BuildContext context) =>
+                       AlertDialog(
+                         title: const Text(''),
+                         content: const Text(
+                             'دانشجویان با موفقیت اضافه شدند.'),
+                         actions: <Widget>[
+                           TextButton(
+                             onPressed: () => Navigator.pop(
+                                 context, LessonsView.id),
+                             child: const Text('باشه'),
+                           ),
+                         ],
+                       ),
+                 );
+               }
+               else{
+                 showDialog<String>(
+                   context: context,
+                   builder: (BuildContext context) =>
+                       AlertDialog(
+                         title: const Text('خطا'),
+                         content: const Text(
+                             'مشکلی در ثبت دانشجویان وجود دارد.'),
+                         actions: <Widget>[
+                           TextButton(
+                             onPressed: () => Navigator.pop(
+                                 context, LessonsView.id),
+                             child: const Text('باشه'),
+                           ),
+                         ],
+                       ),
+                 );
+               }
+                },
                 borderRadius: borderRadiusTxtField,
               text: 'ثبت نهایی',),
             )

@@ -13,7 +13,7 @@ class ForgetPasswordView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-        appBar: const AppbarWidget(
+        appBar: AppbarWidget(
         text: '',
         elevation: 0.5,
     ),

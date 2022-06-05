@@ -15,7 +15,7 @@ class CreateNewLessonsView extends StatelessWidget {
     final controller = Provider.of<CreateNewLessonsController>(context);
     final theme = Theme.of(context).textTheme;
     return Scaffold(
-      appBar: const AppbarWidget(
+      appBar:  AppbarWidget(
         text: 'دروس - درس جدید',
         showIc: true,
       ),
