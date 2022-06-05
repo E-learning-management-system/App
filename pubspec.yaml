@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   provider: ^6.0.2
   http: ^0.13.4
+  
   cupertino_icons: ^1.0.2
 #  persian_datetime_picker: ^2.4.0
   encrypted_shared_preferences: ^3.0.0
