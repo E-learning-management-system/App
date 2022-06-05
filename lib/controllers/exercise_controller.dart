@@ -46,7 +46,7 @@ class ExercisesController extends ChangeNotifier
     // return false;
   }
 
-  Future getSubjectsOfCourse(id)
+  Future getExerciseOfCourse(id)
   async{
 
     String url='https://api.piazza.markop.ir/soren/courses/'+id+'/Exercises/';
