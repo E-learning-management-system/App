@@ -8,7 +8,8 @@ import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
 
 class CreateNewSubjectView extends StatelessWidget {
-  const CreateNewSubjectView({Key? key}) : super(key: key);
+   int Lessonid;
+   CreateNewSubjectView({Key? key, required this.Lessonid}) : super(key: key);
   static const String id = '/create_new_subject';
 
   @override
@@ -60,7 +61,7 @@ class CreateNewSubjectView extends StatelessWidget {
         _buildTitleText(theme, 'متن پیام'),
         _buildTextField(maxLine: true,controller: controller.controllerBody),
         _buildUploadFile(theme),
-        _buildButton()
+        _buildButton(controller: controller)
       ],
     );
   }
@@ -140,14 +141,16 @@ class CreateNewSubjectView extends StatelessWidget {
     );
   }
 
-  _buildButton() {
+  _buildButton({required CreateNewSubjectController controller }) {
     return Container(
       margin: const EdgeInsets.only(top: 18),
       child: ElevationButtonWidget(
         borderRadius: 4,
         width: 80,
         height: 30,
-        call: () {},
+        call: ()async {
+          await controller.addSubject(Lessonid);
+        },
         text: 'ثبت',
       ),
     );
