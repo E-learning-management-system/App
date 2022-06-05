@@ -1,9 +1,12 @@
 
 
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:project/helpers/sharedPreferences.dart';
+import 'package:http/http.dart' as http;
 
 class CreateNewSubjectController extends ChangeNotifier{
 
@@ -27,5 +30,23 @@ class CreateNewSubjectController extends ChangeNotifier{
         file=null;
       }
     notifyListeners();
+  }
+
+  addSubject(int id)async{
+    var _url='/soren/courses/$id/newsubject/';
+    var _token=await sharedPreferences.getToken('token');
+    var response= await http.post(Uri.parse(_url),
+      headers: { "content-type": "application/json",
+        "Authorization": "Token " + _token,},body:jsonEncode({
+        "title":controllerTitle.text,
+      }),
+    );
+
+    print("jsonDecode(add subject)=   "+ const Utf8Decoder().convert(response.bodyBytes));
+    final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+    if(data.containsKey("id")){
+      return true;
+    }
+    return false;
   }
 }

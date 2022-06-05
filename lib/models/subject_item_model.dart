@@ -31,5 +31,7 @@ class SubjectsItemModel {
     courseName=item["course_name"];
     teacher=item["teacher"];
     courseId=item["course_id"];
+    int num= id %(listOfColors.length);
+    bgColor=listOfColors[num];
 }
 }

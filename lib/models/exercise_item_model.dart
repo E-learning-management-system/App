@@ -41,6 +41,8 @@ class ExerciseItemModel {
     date=item["date"];
     deadline=item["deadline"];
     file=item['file'];
+    int num= id %(listOfColors.length);
+    bgColor=listOfColors[num];
 
   }
 }

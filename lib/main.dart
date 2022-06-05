@@ -18,6 +18,7 @@ import 'package:project/controllers/verify_email_controller.dart';
 
 import 'package:project/helpers/them_app.dart';
 import 'package:project/controllers/login_controller.dart';
+import 'package:project/models/lessons_item_model.dart';
 import 'package:project/views/base_view/base_view.dart';
 import 'package:project/views/forget_password_view.dart';
 import 'package:project/views/home_view.dart';
@@ -89,7 +90,6 @@ class MyApp extends StatelessWidget {
           create: (context) => CalendarController(),
         ),
         ChangeNotifierProvider<ItemLessonsController>(
-          child: const ItemLessonsView(),
           create: (context) => ItemLessonsController(),
         ),
         ChangeNotifierProvider<LastTopicController>(
@@ -97,7 +97,7 @@ class MyApp extends StatelessWidget {
           create: (context) => LastTopicController(),
         ),
         ChangeNotifierProvider<CreateNewSubjectController>(
-          child: const CreateNewSubjectView(),
+
           create: (context) => CreateNewSubjectController(),
         ),
         ChangeNotifierProvider<RecordHomeWorkController>(
@@ -132,9 +132,7 @@ class MyApp extends StatelessWidget {
           LessonsView.id: (context) => const LessonsView(),
           CreateNewLessonsView.id: (context) => const CreateNewLessonsView(),
           FinalLessonsView.id: (context) => const FinalLessonsView(),
-          ItemLessonsView.id: (context) => const ItemLessonsView(),
           LastTopicView.id: (context) => const LastTopicView(),
-          CreateNewSubjectView.id: (context) => const CreateNewSubjectView(),
           RecordHomeWorkView.id: (context) => const RecordHomeWorkView(),
           CalendarView.id: (context) => CalendarView(),
           BaseView.id: (context) => const BaseView(),

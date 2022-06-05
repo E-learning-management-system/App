@@ -22,7 +22,7 @@ class LastTopicView extends StatelessWidget {
     final controller = Provider.of<LastTopicController>(context);
     final theme = Theme.of(context).textTheme;
     return Scaffold(
-      appBar: const AppbarWidget(
+      appBar:  AppbarWidget(
         text: 'ریاضی 2 - مبحث 1',
         showIc: true,
       ),

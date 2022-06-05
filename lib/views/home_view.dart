@@ -31,7 +31,7 @@ class HomeView extends StatelessWidget {
 
     if (sharedPreferences.isLogin) {
       return Scaffold(
-        appBar: TopAppBar('دانیال صابر', 1, 'ww'),
+        appBar: TopAppBar('دانشجو', 1, 'ww'),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -259,7 +259,7 @@ class HomeView extends StatelessWidget {
                               .toList()),
                     );
                   } else {
-                    return Text('awaiting the future');
+                    return const Center(child: CircularProgressIndicator(),);
                   }
                 },
               ),

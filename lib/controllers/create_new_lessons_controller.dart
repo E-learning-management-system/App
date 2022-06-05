@@ -58,7 +58,11 @@ class CreateNewLessonsController extends ChangeNotifier
     print("jsonDecode(new lesson)=   "+Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = jsonDecode(Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("id")){
-      SharedPreferencesTable().setLessonTitle(cnNameLessons.text);
+      await sharedPreferences.setLessonTitle(cnNameLessons.text);
+      await sharedPreferences.addLessons(cnNameLessons.text,  data['id']);
+      cnNameLessons.clear();
+      cnDesc.clear();
+
       return true;
     }
     return false;

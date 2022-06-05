@@ -22,7 +22,7 @@ class VerifyEmailView extends StatelessWidget {
     final email = Provider.of<SignUpController>(context).email;
 
     return Scaffold(
-        appBar: const AppbarWidget(
+        appBar: AppbarWidget(
           text: 'تایید ایمیل',
           elevation: 0.5,
         ),
