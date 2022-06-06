@@ -1,62 +1,103 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:project/controllers/home_controller.dart';
-
+import 'package:project/helpers/sharedPreferences.dart';
+import 'package:project/models/exercise_item_model.dart';
 import 'package:project/models/lessons_item_model.dart';
+import 'package:project/models/subject_item_model.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/text_field_widget.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 class ItemLessonsController extends ChangeNotifier{
 
-  var status = StatusCategory.LastTopics;
-  List<LessonsItemModel> listModel = [
-    for (int i = 0; i < 3; i++) ...[
-      LessonsItemModel(
-        description: 'انتگرال یگانه',
-        title: 'مبحث اول',
-        endDate: '1400/11/25',
-        examDate: '',
-        id: i,
-        startDate: '',
-        teacher: ''
-      ),
-    ]
-  ];
 
+late int id=0;
+ List<SubjectsItemModel> _listOfSubjectOfCourse=[];
+ List<ExerciseItemModel> _listOfExerciseOfCourse=[];
+ get listOfSubjectOfCourse=> _listOfSubjectOfCourse;
+ get listOfExerciseOfCourse=>_listOfExerciseOfCourse;
+late String _token;
+var status = StatusCategory.LastTopics;
+List<dynamic> listModel = [];
 
+String titleOfNewSubject='';
 
+ bool isLoading =false;
 
-  void setHomeWork() {
-    listModel = [
-      for (int i = 0; i < 3; i++) ...[
-        LessonsItemModel(
-            description: 'این یک موضوع است',
-            title: 'تکلیف اول',
-            endDate: '1400/11/25',
-            examDate: '',
-            id: i,
-            startDate: '',
-            teacher: ''
-        ),
-      ]
-    ];
+setId(int id){
+  this.id=id;
+}
+Future getSubjectsOfCourse(id)
+async{
+  isLoading =true;
+  notifyListeners();
+  await sharedPreferences.getToken('token').then((value)=>{_token=value});
+  String url='https://api.piazza.markop.ir/soren/courses/$id/subjects/';
+
+  var response= await http.get(Uri.parse(url),
+    headers: { "content-type": "application/json",
+      "Authorization": "Token " + _token,},
+  );
+  isLoading =false;
+  notifyListeners();
+  print("jsonDecode(list of subjects)=   "+response.body);
+  final Map<String, dynamic> data = json.decode(response.body);
+  if(data.containsKey("results")) {
+    if (data["results"].length>0) {
+      final List< dynamic> list = data["results"];
+      for(var v in list) {
+        _listOfSubjectOfCourse.add(SubjectsItemModel.fromJson(Map<String,dynamic>.from(v)));
+      }
+      return true;
+    }
+    _listOfSubjectOfCourse=[];
+    return true;
+  }
+    notifyListeners();
+    return false;
+}
+Future getExerciseOfCourse(id)
+async{
+  isLoading =true;
+  notifyListeners();
+  await sharedPreferences.getToken('token').then((value)=>{_token=value});
+  String url='https://api.piazza.markop.ir/soren/courses/$id/exercises/';
+
+  var response= await http.get(Uri.parse(url),
+    headers: { "content-type": "application/json",
+      "Authorization": "Token " + _token,},
+  );
+  isLoading =false;
+  notifyListeners();
+  print("jsonDecode(list of subjects)=   "+const Utf8Decoder().convert(response.bodyBytes));
+  final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+  if(data.containsKey("results")) {
+    if (data["results"].length>0) {
+      final List< dynamic> list = data["results"];
+      for(var v in list) {
+        _listOfExerciseOfCourse.add(ExerciseItemModel.fromJson(Map<String,dynamic>.from(v)));
+      }
+      return true;
+    }
+    _listOfExerciseOfCourse=[];
+    return true;
+  }
+  notifyListeners();
+  return false;
+}
+  setHomeWork() async{
+  _listOfExerciseOfCourse=[];
+   await getExerciseOfCourse(id);
+    listModel=_listOfExerciseOfCourse;
     status = StatusCategory.HomeWork;
     notifyListeners();
   }
-  void setLastTopics() {
-    listModel = [
-      for (int i = 0; i < 3; i++) ...[
-        LessonsItemModel(
-            description: 'انتگرال یگانه',
-            title: 'مبحث اول',
-            endDate: '1400/11/25',
-            examDate: '',
-            id: i,
-            startDate: '',
-            teacher: ''
-        ),
-      ]
-    ];
+  setLastTopics()async {
+  _listOfSubjectOfCourse=[];
+   await getSubjectsOfCourse(id);
+    listModel=_listOfSubjectOfCourse;
     status = StatusCategory.LastTopics;
     notifyListeners();
   }
@@ -98,18 +139,18 @@ class ItemLessonsController extends ChangeNotifier{
     ];
   }
 
-  void setItemCategory(StatusCategory status) {
+ setItemCategory(StatusCategory status) async{
 
     if (status == StatusCategory.BookMark) {
       setBookMark();
       return;
     }
     if (status == StatusCategory.HomeWork) {
-      setHomeWork();
+      await setHomeWork();
       return;
     }
     if (status == StatusCategory.LastTopics) {
-      setLastTopics();
+      await setLastTopics();
       return;
     } else {
       this.status = status;
@@ -119,7 +160,10 @@ class ItemLessonsController extends ChangeNotifier{
   }
 
 
-  void openDialog(BuildContext context)
+
+
+
+ openDialog(BuildContext context)
   {
     showDialog(context: context,
         builder: (cnt)
@@ -129,11 +173,27 @@ class ItemLessonsController extends ChangeNotifier{
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextFormFieldWidget(hintText: 'نام موضوع را وارد کنید'),
+              TextFormFieldWidget(hintText: 'نام موضوع را وارد کنید',onChanged: (text)=>{titleOfNewSubject=text},),
               sizedBox(height: 15),
-              ElevationButtonWidget(
-                  call: (){},
-                text: 'ایجاد',
+
+              Consumer<ItemLessonsController>(
+                builder: (context, value, child) {
+                  if(value.isLoading)
+                    {
+                      return Center(child: const CircularProgressIndicator());
+                    }
+                  return ElevationButtonWidget(
+                      call: ()async{var res=await addSubject(id);
+                      if(res){
+                        setLastTopics();
+                        Navigator.pop(context);
+                      }
+
+                      },
+                      text: 'ایجاد',
+                    );
+                },
+
               )
             ],
           ),
@@ -141,6 +201,28 @@ class ItemLessonsController extends ChangeNotifier{
 
         );
   }
+
+addSubject(int id)async{
+  isLoading =true;
+  notifyListeners();
+  var _url='https://api.piazza.markop.ir/soren/courses/$id/newsubject/';
+  var _token=await sharedPreferences.getToken('token');
+  var response= await http.post(Uri.parse(_url),
+    headers: { "content-type": "application/json",
+      "Authorization": "Token " + _token,},body:jsonEncode({
+      "title":titleOfNewSubject,
+    }),
+  );
+  isLoading =false;
+  notifyListeners();
+  print("jsonDecode(add subject)=   "+ const Utf8Decoder().convert(response.bodyBytes));
+  final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+  if(data.containsKey("id")){
+    return true;
+  }
+
+  return false;
+}
 
 
 

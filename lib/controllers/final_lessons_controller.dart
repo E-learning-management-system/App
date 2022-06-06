@@ -1,15 +1,18 @@
 
 
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:project/helpers/sharedPreferences.dart';
 
 class FinalLessonsController extends ChangeNotifier
 {
-
-  final textEditController = TextEditingController(text: 'مدار های منطقی');
   final textEditController2 = TextEditingController();
   final ScrollController scrollController = ScrollController();
-  List<String> listItems = ['testet@gmail.com',
-    'testet@gmail.com'];
+  List<String> listItems = [];
+  bool isLoading=false;
+  late String _token;
+  final formEmail = GlobalKey<FormState>();
 
 
   void removeItem(int index)
@@ -19,7 +22,7 @@ class FinalLessonsController extends ChangeNotifier
   }
   void addItemToList()
   {
-    if(textEditController2.text.isNotEmpty)
+    if(textEditController2.text.isNotEmpty && formEmail.currentState!.validate())
       {
         listItems.add(textEditController2.text);
         notifyListeners();
@@ -28,4 +31,28 @@ class FinalLessonsController extends ChangeNotifier
       }
     return;
   }
+Future<bool> addStudentRequest()async{
+  isLoading=true;
+  notifyListeners();
+    var id=sharedPreferences.getLessonId(sharedPreferences.getTitle());
+  _token=await sharedPreferences.getToken('token');
+  for(var email in listItems){
+   // email= email.replaceAll('@', '\\40');
+    String _url='https://api.piazza.markop.ir/soren/courses/$id/newstudent/$email/';
+    var response=  await http.post(Uri.parse(_url),
+      headers: { "content-type": "application/json",
+        "Authorization": "Token " + _token,},
+    );
+    print(response.body);
+    final Map<String, dynamic> data = jsonDecode(response.body);
+
+    if(!data.containsKey("id")){
+      isLoading=false;
+      return false;
+    }
+  }
+  isLoading=false;
+    return true;
+
+}
 }

@@ -22,6 +22,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final Color? fillColor;
   final bool noneEnableBorder;
   final ValueChanged<String>? onChanged;
+  final bool readOnly;
 
 
   const TextFormFieldWidget(
@@ -43,6 +44,7 @@ class TextFormFieldWidget extends StatelessWidget {
         this.maxLength ,
         this.fillColor,
         this.prefixIcon,
+        this.readOnly=false,
         this.onChanged,}): super(key: key);
 
   @override
@@ -53,10 +55,12 @@ class TextFormFieldWidget extends StatelessWidget {
       data: theme,
       child: TextFormField(
         maxLength: maxLength,
+        readOnly: readOnly,
         cursorColor: theme.primaryColor,
         onChanged: onChanged,
         obscureText: obscureText,
         maxLines: maxLines,
+
         keyboardType: textInputType,
         textInputAction: actionKeyboard,
         focusNode: focusNode,

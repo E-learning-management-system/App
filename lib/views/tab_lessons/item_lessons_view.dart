@@ -12,29 +12,35 @@ import 'package:project/views/tab_lessons/record_home_work_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/elevation_button.dart';
+import 'package:project/widgets/empty_view_widget.dart';
 import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
 
 class ItemLessonsView extends StatelessWidget {
-  const ItemLessonsView({Key? key}) : super(key: key);
+  final LessonsItemModel lesson;
+  const ItemLessonsView({Key? key, required this.lesson}): super(key: key);
   static const String id = '/item_lessons_view';
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<ItemLessonsController>(context);
+    controller.setId(lesson.id);
     final theme = Theme.of(context).textTheme;
     return _buildBody(
       controller: controller,
       theme: theme,
+      title: lesson.title,
       context: context
     );
   }
   Widget _buildBody(
       {required TextTheme theme,
         required ItemLessonsController controller,
+        required String title,
       required BuildContext context}) {
+
     return Scaffold(
-      appBar: const AppbarWidget(
-          text: 'ریاضی 2',
+      appBar: AppbarWidget(
+          text: title,
           centerTitle: false,
         showIc: true,
       ),
@@ -51,13 +57,14 @@ class ItemLessonsView extends StatelessWidget {
         controller.status == StatusCategory.HomeWork,
         child: FloatingActionButton.extended(
             backgroundColor: MyColors.blueHex,
-            onPressed: (){
+            onPressed: ()async {
               if(controller.status == StatusCategory.HomeWork)
                 {
-                Navigator.pushNamed(context,RecordHomeWorkView.id);
+                Navigator.pushNamed(context,RecordHomeWorkView.id,
+                arguments: false);
                   return;
                 }
-              controller.openDialog(context);
+              await controller.openDialog(context);
             },
             elevation: 1,
             shape: RoundedRectangleBorder(
@@ -111,8 +118,8 @@ class ItemLessonsView extends StatelessWidget {
                         width: 150,
                         icon: Icons.star,
                         text: 'آخرین مباحث',
-                        call: () {
-                          controller.setItemCategory(StatusCategory.LastTopics);
+                        call: () async{
+                          await controller.setItemCategory(StatusCategory.LastTopics);
                         },
                         iconColor:
                         controller.status ==
@@ -142,8 +149,8 @@ class ItemLessonsView extends StatelessWidget {
                       width: 150,
                       icon: Icons.assignment_rounded,
                       text: 'تکالیف',
-                      call: () {
-                        controller.setItemCategory(StatusCategory.HomeWork);
+                      call: () async{
+                        await controller.setItemCategory(StatusCategory.HomeWork);
 
                       },
                       iconColor:
@@ -180,8 +187,8 @@ class ItemLessonsView extends StatelessWidget {
                       icon: Icons.bookmark,
                       text: 'پست های ذخیره شده',
                       fontSize: 13,
-                      call: () {
-                        controller.setItemCategory(StatusCategory.BookMark);
+                      call: () async{
+                        await controller.setItemCategory(StatusCategory.BookMark);
                       },
                       iconColor:
                       controller.status ==
@@ -215,8 +222,8 @@ class ItemLessonsView extends StatelessWidget {
                       icon: Icons.person,
                       text: 'دانشجویان حاضر',
                       fontSize: 10,
-                      call: () {
-                        controller.setItemCategory(StatusCategory.Sp);
+                      call: () async{
+                       await controller.setItemCategory(StatusCategory.Sp);
                       },
                       iconColor:
                       controller.status ==
@@ -254,7 +261,17 @@ class ItemLessonsView extends StatelessWidget {
   {
     return Expanded(
       child: Consumer<ItemLessonsController>(
-        builder: (context, value, child) => ListView.builder(
+        builder: (context, value, child) {
+          if(value.isLoading)
+          {
+            return Center(child: CircularProgressIndicator(),);
+          }
+          if(value.listModel.isEmpty)
+            {
+              return EmptyViewWidget();
+            }
+
+          return ListView.builder(
           itemCount: value.listModel.length,
             padding: const EdgeInsets.symmetric(
               horizontal: 20,
@@ -270,13 +287,53 @@ class ItemLessonsView extends StatelessWidget {
                 {
                   return _buildUsers(theme,data);
                 }
+              if(value.status== StatusCategory.LastTopics){
+                return GestureDetector(
+                  onTap: (){
+
+                      Navigator.pushNamed(context, LastTopicView.id);
+
+
+                  },
+                  child: SizedBox(
+                    height: 120,
+                    child: Card(
+                      margin: const EdgeInsets.only(top: 15),
+                      color: data.bgColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(borderRadiusTxtField)
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment:
+                          CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(data.title,
+                                    style: theme.headline6!.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      fontSize: 32,
+                                    )),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+              if(value.status== StatusCategory.HomeWork){
               return GestureDetector(
                 onTap: (){
-                  if(value.status == StatusCategory.LastTopics)
-                    {
-                      Navigator.pushNamed(context, LastTopicView.id);
-                    }
-
+                  Navigator.of(context).pushNamed(RecordHomeWorkView.id,
+                  arguments: true);
                 },
                 child: SizedBox(
                   height: 120,
@@ -290,10 +347,7 @@ class ItemLessonsView extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         crossAxisAlignment:
-                        value.status ==
-                            StatusCategory.HomeWork ?
-                        CrossAxisAlignment.start:
-                        CrossAxisAlignment.center,
+                        CrossAxisAlignment.start,
                         children: [
                           Row(
                             mainAxisAlignment:
@@ -329,7 +383,10 @@ class ItemLessonsView extends StatelessWidget {
                   ),
                 ),
               );
-            }, ),
+              }
+              return const Center(child: CircularProgressIndicator());
+            }, );
+        },
       ),
     );
   }
