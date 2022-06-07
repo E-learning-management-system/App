@@ -23,13 +23,13 @@ class HomeProfessorView extends StatelessWidget {
      await Lessons.getLessonsRequest();
      await controller
          .setItemCategory(StatusCategory.Lessons);
-     return controller.listModel;
+     return controller.lessonProfessor;
    }
     mySubjects() async{
       await Subjects.getSubjectsRequest();
       await controller
           .setItemCategory(StatusCategory.LastTopics);
-      return controller.listModel;
+      return controller.subjectProfessor;
     }
     return Scaffold(
       appBar: TopAppBar('استاد', 1, 'ww'),
@@ -76,7 +76,7 @@ class HomeProfessorView extends StatelessWidget {
                     itemCount: snapshot.data!.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder:(context, index) {
-                      final data = controller.listModel[index];
+                      final data = controller.lessonProfessor[index];
 
                       return cartGenerator(data);
                     },
@@ -102,7 +102,7 @@ class HomeProfessorView extends StatelessWidget {
                     itemCount: snapshot.data!.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder:(context, index) {
-                      final data = controller.listModel[index];
+                      final data = controller.subjectProfessor[index];
 
                       return cartGenerator(data);
                     },

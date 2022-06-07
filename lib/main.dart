@@ -147,6 +147,7 @@ class MyApp extends StatelessWidget {
           );
         },
         initialRoute: SplashView.id,
+
       ),
     );
   }
