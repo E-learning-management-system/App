@@ -12,6 +12,7 @@ class FinalLessonsController extends ChangeNotifier
   List<String> listItems = [];
   bool isLoading=false;
   late String _token;
+  final formEmail = GlobalKey<FormState>();
 
 
   void removeItem(int index)
@@ -21,7 +22,7 @@ class FinalLessonsController extends ChangeNotifier
   }
   void addItemToList()
   {
-    if(textEditController2.text.isNotEmpty)
+    if(textEditController2.text.isNotEmpty && formEmail.currentState!.validate())
       {
         listItems.add(textEditController2.text);
         notifyListeners();
@@ -49,7 +50,6 @@ Future<bool> addStudentRequest()async{
       isLoading=false;
       return false;
     }
-
   }
   isLoading=false;
     return true;

@@ -9,6 +9,7 @@ import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/text_field_widget.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 class ItemLessonsController extends ChangeNotifier{
 
 
@@ -23,13 +24,15 @@ List<dynamic> listModel = [];
 
 String titleOfNewSubject='';
 
-
+ bool isLoading =false;
 
 setId(int id){
   this.id=id;
 }
 Future getSubjectsOfCourse(id)
 async{
+  isLoading =true;
+  notifyListeners();
   await sharedPreferences.getToken('token').then((value)=>{_token=value});
   String url='https://api.piazza.markop.ir/soren/courses/$id/subjects/';
 
@@ -37,7 +40,8 @@ async{
     headers: { "content-type": "application/json",
       "Authorization": "Token " + _token,},
   );
-
+  isLoading =false;
+  notifyListeners();
   print("jsonDecode(list of subjects)=   "+response.body);
   final Map<String, dynamic> data = json.decode(response.body);
   if(data.containsKey("results")) {
@@ -56,6 +60,8 @@ async{
 }
 Future getExerciseOfCourse(id)
 async{
+  isLoading =true;
+  notifyListeners();
   await sharedPreferences.getToken('token').then((value)=>{_token=value});
   String url='https://api.piazza.markop.ir/soren/courses/$id/exercises/';
 
@@ -63,7 +69,8 @@ async{
     headers: { "content-type": "application/json",
       "Authorization": "Token " + _token,},
   );
-
+  isLoading =false;
+  notifyListeners();
   print("jsonDecode(list of subjects)=   "+const Utf8Decoder().convert(response.bodyBytes));
   final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
   if(data.containsKey("results")) {
@@ -168,14 +175,25 @@ async{
             children: [
               TextFormFieldWidget(hintText: 'نام موضوع را وارد کنید',onChanged: (text)=>{titleOfNewSubject=text},),
               sizedBox(height: 15),
-              ElevationButtonWidget(
-                  call: ()async{var res=await addSubject(id);
-                    if(res){
-                      Navigator.pop(context);
-                    }
 
-                    },
-                text: 'ایجاد',
+              Consumer<ItemLessonsController>(
+                builder: (context, value, child) {
+                  if(value.isLoading)
+                    {
+                      return Center(child: const CircularProgressIndicator());
+                    }
+                  return ElevationButtonWidget(
+                      call: ()async{var res=await addSubject(id);
+                      if(res){
+                        setLastTopics();
+                        Navigator.pop(context);
+                      }
+
+                      },
+                      text: 'ایجاد',
+                    );
+                },
+
               )
             ],
           ),
@@ -185,6 +203,8 @@ async{
   }
 
 addSubject(int id)async{
+  isLoading =true;
+  notifyListeners();
   var _url='https://api.piazza.markop.ir/soren/courses/$id/newsubject/';
   var _token=await sharedPreferences.getToken('token');
   var response= await http.post(Uri.parse(_url),
@@ -193,12 +213,14 @@ addSubject(int id)async{
       "title":titleOfNewSubject,
     }),
   );
-
+  isLoading =false;
+  notifyListeners();
   print("jsonDecode(add subject)=   "+ const Utf8Decoder().convert(response.bodyBytes));
   final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
   if(data.containsKey("id")){
     return true;
   }
+
   return false;
 }
 

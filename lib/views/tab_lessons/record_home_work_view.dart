@@ -16,19 +16,21 @@ class RecordHomeWorkView extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Provider.of<RecordHomeWorkController>(context);
     final theme = Theme.of(context).textTheme;
+    var fromStudent = ModalRoute.of(context)!.settings.arguments as bool;
     return Scaffold(
       appBar:  AppbarWidget(
         text: 'ریاضی 2 - تکلیف 1',
         centerTitle: false,
         showIc: true,
       ),
-      body: _buildBody(theme: theme, controller: controller),
+      body: _buildBody(theme: theme, controller: controller,fromStudent: fromStudent),
     );
   }
 
   Widget _buildBody(
       {required TextTheme theme,
-      required RecordHomeWorkController controller}) {
+      required RecordHomeWorkController controller,
+      required bool fromStudent}) {
     return SingleChildScrollView(
       padding: const EdgeInsets.only(right: 12, left: 12, bottom: 25, top: 25),
       child: Column(
@@ -41,7 +43,7 @@ class RecordHomeWorkView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildTitleText(theme, 'عنوان'),
-                    _buildTextField()
+                    _buildTextField(fromStudent)
                   ],
                 ),
               ),
@@ -51,7 +53,7 @@ class RecordHomeWorkView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildTitleText(theme, 'مهلت تحویل'),
-                    _buildTextField()
+                    _buildTextField(fromStudent)
                   ],
                 ),
               ),
@@ -59,7 +61,7 @@ class RecordHomeWorkView extends StatelessWidget {
           ),
           sizedBox(height: 15),
           _buildTitleText(theme, 'توضیح'),
-          _buildTextField(maxLine: true),
+          _buildTextField(fromStudent,maxLine: true),
           _downloadFile(theme),
           sizedBox(height: 15),
           _buildTitleText(theme, 'پاسخ شما'),
@@ -84,10 +86,11 @@ class RecordHomeWorkView extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField({bool maxLine = false}) {
+  Widget _buildTextField(bool fromStudent, {bool maxLine = false}) {
     return TextFormFieldWidget(
       hintText: '',
       noneEnableBorder: false,
+      readOnly: fromStudent? true:false,
       filled: true,
       maxLines: maxLine ? 6 : 1,
       fillColor: Colors.white,

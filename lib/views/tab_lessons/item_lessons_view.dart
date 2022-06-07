@@ -12,6 +12,7 @@ import 'package:project/views/tab_lessons/record_home_work_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/elevation_button.dart';
+import 'package:project/widgets/empty_view_widget.dart';
 import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -59,7 +60,8 @@ class ItemLessonsView extends StatelessWidget {
             onPressed: ()async {
               if(controller.status == StatusCategory.HomeWork)
                 {
-                Navigator.pushNamed(context,RecordHomeWorkView.id);
+                Navigator.pushNamed(context,RecordHomeWorkView.id,
+                arguments: false);
                   return;
                 }
               await controller.openDialog(context);
@@ -259,7 +261,17 @@ class ItemLessonsView extends StatelessWidget {
   {
     return Expanded(
       child: Consumer<ItemLessonsController>(
-        builder: (context, value, child) => ListView.builder(
+        builder: (context, value, child) {
+          if(value.isLoading)
+          {
+            return Center(child: CircularProgressIndicator(),);
+          }
+          if(value.listModel.isEmpty)
+            {
+              return EmptyViewWidget();
+            }
+
+          return ListView.builder(
           itemCount: value.listModel.length,
             padding: const EdgeInsets.symmetric(
               horizontal: 20,
@@ -299,7 +311,7 @@ class ItemLessonsView extends StatelessWidget {
                           children: [
                             Row(
                               mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(data.title,
@@ -320,6 +332,8 @@ class ItemLessonsView extends StatelessWidget {
               if(value.status== StatusCategory.HomeWork){
               return GestureDetector(
                 onTap: (){
+                  Navigator.of(context).pushNamed(RecordHomeWorkView.id,
+                  arguments: true);
                 },
                 child: SizedBox(
                   height: 120,
@@ -371,7 +385,8 @@ class ItemLessonsView extends StatelessWidget {
               );
               }
               return const Center(child: CircularProgressIndicator());
-            }, ),
+            }, );
+        },
       ),
     );
   }
