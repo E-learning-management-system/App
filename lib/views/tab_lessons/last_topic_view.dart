@@ -26,6 +26,8 @@ class LastTopicView extends StatelessWidget {
         text: 'ریاضی 2 - مبحث 1',
         showIc: true,
       ),
+      floatingActionButtonLocation:
+      FloatingActionButtonLocation.startFloat,
       body: _buildBody(theme: theme, controller: controller),
       floatingActionButton:  Visibility(
         visible: sharedPreferences.getType() == 't',

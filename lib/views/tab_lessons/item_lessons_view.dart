@@ -44,6 +44,8 @@ class ItemLessonsView extends StatelessWidget {
           centerTitle: false,
         showIc: true,
       ),
+      floatingActionButtonLocation:
+      FloatingActionButtonLocation.startFloat,
       body: Column(
         children: [
           _buildSearchWidget(),
@@ -110,7 +112,7 @@ class ItemLessonsView extends StatelessWidget {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 22.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -177,6 +179,7 @@ class ItemLessonsView extends StatelessWidget {
                   ],
                 ),
               ),
+              sizedBox(height: 8),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -274,7 +277,7 @@ class ItemLessonsView extends StatelessWidget {
           return ListView.builder(
           itemCount: value.listModel.length,
             padding: const EdgeInsets.symmetric(
-              horizontal: 20,
+              horizontal: 30,
               vertical: 20
             ),
             itemBuilder:(context, index) {
@@ -296,33 +299,33 @@ class ItemLessonsView extends StatelessWidget {
 
                   },
                   child: SizedBox(
-                    height: 120,
+                    height: 135,
                     child: Card(
-                      margin: const EdgeInsets.only(top: 15),
+                      margin: const EdgeInsets.only(top: 30),
                       color: data.bgColor,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(borderRadiusTxtField)
+                          borderRadius: BorderRadius.circular(20)
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(data.title,
-                                    style: theme.headline6!.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      fontSize: 32,
-                                    )),
-                              ],
-                            ),
-                          ],
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(data.title,
+                                      style: theme.headline6!.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        fontSize: 32,
+                                      )),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

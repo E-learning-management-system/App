@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:project/controllers/home_controller.dart';
 import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/controllers/subject_controller.dart';
+import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/utility.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/widgets/app_bar_widget.dart';
@@ -37,26 +38,60 @@ class HomeProfessorView extends StatelessWidget {
         padding: EdgeInsets.only(right: 12, left: 12,
         bottom: 20),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: TextFormField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.search,
-                  textDirection: TextDirection.ltr,
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: (MediaQuery.of(context).size.width - 50) * 0.8,
+                height: 50,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      Icons.search,
+                      textDirection: TextDirection.ltr,
+                    ),
+                    hintTextDirection: TextDirection.rtl,
+                    border: InputBorder.none,
+                    hintText: "جست و جو",
+                    hintStyle: Theme.of(context)
+                        .textTheme
+                        .caption!
+                        .copyWith(color: Colors.grey),
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
                 ),
-                hintTextDirection: TextDirection.rtl,
-                border: InputBorder.none,
-                hintText: "جست و جو",
-                hintStyle: Theme.of(context)
-                    .textTheme
-                    .caption!
-                    .copyWith(color: Colors.grey),
-                fillColor: Colors.white,
-                filled: true,
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: Container(
+                  // alignment: Alignment.center,
+                  child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.circular(12.0),
+                          ),
+                          primary: Colors.lightBlue),
+                      onPressed: () async {
+                        // if () {
+                        //   setState(() {});
+                        //   Navigator.pushNamed(context, '/search');
+                        // }
+                      },
+                      child: Icon(
+                        Icons.tune,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           sizedBox(height: 15),
 
@@ -72,7 +107,7 @@ class HomeProfessorView extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return   ListView.builder(
-                    itemExtent: 250,
+                    itemExtent: 270,
                     itemCount: snapshot.data!.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder:(context, index) {
@@ -121,6 +156,7 @@ class HomeProfessorView extends StatelessWidget {
 
   Widget cartGenerator(ItemCategoryModel model) {
     return Card(
+      margin: EdgeInsets.only(left: 20),
       color: Utility.randomColor(),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -131,13 +167,13 @@ class HomeProfessorView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Image.asset(Utility.randomImage(),
-              height: 80,
-              width: 80,),
+              height: 100,
+              width: 100,),
               Text(
                 model.title,
                 style: TextStyle(
                   color: Color.fromARGB(255, 253, 251, 251),
-                  fontFamily: 'Vazir',
+                  fontFamily: fontLotus,
                   fontSize: 16,
                 ),
                 maxLines: 1,
