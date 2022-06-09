@@ -4,6 +4,7 @@ import 'package:project/controllers/home_controller.dart';
 import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/models/exercise_item_model.dart';
 import 'package:project/models/lessons_item_model.dart';
+import 'package:project/models/post_model.dart';
 import 'package:project/models/subject_item_model.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
@@ -14,10 +15,13 @@ class ItemLessonsController extends ChangeNotifier{
 
 
 late int id=0;
+
+List<PostItemModel> savedPosts=[];
  List<SubjectsItemModel> _listOfSubjectOfCourse=[];
  List<ExerciseItemModel> _listOfExerciseOfCourse=[];
  get listOfSubjectOfCourse=> _listOfSubjectOfCourse;
  get listOfExerciseOfCourse=>_listOfExerciseOfCourse;
+ get saved=>savedPosts;
 late String _token;
 var status = StatusCategory.LastTopics;
 List<dynamic> listModel = [];
@@ -28,6 +32,33 @@ String titleOfNewSubject='';
 
 setId(int id){
   this.id=id;
+}
+getSavedPost()async{
+  isLoading =true;
+  notifyListeners();
+  await sharedPreferences.getToken('token').then((value)=>{_token=value});
+  String  _url= 'https://api.piazza.markop.ir/soren/savedposts/';
+  var response= await http.get(Uri.parse(_url),
+    headers: { "content-type": "application/json",
+      "Authorization": "Token " + _token,},
+  );
+
+  print("jsonDecode(list of savedPosts)=   "+Utf8Decoder().convert(response.bodyBytes));
+  final Map<String, dynamic> data = json.decode(Utf8Decoder().convert(response.bodyBytes));
+  if(data.containsKey("results")){
+    if (data["results"].length>0) {
+      final List< dynamic> list = data["results"];
+      for(var v in list) {
+        savedPosts.add(PostItemModel.fromJson(Map<String,dynamic>.from(v)));
+      }
+    }
+    isLoading=false;
+    notifyListeners();
+    return true;
+  }
+  isLoading=false;
+  notifyListeners();
+  return false;
 }
 Future getSubjectsOfCourse(id)
 async{
@@ -42,8 +73,8 @@ async{
   );
   isLoading =false;
   notifyListeners();
-  print("jsonDecode(list of subjects)=   "+response.body);
-  final Map<String, dynamic> data = json.decode(response.body);
+  print("jsonDecode(list of subjects)=   "+Utf8Decoder().convert(response.bodyBytes));
+  final Map<String, dynamic> data = json.decode(Utf8Decoder().convert(response.bodyBytes));
   if(data.containsKey("results")) {
     if (data["results"].length>0) {
       final List< dynamic> list = data["results"];
@@ -101,23 +132,10 @@ async{
     status = StatusCategory.LastTopics;
     notifyListeners();
   }
-  void setBookMark()
-  {
-    listModel = [
-      for (int i = 0; i < 3; i++) ...[
-        LessonsItemModel(
-            title: 'زمان امتحان کی هست ؟ ',
-            endDate: '1400/11/25',
-            name: 'دانیال صابر',
-            countCm: 15,
-            description: 'این تنهای یک پیغام تست است یک پیام تستتستتستتستتستتستتست تست',
-            id: i,
-            startDate: '',
-            teacher: '',
-            examDate: ''
-            ),
-      ]
-    ];
+  void setBookMark()async {
+savedPosts=[];
+await getSavedPost();
+listModel=savedPosts;
     status = StatusCategory.BookMark;
     notifyListeners();
   }

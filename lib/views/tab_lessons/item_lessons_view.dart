@@ -1,12 +1,16 @@
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:project/controllers/home_controller.dart';
 import 'package:project/controllers/item_lessons_controller.dart';
+import 'package:project/controllers/posts_cpntroller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/models/lessons_item_model.dart';
+import 'package:project/models/post_model.dart';
 import 'package:project/views/tab_lessons/last_topic_view.dart';
 import 'package:project/views/tab_lessons/record_home_work_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
@@ -284,7 +288,7 @@ class ItemLessonsView extends StatelessWidget {
               final data =  value.listModel[index];
               if(value.status == StatusCategory.BookMark)
                 {
-                  return _buildBookMark(theme,data);
+                  return _buildBookMark(theme,value.saved[index]);
                 }
               if(value.status == StatusCategory.Sp)
                 {
@@ -292,9 +296,12 @@ class ItemLessonsView extends StatelessWidget {
                 }
               if(value.status== StatusCategory.LastTopics){
                 return GestureDetector(
-                  onTap: (){
-
-                      Navigator.pushNamed(context, LastTopicView.id);
+                  onTap: ()async{
+                   await PostsController().getPostsOfSubject(data.id);
+                      Navigator.push(context,
+                        MaterialPageRoute(
+                        builder: (context) => LastTopicView(subject:data),
+                      ),);
 
 
                   },
@@ -394,7 +401,7 @@ class ItemLessonsView extends StatelessWidget {
     );
   }
 
-  Widget _buildBookMark(TextTheme theme, LessonsItemModel data)
+  Widget _buildBookMark(TextTheme theme, PostItemModel data)
   {
     return Card(
       color: Colors.white,
@@ -416,7 +423,7 @@ class ItemLessonsView extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,),
                 ),
-                IconButton(onPressed: (){},
+                IconButton(onPressed: ()async{},
                     icon: const Icon(
                       Icons.delete,
                       size: 18,
@@ -461,7 +468,7 @@ class ItemLessonsView extends StatelessWidget {
                     right: 4,
                     left: 8
                   ),
-                    child: Text(data.name!)),
+                    child: Text(data.user_email, overflow: TextOverflow.ellipsis,style: const TextStyle(fontSize: 9),)),
                 Container(
                   width: 1,
                   height: 20,
@@ -473,8 +480,8 @@ class ItemLessonsView extends StatelessWidget {
                 ),
                 Container(
                   margin: const EdgeInsets.only(
-                      right: 10,
-                      left: 4
+                      right: 5,
+                      left: 2
                   ),
                   child: const Icon(Icons.comment,
                   color: Colors.grey,
@@ -482,10 +489,10 @@ class ItemLessonsView extends StatelessWidget {
                 ),
                 Container(
                     margin: const EdgeInsets.only(
-                        right: 4,
-                        left: 8
+                        right: 3,
+                        left: 4
                     ),
-                    child: Text(data.countCm.toString()+'  کامنت')),
+                    child: Text(data.comments.toString()+'  کامنت',style: const TextStyle(fontSize: 10))),
                 Container(
                   width: 1,
                   height: 20,
@@ -496,10 +503,10 @@ class ItemLessonsView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 8,
+                  width: 3,
                 ),
-                Text(data.endDate,
-                style: theme.bodySmall,)
+                Text(data.date.substring(0,10),
+                style:  const TextStyle(fontSize: 10),)
 
               ],
             )
