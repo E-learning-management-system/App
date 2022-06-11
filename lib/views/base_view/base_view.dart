@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/views/home_professor_view.dart';
 import 'package:project/views/home_view.dart';
+import 'package:project/views/setting_view.dart';
 import 'package:project/views/tab_calendar/calendar_view.dart';
 import 'package:project/views/tab_lessons/lessons_view.dart';
-import 'package:project/views/test_view.dart';
+import 'package:project/views/setting_view.dart';
 
 class BaseView extends StatefulWidget {
   const BaseView({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class _BaseViewState extends State<BaseView> {
     ],
     const LessonsView(),
     const CalendarView(),
-    const TestPage()
+    const SettingView()
   ];
   final styleText = const TextStyle(
     fontSize: 16,
