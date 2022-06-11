@@ -23,7 +23,7 @@ import 'package:project/views/base_view/base_view.dart';
 import 'package:project/views/forget_password_view.dart';
 import 'package:project/views/home_view.dart';
 
-import 'package:project/views/test_view.dart';
+import 'package:project/views/setting_view.dart';
 
 import 'package:project/views/onboarding_view.dart';
 import 'package:project/views/splash_view.dart';
@@ -39,6 +39,7 @@ import 'views/login_view.dart';
 import 'views/signup_view.dart';
 import 'views/tab_lessons/item_lessons_view.dart';
 import 'views/tab_lessons/last_topic_view.dart';
+import 'views/setting_drawer_view.dart';
 
 void main() {
   runApp(MyApp());
@@ -97,7 +98,6 @@ class MyApp extends StatelessWidget {
           create: (context) => LastTopicController(),
         ),
         ChangeNotifierProvider<CreateNewSubjectController>(
-
           create: (context) => CreateNewSubjectController(),
         ),
         ChangeNotifierProvider<RecordHomeWorkController>(
@@ -136,7 +136,8 @@ class MyApp extends StatelessWidget {
           RecordHomeWorkView.id: (context) => const RecordHomeWorkView(),
           CalendarView.id: (context) => CalendarView(),
           BaseView.id: (context) => const BaseView(),
-          TestPage.id: (context) => const TestPage(),
+          SettingDrawer.id: (context) => const SettingDrawer(),
+          SettingView.id: (context) => const SettingView(),
         },
         title: 'Flutter Demo',
         theme: ThemeApp.theme,
