@@ -1,38 +1,45 @@
 
 
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/controllers/last_topic_controller.dart';
+import 'package:project/controllers/posts_cpntroller.dart';
+import 'package:project/models/post_model.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/sharedPreferences.dart';
-import 'package:project/models/book_mark_model.dart';
 import 'package:project/models/item_category_model.dart';
-import 'package:project/views/tab_lessons/create_new_subject.dart';
+import 'package:project/models/subject_item_model.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
+
 class LastTopicView extends StatelessWidget {
-  const LastTopicView({Key? key}) : super(key: key);
+  const LastTopicView({Key? key,required this.subject}) : super(key: key);
   static const String id = '/last_topic';
+  final SubjectsItemModel subject;
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<LastTopicController>(context);
+    final controller = Provider.of<PostsController>(context);
+    controller.setId(subject.id);
     final theme = Theme.of(context).textTheme;
     return Scaffold(
       appBar:  AppbarWidget(
         text: 'ریاضی 2 - مبحث 1',
         showIc: true,
       ),
+      floatingActionButtonLocation:
+      FloatingActionButtonLocation.startFloat,
       body: _buildBody(theme: theme, controller: controller),
       floatingActionButton:  Visibility(
         visible: sharedPreferences.getType() == 't',
         child: FloatingActionButton.extended(
           backgroundColor: Colors.green,
             onPressed: (){
-            Navigator.pushNamed(context, CreateNewSubjectView.id);
             },
             elevation: 1,
             shape: RoundedRectangleBorder(
@@ -48,8 +55,9 @@ class LastTopicView extends StatelessWidget {
   }
 
   Widget _buildBody({required TextTheme theme,
-    required LastTopicController controller})
+    required PostsController controller})
   {
+    print(controller.posts.toList());
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -70,16 +78,16 @@ class LastTopicView extends StatelessWidget {
         ),
 
         Expanded(
-          child: Consumer<LastTopicController>(
+          child: Consumer<PostsController>(
            builder: (context, value, child) => ListView.builder(
               padding: const EdgeInsets.only(
                 left: 15,
                 right: 15,
                 bottom: 20
               ),
-              itemCount: controller.listModel.length,
+              itemCount: controller.posts.length,
               itemBuilder: (context, index) {
-              final data = controller.listModel[index];
+              final data = controller.posts[index];
               return _buildItemList(theme:theme,data: data, value: value,
               index: index);
             },),
@@ -90,8 +98,8 @@ class LastTopicView extends StatelessWidget {
   }
   Widget _buildItemList(
   {required TextTheme theme,
-      required BookMarkModel data,
-      required LastTopicController value,
+      required PostItemModel data,
+      required PostsController value,
     required int index
   })
   {
@@ -118,8 +126,8 @@ class LastTopicView extends StatelessWidget {
   }
   Widget _buildNotExpanded(
   { required TextTheme theme,
-    required BookMarkModel data,
-    required LastTopicController controller,
+    required PostItemModel data,
+    required PostsController controller,
    required int index})
   {
     return Positioned(
@@ -151,7 +159,7 @@ class LastTopicView extends StatelessWidget {
                 ),
                 Container(
                     margin: const EdgeInsets.only(right: 15),
-                    child: Text(data.desc,
+                    child: Text(data.description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,)),
                 const SizedBox(
@@ -172,7 +180,7 @@ class LastTopicView extends StatelessWidget {
                             right: 4,
                             left: 8
                         ),
-                        child: Text(data.name)),
+                        child: Text(data.user_email,style: TextStyle(fontSize: 10),)),
                     Container(
                       width: 1,
                       height: 20,
@@ -194,9 +202,9 @@ class LastTopicView extends StatelessWidget {
                     Container(
                         margin: const EdgeInsets.only(
                             right: 4,
-                            left: 8
+                            left: 5
                         ),
-                        child: Text(data.countCm.toString()+'  کامنت')),
+                        child: Text(data.comments.toString()+'  کامنت')),
                     Container(
                       width: 1,
                       height: 20,
@@ -206,7 +214,7 @@ class LastTopicView extends StatelessWidget {
                         color: Colors.grey.shade400,
                       ),
                     ),
-                    SizedBox(width: 8,),
+                    SizedBox(width: 3,),
                     Text(data.date,
                       style: theme.bodySmall,)
 
@@ -307,8 +315,8 @@ class LastTopicView extends StatelessWidget {
 
   Widget _buildIsExpanded(
       { required TextTheme theme,
-        required BookMarkModel data,
-        required LastTopicController controller,
+        required PostItemModel data,
+        required PostsController controller,
         required int index}){
     return Positioned(
       bottom: 0,
@@ -343,7 +351,7 @@ class LastTopicView extends StatelessWidget {
                   ],
                 ),
                sizedBox(height: 8),
-                Text(data.desc,
+                Text(data.description,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,),
                  sizedBox(height: 15,),
@@ -391,7 +399,7 @@ class LastTopicView extends StatelessWidget {
                   width: 100,
                   borderRadius: borderRadiusTxtField,
                   call: (){
-                    controller.addItemComment();
+                    controller.addComment();
                   },
                   text: 'ارسال',
                 )
@@ -418,7 +426,7 @@ class LastTopicView extends StatelessWidget {
       ),
     );
   }
-  _itemComment(TextTheme theme,BookMarkModel data)
+  _itemComment(TextTheme theme,PostItemModel data)
   {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -445,7 +453,7 @@ class LastTopicView extends StatelessWidget {
                     height: 24,
                     width: 24,),
                   sizedBox(width: 8),
-                  Text(data.name,
+                  Text(data.user_email,
                     style: theme.subtitle2!.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 13,

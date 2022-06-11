@@ -12,6 +12,7 @@ class FinalLessonsController extends ChangeNotifier
   List<String> listItems = [];
   bool isLoading=false;
   late String _token;
+  final formEmail = GlobalKey<FormState>();
 
 
   void removeItem(int index)
@@ -21,7 +22,7 @@ class FinalLessonsController extends ChangeNotifier
   }
   void addItemToList()
   {
-    if(textEditController2.text.isNotEmpty)
+    if(textEditController2.text.isNotEmpty && formEmail.currentState!.validate())
       {
         listItems.add(textEditController2.text);
         notifyListeners();
@@ -36,20 +37,27 @@ Future<bool> addStudentRequest()async{
     var id=sharedPreferences.getLessonId(sharedPreferences.getTitle());
   _token=await sharedPreferences.getToken('token');
   for(var email in listItems){
-   // email= email.replaceAll('@', '\\40');
+    email= email.replaceAll('@', '%40');
     String _url='https://api.piazza.markop.ir/soren/courses/$id/newstudent/$email/';
-    var response=  await http.post(Uri.parse(_url),
-      headers: { "content-type": "application/json",
-        "Authorization": "Token " + _token,},
-    );
-    print(response.body);
-    final Map<String, dynamic> data = jsonDecode(response.body);
+    try {
+      var response = await http.post(Uri.parse(_url),
+        headers: { "content-type": "application/json",
+          "Authorization": "Token " + _token,}, body: jsonEncode({
+          "email": email,
+          "id": id,
+        }),
+      );
+      print(response.body);
+      final Map<String, dynamic> data = jsonDecode(response.body);
 
-    if(!data.containsKey("id")){
-      isLoading=false;
-      return false;
-    }
-
+      if(!data.containsKey("id")){
+        isLoading=false;
+        return false;}
+    }catch(e){
+      print('error:'+e.toString());
+  isLoading=false;
+  return false;
+  }
   }
   isLoading=false;
     return true;

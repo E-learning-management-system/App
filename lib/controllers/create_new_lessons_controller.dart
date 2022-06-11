@@ -22,9 +22,19 @@ class CreateNewLessonsController extends ChangeNotifier
 
   Future showMyDatePicker(BuildContext context,bool? isStartDate)async
   {
-    String? date = await jalaliCalendarPicker(context: context,
-        selectedFormat:'yyyy-mm-dd' );
-    String? examDate = await jalaliCalendarPicker(context: context, showTimePicker: true,selectedFormat: 'yyyy-mm-ddThh:m' );
+    String? examDate;
+    String? date;
+    if(isStartDate==null)
+      {
+         examDate = await jalaliCalendarPicker(context: context, showTimePicker: true,
+            selectedFormat: 'yyyy-mm-ddThh:m' );
+      }
+   else {
+     date = await jalaliCalendarPicker(context: context,
+          selectedFormat:'yyyy-mm-dd' );
+    }
+
+
     print(date);
     if(isStartDate==true){
       startDate =date;
@@ -37,6 +47,7 @@ class CreateNewLessonsController extends ChangeNotifier
     notifyListeners();
 
   }
+
 
   Future createNewLessonsRequest()
   async{

@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 class LoginView extends StatelessWidget {
   static const id = '/Login';
-  late String _email, _password;
+ String? _email, _password;
 
   LoginView({Key? key}) : super(key: key);
 

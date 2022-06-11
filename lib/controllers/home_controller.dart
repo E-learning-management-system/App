@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:project/models/item_category_model.dart';
 
@@ -8,6 +10,8 @@ class HomeController extends ChangeNotifier {
   var status = StatusCategory.Init;
   final formSearchKey = GlobalKey<FormState>();
   List<ItemCategoryModel> listModel = [];
+  List<ItemCategoryModel> lessonProfessor=[];
+  List<ItemCategoryModel> subjectProfessor=[];
 
  setAllCategory() async{
 
@@ -39,13 +43,23 @@ class HomeController extends ChangeNotifier {
 
  setLessons()async {
    List<String>? myList=await sharedPreferences.getLessons();
-    listModel = [
+   if(sharedPreferences.getType()=='t'){
+     lessonProfessor = [
       for (String i in myList!) ...[
         ItemCategoryModel(
             title: i,
             category: 'Lesson'),
       ]
-    ];
+    ];}
+   else{
+    listModel=[
+       for (String i in myList!) ...[
+         ItemCategoryModel(
+             title: i,
+             category: 'Lesson'),
+       ]
+     ];
+   }
     status = StatusCategory.Lessons;
 
     // notifyListeners();
@@ -67,13 +81,22 @@ class HomeController extends ChangeNotifier {
 
  setLastTopics()async {
     List<String> myList=await sharedPreferences.getSubjects();
+    if(sharedPreferences.getType() == 't'){
+      subjectProfessor=[
+        for (String i in myList) ...[
+          ItemCategoryModel(
+              title: i,
+              category: 'Subject'),
+        ]
+      ];
+    }else{
     listModel = [
       for (String i in myList) ...[
         ItemCategoryModel(
             title: i,
             category: 'Subject'),
       ]
-    ];
+    ];}
     status = StatusCategory.LastTopics;
     // notifyListeners();
   }

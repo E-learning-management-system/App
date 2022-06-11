@@ -5,6 +5,7 @@ import 'package:project/views/home_professor_view.dart';
 import 'package:project/views/home_view.dart';
 import 'package:project/views/tab_calendar/calendar_view.dart';
 import 'package:project/views/tab_lessons/lessons_view.dart';
+import 'package:project/views/test_view.dart';
 
 class BaseView extends StatefulWidget {
   const BaseView({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class BaseView extends StatefulWidget {
 }
 
 class _BaseViewState extends State<BaseView> {
-  int selectIndex = 1;
+  int selectIndex = 0;
   final myViews = [
     if (sharedPreferences.getType() == 't') ...[
       const HomeProfessorView()
@@ -23,7 +24,8 @@ class _BaseViewState extends State<BaseView> {
       const HomeView()
     ],
     const LessonsView(),
-    const CalendarView()
+    const CalendarView(),
+    const TestPage()
   ];
   final styleText = const TextStyle(
     fontSize: 16,
@@ -77,7 +79,7 @@ class _BaseViewState extends State<BaseView> {
         ),
         BottomNavyBarItem(
           textAlign: TextAlign.center,
-          icon: Icon(Icons.person),
+          icon: const Icon(Icons.person),
           title: Text(
             'Settings',
             style: styleText,

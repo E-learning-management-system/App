@@ -8,8 +8,8 @@ class LoginController extends ChangeNotifier
 {
 
   final String _url='https://api.piazza.markop.ir/signin/';
-  late final String _token;
-  String get token=>_token;
+  String? _token;
+  String get token=>_token!;
   bool isLoading =false;
 
   Future loginRequest( var email, var password)
@@ -29,7 +29,7 @@ class LoginController extends ChangeNotifier
     _token=res.containsKey("token")?res["token"]:"";
 
     notifyListeners();
-    if( _token.isNotEmpty){
+    if( _token!.isNotEmpty){
       sharedPreferences.setToken("token", _token);
       sharedPreferences.setLogin();
      await getProfile();
@@ -46,7 +46,7 @@ class LoginController extends ChangeNotifier
     ProfileModel profile;
     var response= await http.get(Uri.parse(url),
       headers: { "content-type": "application/json",
-        "Authorization": "Token " + _token,},
+        "Authorization": "Token " + _token!,},
     );
     final Map<String, dynamic> data = jsonDecode(response.body);
     if(data.containsKey("id")){

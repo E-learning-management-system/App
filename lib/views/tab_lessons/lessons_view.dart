@@ -69,6 +69,8 @@ class LessonsView extends StatelessWidget {
           ],
         ),
         floatingActionButton: _buildFloatAc(context),
+        floatingActionButtonLocation:
+        FloatingActionButtonLocation.startFloat,
         // bottomNavigationBar: B_AppBar(
         //   fromLessons: true,
         //   onTapHome: (){
@@ -161,6 +163,7 @@ class LessonsView extends StatelessWidget {
   Widget _buildFloatAc(BuildContext context) {
     if (sharedPreferences.getType() == 't') {
       return FloatingActionButton.extended(
+
           onPressed: () {
             Navigator.of(context).pushNamed(CreateNewLessonsView.id);
           },

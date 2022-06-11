@@ -1,17 +1,22 @@
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:project/controllers/home_controller.dart';
 import 'package:project/controllers/item_lessons_controller.dart';
+import 'package:project/controllers/posts_cpntroller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/models/lessons_item_model.dart';
+import 'package:project/models/post_model.dart';
 import 'package:project/views/tab_lessons/last_topic_view.dart';
 import 'package:project/views/tab_lessons/record_home_work_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/elevation_button.dart';
+import 'package:project/widgets/empty_view_widget.dart';
 import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -43,6 +48,8 @@ class ItemLessonsView extends StatelessWidget {
           centerTitle: false,
         showIc: true,
       ),
+      floatingActionButtonLocation:
+      FloatingActionButtonLocation.startFloat,
       body: Column(
         children: [
           _buildSearchWidget(),
@@ -59,7 +66,8 @@ class ItemLessonsView extends StatelessWidget {
             onPressed: ()async {
               if(controller.status == StatusCategory.HomeWork)
                 {
-                Navigator.pushNamed(context,RecordHomeWorkView.id);
+                Navigator.pushNamed(context,RecordHomeWorkView.id,
+                arguments: false);
                   return;
                 }
               await controller.openDialog(context);
@@ -108,7 +116,7 @@ class ItemLessonsView extends StatelessWidget {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 22.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -175,6 +183,7 @@ class ItemLessonsView extends StatelessWidget {
                   ],
                 ),
               ),
+              sizedBox(height: 8),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -259,17 +268,27 @@ class ItemLessonsView extends StatelessWidget {
   {
     return Expanded(
       child: Consumer<ItemLessonsController>(
-        builder: (context, value, child) => ListView.builder(
+        builder: (context, value, child) {
+          if(value.isLoading)
+          {
+            return Center(child: CircularProgressIndicator(),);
+          }
+          if(value.listModel.isEmpty)
+            {
+              return EmptyViewWidget();
+            }
+
+          return ListView.builder(
           itemCount: value.listModel.length,
             padding: const EdgeInsets.symmetric(
-              horizontal: 20,
+              horizontal: 30,
               vertical: 20
             ),
             itemBuilder:(context, index) {
               final data =  value.listModel[index];
               if(value.status == StatusCategory.BookMark)
                 {
-                  return _buildBookMark(theme,data);
+                  return _buildBookMark(theme,value.saved[index]);
                 }
               if(value.status == StatusCategory.Sp)
                 {
@@ -277,40 +296,43 @@ class ItemLessonsView extends StatelessWidget {
                 }
               if(value.status== StatusCategory.LastTopics){
                 return GestureDetector(
-                  onTap: (){
-
-                      Navigator.pushNamed(context, LastTopicView.id);
+                  onTap: ()async{
+                   await PostsController().getPostsOfSubject(data.id);
+                      Navigator.push(context,
+                        MaterialPageRoute(
+                        builder: (context) => LastTopicView(subject:data),
+                      ),);
 
 
                   },
                   child: SizedBox(
-                    height: 120,
+                    height: 135,
                     child: Card(
-                      margin: const EdgeInsets.only(top: 15),
+                      margin: const EdgeInsets.only(top: 30),
                       color: data.bgColor,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(borderRadiusTxtField)
+                          borderRadius: BorderRadius.circular(20)
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(data.title,
-                                    style: theme.headline6!.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      fontSize: 32,
-                                    )),
-                              ],
-                            ),
-                          ],
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(data.title,
+                                      style: theme.headline6!.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        fontSize: 32,
+                                      )),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -320,6 +342,8 @@ class ItemLessonsView extends StatelessWidget {
               if(value.status== StatusCategory.HomeWork){
               return GestureDetector(
                 onTap: (){
+                  Navigator.of(context).pushNamed(RecordHomeWorkView.id,
+                  arguments: true);
                 },
                 child: SizedBox(
                   height: 120,
@@ -371,12 +395,13 @@ class ItemLessonsView extends StatelessWidget {
               );
               }
               return const Center(child: CircularProgressIndicator());
-            }, ),
+            }, );
+        },
       ),
     );
   }
 
-  Widget _buildBookMark(TextTheme theme, LessonsItemModel data)
+  Widget _buildBookMark(TextTheme theme, PostItemModel data)
   {
     return Card(
       color: Colors.white,
@@ -398,7 +423,7 @@ class ItemLessonsView extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,),
                 ),
-                IconButton(onPressed: (){},
+                IconButton(onPressed: ()async{},
                     icon: const Icon(
                       Icons.delete,
                       size: 18,
@@ -443,7 +468,7 @@ class ItemLessonsView extends StatelessWidget {
                     right: 4,
                     left: 8
                   ),
-                    child: Text(data.name!)),
+                    child: Text(data.user_email, overflow: TextOverflow.ellipsis,style: const TextStyle(fontSize: 9),)),
                 Container(
                   width: 1,
                   height: 20,
@@ -455,8 +480,8 @@ class ItemLessonsView extends StatelessWidget {
                 ),
                 Container(
                   margin: const EdgeInsets.only(
-                      right: 10,
-                      left: 4
+                      right: 5,
+                      left: 2
                   ),
                   child: const Icon(Icons.comment,
                   color: Colors.grey,
@@ -464,10 +489,10 @@ class ItemLessonsView extends StatelessWidget {
                 ),
                 Container(
                     margin: const EdgeInsets.only(
-                        right: 4,
-                        left: 8
+                        right: 3,
+                        left: 4
                     ),
-                    child: Text(data.countCm.toString()+'  کامنت')),
+                    child: Text(data.comments.toString()+'  کامنت',style: const TextStyle(fontSize: 10))),
                 Container(
                   width: 1,
                   height: 20,
@@ -478,10 +503,10 @@ class ItemLessonsView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 8,
+                  width: 3,
                 ),
-                Text(data.endDate,
-                style: theme.bodySmall,)
+                Text(data.date.substring(0,10),
+                style:  const TextStyle(fontSize: 10),)
 
               ],
             )

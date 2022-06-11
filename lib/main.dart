@@ -10,6 +10,7 @@ import 'package:project/controllers/item_lessons_controller.dart';
 import 'package:project/controllers/last_topic_controller.dart';
 import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/controllers/onboarding_controller.dart';
+import 'package:project/controllers/posts_cpntroller.dart';
 import 'package:project/controllers/profile_controller.dart';
 import 'package:project/controllers/record_home_work_controller.dart';
 import 'package:project/controllers/signup_controller.dart';
@@ -93,9 +94,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ItemLessonsController>(
           create: (context) => ItemLessonsController(),
         ),
-        ChangeNotifierProvider<LastTopicController>(
-          child: const LastTopicView(),
-          create: (context) => LastTopicController(),
+        ChangeNotifierProvider<PostsController>(
+          create: (context) => PostsController(),
         ),
         ChangeNotifierProvider<CreateNewSubjectController>(
           create: (context) => CreateNewSubjectController(),
@@ -132,7 +132,6 @@ class MyApp extends StatelessWidget {
           LessonsView.id: (context) => const LessonsView(),
           CreateNewLessonsView.id: (context) => const CreateNewLessonsView(),
           FinalLessonsView.id: (context) => const FinalLessonsView(),
-          LastTopicView.id: (context) => const LastTopicView(),
           RecordHomeWorkView.id: (context) => const RecordHomeWorkView(),
           CalendarView.id: (context) => CalendarView(),
           BaseView.id: (context) => const BaseView(),
@@ -148,6 +147,7 @@ class MyApp extends StatelessWidget {
           );
         },
         initialRoute: SplashView.id,
+
       ),
     );
   }
