@@ -1,11 +1,11 @@
 
-
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/controllers/last_topic_controller.dart';
 import 'package:project/controllers/posts_cpntroller.dart';
+import 'package:project/models/comment_model.dart';
 import 'package:project/models/post_model.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
@@ -22,14 +22,21 @@ class LastTopicView extends StatelessWidget {
   static const String id = '/last_topic';
   final SubjectsItemModel subject;
 
+  Future<List<PostItemModel>> myPosts(PostsController controller)async{
+      await controller.getPostsOfSubject(subject.id);
+      return controller.posts;
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<PostsController>(context);
+    final controller = Provider.of<PostsController>(context,listen: false);
     controller.setId(subject.id);
     final theme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar:  AppbarWidget(
-        text: 'ریاضی 2 - مبحث 1',
+        text: subject.title,
         showIc: true,
       ),
       floatingActionButtonLocation:
@@ -57,7 +64,7 @@ class LastTopicView extends StatelessWidget {
   Widget _buildBody({required TextTheme theme,
     required PostsController controller})
   {
-    print(controller.posts.toList());
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -78,50 +85,69 @@ class LastTopicView extends StatelessWidget {
         ),
 
         Expanded(
-          child: Consumer<PostsController>(
-           builder: (context, value, child) => ListView.builder(
-              padding: const EdgeInsets.only(
-                left: 15,
-                right: 15,
-                bottom: 20
-              ),
-              itemCount: controller.posts.length,
-              itemBuilder: (context, index) {
-              final data = controller.posts[index];
-              return _buildItemList(theme:theme,data: data, value: value,
-              index: index);
-            },),
-          ),
+          child: FutureBuilder<List<PostItemModel>>(
+            future:myPosts(controller) ,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                print("myPosts");
+                return
+                  // Consumer<PostsController>(
+                  //   builder: (context, value, child) =>
+                    ListView.builder(
+            padding: const EdgeInsets.only(
+            left: 15,
+            right: 15,
+            bottom: 20
+            ),
+            itemCount: snapshot.data?.length,
+            itemBuilder: (context, index) {
+              final data = snapshot.data![index];
+              return _buildItemList(theme:theme,data: data, value: controller,
+            index: index);
+              },
+                    );
+                    // );
+              } else {
+                 return const Center(child: CircularProgressIndicator(),);
+                 }
+                 },
         )
-      ],
+
+    )
+    ],
     );
   }
   Widget _buildItemList(
   {required TextTheme theme,
-      required PostItemModel data,
+    required PostItemModel data,
       required PostsController value,
     required int index
   })
   {
-    return  SizedBox(
-      height:  data.isExpanded==true ? 520 :215,
-      child: Stack(
-        children: [
-          data.isExpanded==true?  _buildIsExpanded(theme:theme,
-              data: data,
-          controller: value,
-          index: index) :
-          _buildNotExpanded(
-              theme: theme,
-              data:data,
-              controller: value,
-          index: index),
-          Positioned(
-            left: 0,
-            top: 0,
-            child: _buildCircleButton(),)
-        ],
-      ),
+
+    return Consumer<PostsController>(
+        builder: (context, value, child) {
+          return SizedBox(
+            height: data.isExpanded == true ? 520 : 215,
+            child: Stack(
+              children: [
+                data.isExpanded == true ? _buildIsExpanded(theme: theme,
+                    data: data,
+                    controller: value,
+                    index: index) :
+                _buildNotExpanded(
+                    theme: theme,
+                    data: data,
+                    controller: value,
+                    index: index),
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  child: _buildCircleButton(data: data,controller: value),)
+              ],
+            ),
+          );
+        }
     );
   }
   Widget _buildNotExpanded(
@@ -173,14 +199,14 @@ class LastTopicView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset('$baseUrlImage/ic_profile.png',
-                      height: 35,
-                      width: 35,),
+                      height: 25,
+                      width: 25,),
                     Container(
                         margin: const EdgeInsets.only(
                             right: 4,
-                            left: 8
+                            left: 5
                         ),
-                        child: Text(data.user_email,style: TextStyle(fontSize: 10),)),
+                        child: Text(data.user_email,style: const TextStyle(fontSize: 10),)),
                     Container(
                       width: 1,
                       height: 20,
@@ -192,8 +218,8 @@ class LastTopicView extends StatelessWidget {
                     ),
                     Container(
                       margin: const EdgeInsets.only(
-                          right: 10,
-                          left: 4
+                          right: 1,
+                          left: 1
                       ),
                       child: const Icon(Icons.comment,
                           color: Colors.grey,
@@ -201,10 +227,10 @@ class LastTopicView extends StatelessWidget {
                     ),
                     Container(
                         margin: const EdgeInsets.only(
-                            right: 4,
-                            left: 5
+                            right: 1,
+                            left: 2
                         ),
-                        child: Text(data.comments.toString()+'  کامنت')),
+                        child: Text(data.comments.toString()+'  کامنت',style: const TextStyle(fontSize: 11),),),
                     Container(
                       width: 1,
                       height: 20,
@@ -215,8 +241,8 @@ class LastTopicView extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 3,),
-                    Text(data.date,
-                      style: theme.bodySmall,)
+                    Text(data.date.substring(0,10),
+                      style: const TextStyle(fontSize: 10))
 
                   ],
                 ),
@@ -231,7 +257,7 @@ class LastTopicView extends StatelessWidget {
   }
 
 
-  Widget _buildCircleButton()
+  Widget _buildCircleButton({required PostItemModel data,required PostsController controller})
   {
     return Row(
       children: [
@@ -242,13 +268,17 @@ class LastTopicView extends StatelessWidget {
           color: Colors.white,
           padding: const EdgeInsets.all(5),
           shape: const CircleBorder(),
-          onPressed: (){
-
+          onPressed: ()async{
+            if(data.is_saved=="False") {
+              await controller.savePost(data);
+            } else {
+              await controller.unSavePost(data.id);
+            }
           },
-          child: const Icon(
+          child: Icon(
               Icons.bookmark,
              size: 16,
-          color: Colors.grey),
+          color: data.is_saved=='True' ? Colors.red :Colors.grey ),
 
         ),
         sizedBox(width: 8),
@@ -259,13 +289,18 @@ class LastTopicView extends StatelessWidget {
           color: Colors.white,
           padding: const EdgeInsets.all(5),
           shape: const CircleBorder(),
-          onPressed: (){
+          onPressed: ()async{
+            if(data.is_liked=='False') {
+              await controller.likePost(data.id);
+            } else{
+              await controller.removeLike(data.id);
+            }
 
           },
           child: Icon(
               Icons.favorite,
               size: 16,
-              color: Colors.grey),
+              color: data.is_liked=='True'?Colors.red:Colors.grey),
 
         ),
 
@@ -289,7 +324,7 @@ class LastTopicView extends StatelessWidget {
           Center(
             child: Container(
               margin: EdgeInsets.only(top: 12,bottom: 20),
-                child: Text('هنوز پاسخی داده نشده ')),
+                child: const Text("پاسخی داده نشده")),
           ),
           _dividerWith(),
           sizedBox(
@@ -357,14 +392,7 @@ class LastTopicView extends StatelessWidget {
                  sizedBox(height: 15,),
                 _dividerWith(),
                  sizedBox(height: 15,),
-                Text('پاسخ استاد',style: theme.bodyText1!.copyWith(
-                    fontWeight: FontWeight.bold
-                ),),
-                Center(
-                  child: Container(
-                      margin: const EdgeInsets.only(top: 12,bottom: 20),
-                      child: const Text('هنوز پاسخی داده نشده ')),
-                ),
+                _tComment(theme: theme, data: data, controller: controller, index: index),
                 _dividerWith(),
                 sizedBox(height: 12),
                 Row(
@@ -381,14 +409,20 @@ class LastTopicView extends StatelessWidget {
                 ),
                 SizedBox(
                   height: 130,
-                  child: Consumer<LastTopicController>(
-                    builder: (context, value, child) =>
-                        ListView.builder(
-                        itemCount: value.listComments.length,
-                        itemBuilder: (context, index) {
-                          final dataCm = value.listComments[index];
-                          return _itemComment(theme,dataCm);
-                        }),
+                  child: Consumer<PostsController>(
+                    builder: (context, value, child){
+
+                      if(value.postComments[data.id]?.number!=0){
+                        return ListView.builder(
+                            itemCount: value.postComments[data.id]?.number,
+                            itemBuilder: (context, index) {
+                              final dataCm =value.postComments[data.id]!.comment[index];
+                              return _itemComment(theme,dataCm);
+                            });
+                      }
+                      return const Text('موردی یافت نشد!');
+                    }
+
                   ),
                 ),
                 sizedBox(height: 8),
@@ -399,7 +433,7 @@ class LastTopicView extends StatelessWidget {
                   width: 100,
                   borderRadius: borderRadiusTxtField,
                   call: (){
-                    controller.addComment();
+                    controller.addComment(controller.textEditController.text,data.id);
                   },
                   text: 'ارسال',
                 )
@@ -410,6 +444,45 @@ class LastTopicView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _tComment( { required TextTheme theme,
+    required PostItemModel data,
+    required PostsController controller,
+    required int index}){
+    if(controller.postComments[data.id]!.isTComment ){
+      return Column(
+        children: [
+        Text('پاسخ استاد',style: theme.bodyText1!.copyWith(
+          fontWeight: FontWeight.bold),),
+        Center(
+          child: Container(
+              margin: const EdgeInsets.only(top: 12,bottom: 20),
+              child: _itemComment(theme, controller.postComments[data.id]!.tComment),
+        )
+        ),
+
+        ],
+      );
+
+
+
+    }
+    else{
+      return Column(
+        children: [
+          Text('پاسخ استاد',style: theme.bodyText1!.copyWith(
+              fontWeight: FontWeight.bold),),
+          Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: 12,bottom: 20),
+                child: const Text('پاسخی داده نشده'),
+              )
+          ),
+
+        ],
+      );
+    }
   }
   _dividerWith()
   {
@@ -426,7 +499,7 @@ class LastTopicView extends StatelessWidget {
       ),
     );
   }
-  _itemComment(TextTheme theme,PostItemModel data)
+  _itemComment(TextTheme theme,CommentItemModel data)
   {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -460,7 +533,7 @@ class LastTopicView extends StatelessWidget {
                         color: MyColors.blueHex
                     ),),
                   sizedBox(width: 8),
-                  Expanded(child: Text(data.title,
+                  Expanded(child: Text(data.text,
                     style: theme.caption,))
                 ],
               ),
