@@ -288,7 +288,7 @@ class ItemLessonsView extends StatelessWidget {
               final data =  value.listModel[index];
               if(value.status == StatusCategory.BookMark)
                 {
-                  return _buildBookMark(theme,value.saved[index]);
+                  return _buildBookMark(theme,value.saved[index],value);
                 }
               if(value.status == StatusCategory.Sp)
                 {
@@ -296,8 +296,7 @@ class ItemLessonsView extends StatelessWidget {
                 }
               if(value.status== StatusCategory.LastTopics){
                 return GestureDetector(
-                  onTap: ()async{
-                   await PostsController().getPostsOfSubject(data.id);
+                  onTap: (){
                       Navigator.push(context,
                         MaterialPageRoute(
                         builder: (context) => LastTopicView(subject:data),
@@ -401,7 +400,7 @@ class ItemLessonsView extends StatelessWidget {
     );
   }
 
-  Widget _buildBookMark(TextTheme theme, PostItemModel data)
+  Widget _buildBookMark(TextTheme theme, PostItemModel data,ItemLessonsController controller)
   {
     return Card(
       color: Colors.white,
@@ -423,7 +422,9 @@ class ItemLessonsView extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,),
                 ),
-                IconButton(onPressed: ()async{},
+                IconButton(onPressed: ()async{
+                  await controller.unSavePost(data.id);
+                },
                     icon: const Icon(
                       Icons.delete,
                       size: 18,

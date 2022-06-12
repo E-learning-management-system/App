@@ -33,6 +33,25 @@ String titleOfNewSubject='';
 setId(int id){
   this.id=id;
 }
+unSavePost(id)async{
+  await sharedPreferences.getToken('token').then((value)=>{_token=value});
+  String  _url= 'https://api.piazza.markop.ir/soren/unsavepost/$id/';
+  var response= await http.post(Uri.parse(_url),
+      headers: { "content-type": "application/json",
+        "Authorization": "Token " + _token,},
+      body: jsonEncode({
+        "file":''
+      })
+  );
+  if(response.statusCode==200){
+    savedPosts.removeWhere((element) => element.id==id);
+    setBookMark();
+    notifyListeners();
+    return true;
+  }
+  notifyListeners();
+  return false;
+}
 getSavedPost()async{
   isLoading =true;
   notifyListeners();
