@@ -23,6 +23,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final bool noneEnableBorder;
   final ValueChanged<String>? onChanged;
   final bool readOnly;
+  final Function()? onTap;
 
 
   const TextFormFieldWidget(
@@ -45,7 +46,8 @@ class TextFormFieldWidget extends StatelessWidget {
         this.fillColor,
         this.prefixIcon,
         this.readOnly=false,
-        this.onChanged,}): super(key: key);
+        this.onChanged,
+       this.onTap}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,7 @@ class TextFormFieldWidget extends StatelessWidget {
     return Theme(
       data: theme,
       child: TextFormField(
+        onTap: onTap,
         maxLength: maxLength,
         readOnly: readOnly,
         cursorColor: theme.primaryColor,
