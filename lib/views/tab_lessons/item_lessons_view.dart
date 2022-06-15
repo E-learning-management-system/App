@@ -67,7 +67,7 @@ class ItemLessonsView extends StatelessWidget {
               if(controller.status == StatusCategory.HomeWork)
                 {
                 Navigator.pushNamed(context,RecordHomeWorkView.id,
-                arguments: false);
+                arguments: EnCreateHomeWork.CreateNew);
                   return;
                 }
               await controller.openDialog(context);
@@ -288,7 +288,7 @@ class ItemLessonsView extends StatelessWidget {
               final data =  value.listModel[index];
               if(value.status == StatusCategory.BookMark)
                 {
-                  return _buildBookMark(theme,value.saved[index],value);
+                  return _buildBookMark(theme,value.saved[index]);
                 }
               if(value.status == StatusCategory.Sp)
                 {
@@ -296,7 +296,8 @@ class ItemLessonsView extends StatelessWidget {
                 }
               if(value.status== StatusCategory.LastTopics){
                 return GestureDetector(
-                  onTap: (){
+                  onTap: ()async{
+                   await PostsController().getPostsOfSubject(data.id);
                       Navigator.push(context,
                         MaterialPageRoute(
                         builder: (context) => LastTopicView(subject:data),
@@ -342,7 +343,8 @@ class ItemLessonsView extends StatelessWidget {
               return GestureDetector(
                 onTap: (){
                   Navigator.of(context).pushNamed(RecordHomeWorkView.id,
-                  arguments: true);
+                  arguments: sharedPreferences.getType() == 't'?
+                  EnCreateHomeWork.Professor :EnCreateHomeWork.Student);
                 },
                 child: SizedBox(
                   height: 120,
@@ -367,12 +369,12 @@ class ItemLessonsView extends StatelessWidget {
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold
                               )),
-                              Text(data.endDate,
-                                  style: theme.subtitle2!.
-                                  copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.normal
-                                  ))
+                              // Text(data.endDate,
+                              //     style: theme.subtitle2!.
+                              //     copyWith(
+                              //         color: Colors.white,
+                              //         fontWeight: FontWeight.normal
+                              //     ))
                             ],
                           ),
                           SizedBox(
@@ -400,7 +402,7 @@ class ItemLessonsView extends StatelessWidget {
     );
   }
 
-  Widget _buildBookMark(TextTheme theme, PostItemModel data,ItemLessonsController controller)
+  Widget _buildBookMark(TextTheme theme, PostItemModel data)
   {
     return Card(
       color: Colors.white,
@@ -422,9 +424,7 @@ class ItemLessonsView extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,),
                 ),
-                IconButton(onPressed: ()async{
-                  await controller.unSavePost(data.id);
-                },
+                IconButton(onPressed: ()async{},
                     icon: const Icon(
                       Icons.delete,
                       size: 18,
@@ -549,4 +549,10 @@ class ItemLessonsView extends StatelessWidget {
     );
   }
 
+}
+
+enum EnCreateHomeWork{
+  Student,
+  Professor,
+  CreateNew
 }

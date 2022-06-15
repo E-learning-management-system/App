@@ -14,6 +14,7 @@ import 'package:project/controllers/posts_cpntroller.dart';
 import 'package:project/controllers/profile_controller.dart';
 import 'package:project/controllers/record_home_work_controller.dart';
 import 'package:project/controllers/signup_controller.dart';
+import 'package:project/controllers/student_delivery_controller.dart';
 import 'package:project/controllers/subject_controller.dart';
 import 'package:project/controllers/verify_email_controller.dart';
 
@@ -24,7 +25,7 @@ import 'package:project/views/base_view/base_view.dart';
 import 'package:project/views/forget_password_view.dart';
 import 'package:project/views/home_view.dart';
 
-import 'package:project/views/setting_view.dart';
+import 'package:project/views/test_view.dart';
 
 import 'package:project/views/onboarding_view.dart';
 import 'package:project/views/splash_view.dart';
@@ -34,6 +35,7 @@ import 'package:project/views/tab_lessons/create_new_subject.dart';
 import 'package:project/views/tab_lessons/final_lessons_view.dart';
 import 'package:project/views/tab_lessons/lessons_view.dart';
 import 'package:project/views/tab_lessons/record_home_work_view.dart';
+import 'package:project/views/tab_lessons/student_delivery_view.dart';
 import 'package:project/views/verify_email_view.dart';
 import 'package:provider/provider.dart';
 import 'views/login_view.dart';
@@ -98,6 +100,7 @@ class MyApp extends StatelessWidget {
           create: (context) => PostsController(),
         ),
         ChangeNotifierProvider<CreateNewSubjectController>(
+
           create: (context) => CreateNewSubjectController(),
         ),
         ChangeNotifierProvider<RecordHomeWorkController>(
@@ -107,6 +110,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<FinalLessonsController>(
           child: const FinalLessonsView(),
           create: (context) => FinalLessonsController(),
+        ),
+        ChangeNotifierProvider<StudentDeliveryController>(
+          child: const StudentDeliveryView(),
+          create: (context) => StudentDeliveryController(),
         ),
       ],
       child: MaterialApp(
@@ -137,6 +144,7 @@ class MyApp extends StatelessWidget {
           BaseView.id: (context) => const BaseView(),
           SettingDrawer.id: (context) => const SettingDrawer(),
           SettingView.id: (context) => const SettingView(),
+          StudentDeliveryView.id: (context) => const StudentDeliveryView()
         },
         title: 'Flutter Demo',
         theme: ThemeApp.theme,
