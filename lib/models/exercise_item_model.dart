@@ -40,7 +40,7 @@ class ExerciseItemModel {
     courseId=item["course_id"];
     date=item["date"];
     deadline=item["deadline"];
-    file=item['file'];
+    file=item['file']?? '';
     int num= id %(listOfColors.length);
     bgColor=listOfColors[num];
 

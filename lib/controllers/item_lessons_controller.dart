@@ -12,6 +12,9 @@ import 'package:project/widgets/text_field_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 class ItemLessonsController extends ChangeNotifier{
+  ItemLessonsController(){
+    setLastTopics();
+  }
 
 
 late int id=0;
@@ -23,7 +26,7 @@ List<PostItemModel> savedPosts=[];
  get listOfExerciseOfCourse=>_listOfExerciseOfCourse;
  get saved=>savedPosts;
 late String _token;
-var status = StatusCategory.LastTopics;
+var status ;
 List<dynamic> listModel = [];
 
 String titleOfNewSubject='';
@@ -45,7 +48,7 @@ unSavePost(id)async{
   );
   if(response.statusCode==200){
     savedPosts.removeWhere((element) => element.id==id);
-    setBookMark();
+    await setItemCategory(StatusCategory.BookMark);
     notifyListeners();
     return true;
   }

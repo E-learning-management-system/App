@@ -8,8 +8,8 @@ import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
 
 class CreateNewSubjectView extends StatelessWidget {
-   int Lessonid;
-   CreateNewSubjectView({Key? key, required this.Lessonid}) : super(key: key);
+   int subjectId;
+   CreateNewSubjectView({Key? key, required this.subjectId}) : super(key: key);
   static const String id = '/create_new_subject';
 
   @override
@@ -42,7 +42,7 @@ class CreateNewSubjectView extends StatelessWidget {
                   },
                       icon: const Icon(Icons.close, size: 15,),
                       splashRadius: 12),
-                  _buildContent(theme,controller)],
+                  _buildContent(theme,controller,context)],
               ),
             ),
           ),
@@ -51,7 +51,7 @@ class CreateNewSubjectView extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(TextTheme theme, CreateNewSubjectController controller,) {
+  Widget _buildContent(TextTheme theme, CreateNewSubjectController controller,BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -61,7 +61,7 @@ class CreateNewSubjectView extends StatelessWidget {
         _buildTitleText(theme, 'متن پیام'),
         _buildTextField(maxLine: true,controller: controller.controllerBody),
         _buildUploadFile(theme),
-        _buildButton(controller: controller)
+        _buildButton(controller: controller,context: context)
       ],
     );
   }
@@ -141,7 +141,7 @@ class CreateNewSubjectView extends StatelessWidget {
     );
   }
 
-  _buildButton({required CreateNewSubjectController controller }) {
+  _buildButton({required CreateNewSubjectController controller,required BuildContext context }) {
     return Container(
       margin: const EdgeInsets.only(top: 18),
       child: ElevationButtonWidget(
@@ -149,8 +149,32 @@ class CreateNewSubjectView extends StatelessWidget {
         width: 80,
         height: 30,
         call: ()async {
-          await controller.addSubject(Lessonid);
-        },
+         var res= await controller.addSubject(subjectId);
+         if(res){
+           controller.file?.delete();
+           controller.controllerBody.clear();
+           controller.controllerTitle.clear();
+           Navigator.pop(context);
+         }
+         else{
+           controller.file?.delete();
+           controller.controllerBody.clear();
+           controller.controllerTitle.clear();
+    showDialog<String>(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+    title: const Text('خطا'),
+    content: const Text('مشکلی در ثبت پست وحود دارد.'),
+    actions: <Widget>[
+    TextButton(
+    onPressed: () => Navigator.pop(context),
+    child: const Text('باشه'),
+    ),
+    ],
+    ),
+    );
+    }
+         },
         text: 'ثبت',
       ),
     );

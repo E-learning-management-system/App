@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_summernote/flutter_summernote.dart';
 import 'package:project/controllers/record_home_work_controller.dart';
+import 'package:project/controllers/student_delivery_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
+import 'package:project/models/exercise_item_model.dart';
 import 'package:project/views/tab_lessons/item_lessons_view.dart';
 import 'package:project/views/tab_lessons/student_delivery_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
@@ -13,18 +15,31 @@ import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:pie_chart/pie_chart.dart';
 
+import '../../widgets/empty_view_widget.dart';
+
 class RecordHomeWorkView extends StatelessWidget {
-  const RecordHomeWorkView({Key? key}) : super(key: key);
+  RecordHomeWorkView({Key? key, this.exercise }) : super(key: key);
   static const String id = '/record_home_work';
+  ExerciseItemModel? exercise;
 
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<RecordHomeWorkController>(context);
     final theme = Theme.of(context).textTheme;
     var enStatus = ModalRoute.of(context)!.settings.arguments as EnCreateHomeWork;
+    final deliveryController = Provider.of<StudentDeliveryController>(context);
+    controller.setTitle(exercise?.title);
+    controller.setDes(exercise?.description);
+
+    String? title='';
+    if(enStatus==EnCreateHomeWork.CreateNew){
+      title='تکلیف جدید';
+    }else{
+      title=exercise?.title;
+    }
     return Scaffold(
       appBar: AppbarWidget(
-        text: 'ریاضی 2 - تکلیف 1',
+        text: title,
         centerTitle: false,
         showIc: true,
       ),
@@ -32,7 +47,9 @@ class RecordHomeWorkView extends StatelessWidget {
           theme: theme,
           controller: controller,
           enStatus: enStatus,
-          context: context),
+          context: context,
+      exercise: exercise,
+      deliveryController: deliveryController),
     );
   }
 
@@ -40,7 +57,9 @@ class RecordHomeWorkView extends StatelessWidget {
       {required TextTheme theme,
       required RecordHomeWorkController controller,
       required EnCreateHomeWork enStatus,
-      required BuildContext context}) {
+      required BuildContext context,
+      required ExerciseItemModel? exercise,
+      required StudentDeliveryController deliveryController}) {
     return SingleChildScrollView(
       padding: const EdgeInsets.only(right: 12, left: 12, bottom: 25, top: 25),
       child: Column(
@@ -53,7 +72,7 @@ class RecordHomeWorkView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildTitleText(theme, 'عنوان'),
-                    _buildTextField(enStatus)
+                    _buildTextField(controller.titleController,enStatus,exercise)
                   ],
                 ),
               ),
@@ -63,7 +82,7 @@ class RecordHomeWorkView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildTitleText(theme, 'مهلت تحویل'),
-                    _buildDatePick()
+                    _buildDatePick(exercise,enStatus)
                   ],
                 ),
               ),
@@ -75,7 +94,7 @@ class RecordHomeWorkView extends StatelessWidget {
               child: _buildTitleText(theme, 'توضیح')),
           Visibility(
             visible: enStatus != EnCreateHomeWork.CreateNew,
-              child: _buildTextField(enStatus, maxLine: true),
+              child: _buildTextField(controller.desController,enStatus,exercise, maxLine: true),
           replacement: _buildTextEditor(controller.keyEditor, theme,
           enStatus)),
           Visibility(
@@ -90,19 +109,36 @@ class RecordHomeWorkView extends StatelessWidget {
           sizedBox(height: 15),
           Visibility(
               visible: enStatus == EnCreateHomeWork.Professor,
-              child: _buildChart(theme, context, controller)),
+              child: _buildChart(theme, context, controller,deliveryController)),
           sizedBox(height: 30),
-          _buildButton(theme, enStatus),
+          _buildButton(theme, enStatus,controller,context),
         ],
       ),
     );
   }
 
-  _buildDatePick(){
-    return Consumer<RecordHomeWorkController>(
+  _buildDatePick(ExerciseItemModel? exercise,EnCreateHomeWork enStatus){
+    if(enStatus!=EnCreateHomeWork.CreateNew){
+      return Consumer<RecordHomeWorkController>(
+        builder: (context, value, child) => InkWell(
+          onTap: (){},
+          child: Container(
+            height: 30,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(borderRadiusTxtField),
+            ),
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 8),
+            child: Text(exercise!.date.substring(0,10) ),
+          ),
+        ),
+      );
+    }
+   else{ return Consumer<RecordHomeWorkController>(
       builder: (context, value, child) => InkWell(
         onTap: (){
-          value.showDate(context);
+            value.showDate(context);
         },
         child: Container(
           height: 30,
@@ -116,7 +152,7 @@ class RecordHomeWorkView extends StatelessWidget {
         ),
       ),
     );
-  }
+  }}
 
   _buildTitleText(TextTheme theme, String title) {
     return Padding(
@@ -129,16 +165,17 @@ class RecordHomeWorkView extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(EnCreateHomeWork enStatus, {bool maxLine = false}) {
-    return TextFormFieldWidget(
-      hintText: '',
+  Widget _buildTextField(TextEditingController controller,EnCreateHomeWork enStatus,ExerciseItemModel? exercise, {bool maxLine = false}) {
+   return TextFormFieldWidget(
+     controller: controller,
+     noneEnableBorder: false,
+     readOnly: enStatus == EnCreateHomeWork.Student? true:false,
+     filled: true,
+     maxLines:maxLine? 6: 1,
+     fillColor: Colors.white,
+     hintText: '',
 
-      noneEnableBorder: false,
-      readOnly: enStatus == EnCreateHomeWork.Student? true:false,
-      filled: true,
-      maxLines: maxLine ? 6 : 1,
-      fillColor: Colors.white,
-    );
+   );
   }
 
   _downloadFile(TextTheme theme,EnCreateHomeWork enStatus) {
@@ -189,7 +226,9 @@ class RecordHomeWorkView extends StatelessWidget {
         Visibility(
           visible: enStatus == EnCreateHomeWork.Professor,
           child: TextButton(
-              onPressed: (){},
+              onPressed: (){
+
+              },
               style: TextButton.styleFrom(
                 textStyle: const TextStyle(fontWeight: FontWeight.bold)
               ),
@@ -314,12 +353,61 @@ class RecordHomeWorkView extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(TextTheme theme, EnCreateHomeWork enStatus) {
+  Widget _buildButton(TextTheme theme, EnCreateHomeWork enStatus, RecordHomeWorkController controller,BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ElevationButtonWidget(
-          call: () {},
+          call: () async{
+            if(enStatus == EnCreateHomeWork.CreateNew){
+              var res = await controller.newExercise(exercise?.id);
+              if(res){
+                Navigator.pop(context);
+              }else{
+                showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) =>
+                      AlertDialog(
+                        title: const Text('خطا'),
+                        content: const Text(
+                            'مشکلی در ثبت تکلیف وجود دارد.'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.pop(
+                                context),
+                            child: const Text('باشه'),
+                          ),
+                        ],
+                      ),
+                );
+              }
+            }if(enStatus == EnCreateHomeWork.Student){
+              var res= await controller.newAnswer(exercise?.id);
+              if(res){
+                Navigator.pop(context);
+              }
+              else{
+                showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) =>
+                      AlertDialog(
+                        title: const Text('خطا'),
+                        content: const Text(
+                            'مشکلی در ثبت پاسخ وجود دارد.'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.pop(
+                                context),
+                            child: const Text('باشه'),
+                          ),
+                        ],
+                      ),
+                );
+              }
+            }if(enStatus == EnCreateHomeWork.Professor){
+              Navigator.pop(context);
+            }
+          },
           width: 120,
           text: enStatus == EnCreateHomeWork.CreateNew? 'ثبت تکلیف': 'ثبت',
         ),
@@ -327,7 +415,8 @@ class RecordHomeWorkView extends StatelessWidget {
         Visibility(
           visible: enStatus == EnCreateHomeWork.Professor,
           child: InkWell(
-            onTap: () {},
+            onTap: ()async{
+            },
             child: Container(
               margin: const EdgeInsets.only(right: 30),
               child: Text(
@@ -344,100 +433,260 @@ class RecordHomeWorkView extends StatelessWidget {
     );
   }
 
+  Future<bool> getStudents(StudentDeliveryController deliveryController)async{
+    await deliveryController.getNotAnswerStudent(exercise?.id);
+    await deliveryController.getNotAnswerStudent(exercise?.id);
+    return true;
+  }
+
   Widget _buildChart(TextTheme theme, BuildContext context,
-      RecordHomeWorkController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildTitleText(theme, 'آمار تحویل تکلیف'),
-        Container(
-          color: Colors.white,
-          padding: EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+      RecordHomeWorkController controller,StudentDeliveryController deliveryController)  {
+
+
+    return FutureBuilder(
+
+        future: getStudents(deliveryController),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData) {
+            int delivery=0;
+            int notDelivery=0;
+            return Column
+              (
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTitleText(theme, 'آمار تحویل تکلیف'),
+                Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.all(8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        height: 12,
-                        width: 12,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.green,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                height: 12,
+                                width: 12,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              sizedBox(width: 8),
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) =>
+                                            StudentDeliveryView(Id: exercise!.id,
+                                              title: exercise!.title,),
+                                        settings: const RouteSettings(
+                                            arguments: true)
+                                    )
+                                    );
+                                  },
+                                  child: Text(
+                                    delivery.toString()+"  دانشجو تحویل داده اند"
+                                       ,
+                                    style: TextStyle(color: Colors.blue),
+                                  )),
+                            ],
+                          ),
+                          sizedBox(height: 15),
+                          Row(
+                            children: [
+                              Container(
+                                height: 12,
+                                width: 12,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              sizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) =>
+                                          StudentDeliveryView(Id: exercise!.id,
+                                            title: exercise!.title,),
+                                      settings: const RouteSettings(
+                                          arguments: false)
+                                  )
+                                  );
+                                },
+                                child: Text(
+                                notDelivery.toString()+"دانشجو تحویل نداده اند" ,
+                                    style: const TextStyle(color: Colors.blue)),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                       sizedBox(width: 8),
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(StudentDeliveryView.id,
-                            arguments: true);
-                          },
-                          child: const Text(
-                            "26  دانشجو تحویل داده اند",
-                            style: TextStyle(color: Colors.blue),
-                          )),
-                    ],
-                  ),
-                  sizedBox(height: 15),
-                  Row(
-                    children: [
-                      Container(
-                        height: 12,
-                        width: 12,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.red,
-                        ),
-                      ),
-                      sizedBox(width: 8),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pushNamed(StudentDeliveryView.id,
-                              arguments: false);
+                      PieChart(
+                        dataMap: {
+                          'true': delivery.toDouble(),
+                          'false': notDelivery.toDouble()
                         },
-                        child: const Text("76  دانشجو تحویل نداده اند",
-                            style: TextStyle(color: Colors.blue)),
+                        animationDuration: const Duration(milliseconds: 800),
+                        chartLegendSpacing: 15,
+                        chartRadius: MediaQuery
+                            .of(context)
+                            .size
+                            .width / 3.2,
+                        initialAngleInDegree: 0,
+                        chartType: ChartType.ring,
+                        ringStrokeWidth: 14,
+                        legendOptions: const LegendOptions(
+                          showLegends: false,
+                        ),
+                        centerText: controller.calPercentage(
+                            delivery, delivery + notDelivery),
+                        totalValue: delivery.toDouble() + notDelivery,
+                        colorList: const [
+                          Colors.green,
+                          Colors.red,
+                        ],
+                        chartValuesOptions: const ChartValuesOptions(
+                            showChartValueBackground: false,
+                            showChartValues: false,
+                            showChartValuesInPercentage: true,
+                            showChartValuesOutside: false,
+                            decimalPlaces: 0,
+                            chartValueStyle: TextStyle(
+                              fontSize: 12,
+                              color: Colors.blue,
+                            )),
                       ),
                     ],
                   ),
-                ],
-              ),
-              sizedBox(width: 8),
-              PieChart(
-                dataMap: const {'true': 20, 'false': 80},
-                animationDuration: const Duration(milliseconds: 800),
-                chartLegendSpacing: 15,
-                chartRadius: MediaQuery.of(context).size.width / 3.2,
-                initialAngleInDegree: 0,
-                chartType: ChartType.ring,
-                ringStrokeWidth: 14,
-                legendOptions: const LegendOptions(
-                  showLegends: false,
                 ),
-                centerText: controller.calPercentage(20, 100),
-                totalValue: 100,
-                colorList: const [
-                  Colors.green,
-                  Colors.red,
-                ],
-                chartValuesOptions: const ChartValuesOptions(
-                    showChartValueBackground: false,
-                    showChartValues: false,
-                    showChartValuesInPercentage: true,
-                    showChartValuesOutside: false,
-                    decimalPlaces: 0,
-                    chartValueStyle: TextStyle(
-                      fontSize: 12,
-                      color: Colors.blue,
-                    )),
+              ],
+            );
+          }
+          int delivery=deliveryController.answerStudent[exercise?.id]!.length;
+          int notDelivery=deliveryController.notAnswerStudent[exercise?.id]!.length;
+          return Column
+            (
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTitleText(theme, 'آمار تحویل تکلیف'),
+              Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              height: 12,
+                              width: 12,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.green,
+                              ),
+                            ),
+                            sizedBox(width: 8),
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) =>
+                                          StudentDeliveryView(Id: exercise!.id,
+                                            title: exercise!.title,),
+                                      settings: const RouteSettings(
+                                          arguments: true)
+                                  )
+                                  );
+                                },
+                                child: Text(
+                                  delivery.toString()+"  دانشجو تحویل داده اند"
+                                      ,
+                                  style: TextStyle(color: Colors.blue),
+                                )),
+                          ],
+                        ),
+                        sizedBox(height: 15),
+                        Row(
+                          children: [
+                            Container(
+                              height: 12,
+                              width: 12,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.red,
+                              ),
+                            ),
+                            sizedBox(width: 8),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) =>
+                                        StudentDeliveryView(Id: exercise!.id,
+                                          title: exercise!.title,),
+                                    settings: const RouteSettings(
+                                        arguments: false)
+                                )
+                                );
+                              },
+                              child: Text(notDelivery.toString()+"دانشجو تحویل نداده اند"
+                                  ,
+                                  style: const TextStyle(color: Colors.blue)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    sizedBox(width: 8),
+                    PieChart(
+                      dataMap: {
+                        'true': delivery.toDouble(),
+                        'false': notDelivery.toDouble()
+                      },
+                      animationDuration: const Duration(milliseconds: 800),
+                      chartLegendSpacing: 15,
+                      chartRadius: MediaQuery
+                          .of(context)
+                          .size
+                          .width / 3.2,
+                      initialAngleInDegree: 0,
+                      chartType: ChartType.ring,
+                      ringStrokeWidth: 14,
+                      legendOptions: const LegendOptions(
+                        showLegends: false,
+                      ),
+                      centerText: controller.calPercentage(
+                          delivery, delivery + notDelivery),
+                      totalValue: delivery.toDouble() + notDelivery,
+                      colorList: const [
+                        Colors.green,
+                        Colors.red,
+                      ],
+                      chartValuesOptions: const ChartValuesOptions(
+                          showChartValueBackground: false,
+                          showChartValues: false,
+                          showChartValuesInPercentage: true,
+                          showChartValuesOutside: false,
+                          decimalPlaces: 0,
+                          chartValueStyle: TextStyle(
+                            fontSize: 12,
+                            color: Colors.blue,
+                          )),
+                    ),
+                  ],
+                ),
               ),
             ],
-          ),
-        ),
-      ],
+          );
+        }
     );
   }
 }

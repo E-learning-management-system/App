@@ -12,6 +12,7 @@ import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/models/subject_item_model.dart';
+import 'package:project/views/tab_lessons/create_new_subject.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/text_field_widget.dart';
@@ -47,6 +48,10 @@ class LastTopicView extends StatelessWidget {
         child: FloatingActionButton.extended(
           backgroundColor: Colors.green,
             onPressed: (){
+              Navigator.push(context,
+                MaterialPageRoute(
+                  builder: (context) => CreateNewSubjectView(subjectId: subject.id,),
+                ),);
             },
             elevation: 1,
             shape: RoundedRectangleBorder(
@@ -134,7 +139,8 @@ class LastTopicView extends StatelessWidget {
                 data.isExpanded == true ? _buildIsExpanded(theme: theme,
                     data: data,
                     controller: value,
-                    index: index) :
+                    index: index,
+                context: context) :
                 _buildNotExpanded(
                     theme: theme,
                     data: data,
@@ -270,9 +276,15 @@ class LastTopicView extends StatelessWidget {
           shape: const CircleBorder(),
           onPressed: ()async{
             if(data.is_saved=="False") {
-              await controller.savePost(data);
+             var res= await controller.savePost(data);
+              if(res){
+                data.is_saved='True';
+              }
             } else {
-              await controller.unSavePost(data.id);
+             var res= await controller.unSavePost(data.id);
+             if(res){
+               data.is_saved='False';
+             }
             }
           },
           child: Icon(
@@ -291,9 +303,15 @@ class LastTopicView extends StatelessWidget {
           shape: const CircleBorder(),
           onPressed: ()async{
             if(data.is_liked=='False') {
-              await controller.likePost(data.id);
+             var res= await controller.likePost(data.id);
+             if(res){
+               data.is_liked='True';
+             }
             } else{
-              await controller.removeLike(data.id);
+              var res=await controller.removeLike(data.id);
+              if(res){
+                data.is_liked='False';
+              }
             }
 
           },
@@ -352,7 +370,8 @@ class LastTopicView extends StatelessWidget {
       { required TextTheme theme,
         required PostItemModel data,
         required PostsController controller,
-        required int index}){
+        required int index,
+      required BuildContext context}){
     return Positioned(
       bottom: 0,
       right: 0,
@@ -432,8 +451,27 @@ class LastTopicView extends StatelessWidget {
                   height: 30,
                   width: 100,
                   borderRadius: borderRadiusTxtField,
-                  call: (){
-                    controller.addComment(controller.textEditController.text,data.id);
+                  call: ()async{
+                   var res= await controller.addComment(controller.textEditController.text,data.id);
+                   if(res){
+                     controller.textEditController.clear();
+                    await controller.getPostsOfSubject(subject.id);
+                   }else{
+                     controller.textEditController.clear();
+                     showDialog<String>(
+                       context: context,
+                       builder: (BuildContext context) => AlertDialog(
+                         title: const Text('خطا'),
+                         content: const Text('مشکلی در ثبت نظر وحود دارد.'),
+                         actions: <Widget>[
+                           TextButton(
+                             onPressed: () => Navigator.pop(context),
+                             child: const Text('باشه'),
+                           ),
+                         ],
+                       ),
+                     );
+                   }
                   },
                   text: 'ارسال',
                 )

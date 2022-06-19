@@ -33,16 +33,18 @@ class CreateNewSubjectController extends ChangeNotifier{
   }
 
   addSubject(int id)async{
-    var _url='/soren/courses/$id/newsubject/';
+    var _url='https://api.piazza.markop.ir/soren/subjects/$id/newpost/';
     var _token=await sharedPreferences.getToken('token');
     var response= await http.post(Uri.parse(_url),
       headers: { "content-type": "application/json",
         "Authorization": "Token " + _token,},body:jsonEncode({
         "title":controllerTitle.text,
+        "description": controllerBody.text,
+        "file": file!=null ? file!.path : null,
       }),
     );
 
-    print("jsonDecode(add subject)=   "+ const Utf8Decoder().convert(response.bodyBytes));
+    print("jsonDecode(add post)=   "+ const Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("id")){
       return true;

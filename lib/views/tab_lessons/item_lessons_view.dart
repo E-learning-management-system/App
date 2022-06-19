@@ -8,6 +8,7 @@ import 'package:project/controllers/posts_cpntroller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/sharedPreferences.dart';
+import 'package:project/models/exercise_item_model.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/models/lessons_item_model.dart';
 import 'package:project/models/post_model.dart';
@@ -28,6 +29,7 @@ class ItemLessonsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Provider.of<ItemLessonsController>(context);
     controller.setId(lesson.id);
+    // controller.getSubjectsOfCourse(lesson.id);
     final theme = Theme.of(context).textTheme;
     return _buildBody(
       controller: controller,
@@ -54,7 +56,7 @@ class ItemLessonsView extends StatelessWidget {
         children: [
           _buildSearchWidget(),
           _buildCategoryWidget(),
-          _buildListItems(theme)
+          _buildListItems(theme,controller)
         ],
       ),
       floatingActionButton:   Visibility(
@@ -66,8 +68,12 @@ class ItemLessonsView extends StatelessWidget {
             onPressed: ()async {
               if(controller.status == StatusCategory.HomeWork)
                 {
-                Navigator.pushNamed(context,RecordHomeWorkView.id,
-                arguments: EnCreateHomeWork.CreateNew);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RecordHomeWorkView(exercise: ExerciseItemModel(courseName:'',file:'',id:lesson.id,title: '',teacher: '',date: '',deadline: '',description: '',courseId: 0),),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
+                    EnCreateHomeWork.CreateNew :EnCreateHomeWork.Student )
+                    ),);
                   return;
                 }
               await controller.openDialog(context);
@@ -264,7 +270,7 @@ class ItemLessonsView extends StatelessWidget {
           ),
     );
   }
-  Widget _buildListItems(TextTheme theme)
+  Widget _buildListItems(TextTheme theme,ItemLessonsController controller)
   {
     return Expanded(
       child: Consumer<ItemLessonsController>(
@@ -288,7 +294,7 @@ class ItemLessonsView extends StatelessWidget {
               final data =  value.listModel[index];
               if(value.status == StatusCategory.BookMark)
                 {
-                  return _buildBookMark(theme,value.saved[index]);
+                  return _buildBookMark(theme,value.saved[index],controller);
                 }
               if(value.status == StatusCategory.Sp)
                 {
@@ -342,9 +348,13 @@ class ItemLessonsView extends StatelessWidget {
               if(value.status== StatusCategory.HomeWork){
               return GestureDetector(
                 onTap: (){
-                  Navigator.of(context).pushNamed(RecordHomeWorkView.id,
-                  arguments: sharedPreferences.getType() == 't'?
-                  EnCreateHomeWork.Professor :EnCreateHomeWork.Student);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RecordHomeWorkView(exercise: data,),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
+                    EnCreateHomeWork.Professor :EnCreateHomeWork.Student )
+                    ),);
+
                 },
                 child: SizedBox(
                   height: 120,
@@ -402,7 +412,7 @@ class ItemLessonsView extends StatelessWidget {
     );
   }
 
-  Widget _buildBookMark(TextTheme theme, PostItemModel data)
+  Widget _buildBookMark(TextTheme theme, PostItemModel data,ItemLessonsController controller)
   {
     return Card(
       color: Colors.white,
@@ -424,7 +434,14 @@ class ItemLessonsView extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,),
                 ),
-                IconButton(onPressed: ()async{},
+                IconButton(onPressed: ()async{
+
+                 var res= await controller.unSavePost(data.id);
+                 if(res){
+                   print('delete');
+
+                 }
+                },
                     icon: const Icon(
                       Icons.delete,
                       size: 18,
