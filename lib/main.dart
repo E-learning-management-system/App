@@ -107,6 +107,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<StudentDeliveryController>(
           create: (context) => StudentDeliveryController(),
         ),
+        ChangeNotifierProvider<StudentDeliveryController>(
+          child: const StudentDeliveryView(title: '',Id: 0),
+          create: (context) => StudentDeliveryController(),
+        ),
       ],
       child: MaterialApp(
         localizationsDelegates: const [
@@ -135,6 +139,8 @@ class MyApp extends StatelessWidget {
           BaseView.id: (context) => const BaseView(),
           SettingDrawer.id: (context) => const SettingDrawer(),
           SettingView.id: (context) => const SettingView(),
+          StudentDeliveryView.id: (context) => const StudentDeliveryView(Id: 0,
+          title: '',)
         },
         title: 'Flutter Demo',
         theme: ThemeApp.theme,

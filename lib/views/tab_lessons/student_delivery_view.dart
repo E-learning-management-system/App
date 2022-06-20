@@ -4,18 +4,14 @@ import 'package:project/controllers/student_delivery_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/widgets/app_bar_widget.dart';
+import 'package:project/widgets/empty_view_widget.dart';
 import 'package:provider/provider.dart';
-
-import '../../widgets/empty_view_widget.dart';
 class StudentDeliveryView extends StatelessWidget {
   const StudentDeliveryView({Key? key,required this.title,required this.Id}) : super(key: key);
   static const String id = '/student_delivery';
   final String title;
   final int Id;
   @override
-
-
-
   Widget build(BuildContext context) {
     final isComplete = ModalRoute.of(context)!.settings.arguments as bool;
     final cnt = Provider.of<StudentDeliveryController>(context);

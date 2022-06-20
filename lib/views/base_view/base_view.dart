@@ -19,7 +19,7 @@ class BaseView extends StatefulWidget {
 class _BaseViewState extends State<BaseView> {
   int selectIndex = 0;
   final myViews = [
-    if (sharedPreferences.getType() == 't') ...[
+    if (sharedPreferences.getType() != 't') ...[
       const HomeProfessorView()
     ] else ...[
       const HomeView()

@@ -62,7 +62,7 @@ class ItemLessonsView extends StatelessWidget {
       floatingActionButton:   Visibility(
         visible: sharedPreferences.getType() == 't' &&
         controller.status == StatusCategory.LastTopics ||
-        controller.status == StatusCategory.HomeWork,
+            sharedPreferences.getType() == 't' && controller.status == StatusCategory.HomeWork,
         child: FloatingActionButton.extended(
             backgroundColor: MyColors.blueHex,
             onPressed: ()async {
@@ -379,12 +379,12 @@ class ItemLessonsView extends StatelessWidget {
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold
                               )),
-                              // Text(data.endDate,
-                              //     style: theme.subtitle2!.
-                              //     copyWith(
-                              //         color: Colors.white,
-                              //         fontWeight: FontWeight.normal
-                              //     ))
+                              Text(data.endDate,
+                                  style: theme.subtitle2!.
+                                  copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.normal
+                                  ))
                             ],
                           ),
                           SizedBox(

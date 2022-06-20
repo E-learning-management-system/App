@@ -44,7 +44,7 @@ class LastTopicView extends StatelessWidget {
       FloatingActionButtonLocation.startFloat,
       body: _buildBody(theme: theme, controller: controller),
       floatingActionButton:  Visibility(
-        visible: sharedPreferences.getType() == 't',
+        //visible: sharedPreferences.getType() == 't',
         child: FloatingActionButton.extended(
           backgroundColor: Colors.green,
             onPressed: (){
@@ -133,7 +133,7 @@ class LastTopicView extends StatelessWidget {
     return Consumer<PostsController>(
         builder: (context, value, child) {
           return SizedBox(
-            height: data.isExpanded == true ? 520 : 215,
+            height: data.isExpanded == true ? 540 : 215,
             child: Stack(
               children: [
                 data.isExpanded == true ? _buildIsExpanded(theme: theme,
@@ -376,7 +376,7 @@ class LastTopicView extends StatelessWidget {
       bottom: 0,
       right: 0,
       left: 0,
-      height: 500,
+      height: 520,
       child: GestureDetector(
         onTap: () {
           controller.changeExpanded(index);
