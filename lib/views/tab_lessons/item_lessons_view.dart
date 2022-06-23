@@ -8,6 +8,7 @@ import 'package:project/controllers/posts_cpntroller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/sharedPreferences.dart';
+import 'package:project/helpers/utility.dart';
 import 'package:project/models/exercise_item_model.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/models/lessons_item_model.dart';
@@ -379,7 +380,7 @@ class ItemLessonsView extends StatelessWidget {
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold
                               )),
-                              Text(data.endDate,
+                              Text(Utility.convertToPersian(data.date)??'',
                                   style: theme.subtitle2!.
                                   copyWith(
                                       color: Colors.white,
