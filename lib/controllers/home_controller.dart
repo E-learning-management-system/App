@@ -75,7 +75,7 @@ class HomeController extends ChangeNotifier {
     ];
     status = StatusCategory.HomeWork;
 
-    // notifyListeners();
+    notifyListeners();
   }
 
  setLastTopics()async {

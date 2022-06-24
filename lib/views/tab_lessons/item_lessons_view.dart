@@ -63,23 +63,23 @@ class ItemLessonsView extends StatelessWidget {
                 _buildListItems(theme, controller)
               ],
             ),
-      floatingActionButton:   Visibility(
+      floatingActionButton:    Visibility(
         visible: sharedPreferences.getType() == 't' &&
-        controller.status == StatusCategory.LastTopics ||
-            sharedPreferences.getType() == 't' && controller.status == StatusCategory.HomeWork,
+            controller.status == StatusCategory.LastTopics ||
+            controller.status == StatusCategory.HomeWork,
         child: FloatingActionButton.extended(
             backgroundColor: MyColors.blueHex,
             onPressed: ()async {
               if(controller.status == StatusCategory.HomeWork)
-                {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RecordHomeWorkView(exercise: ExerciseItemModel(courseName:'',file:'',id:lesson.id,title: '',teacher: '',date: '',deadline: '',description: '',courseId: 0),),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
-                    EnCreateHomeWork.CreateNew :EnCreateHomeWork.Student )
-                    ),);
-                  return;
-                }
+              {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RecordHomeWorkView(exercise: ExerciseItemModel(courseName:'',file:'',id:lesson.id,title: '',teacher: '',date: '',deadline: '',description: '',courseId: 0),),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
+                  EnCreateHomeWork.CreateNew :EnCreateHomeWork.Student )
+                  ),);
+                return;
+              }
               await controller.openDialog(context);
             },
             elevation: 1,
@@ -302,16 +302,19 @@ class ItemLessonsView extends StatelessWidget {
   vertical: 20
   ),
   itemBuilder:(context, index) {
-  final data = value.listModel[index];
+  // final data = value.listOfExerciseOfCourse[index];
   if(value.status == StatusCategory.BookMark)
   {
+   final data = value.savedPosts[index];
   return _buildBookMark(theme,value.saved[index],controller);
   }
   if(value.status == StatusCategory.Sp)
   {
-  return _buildUsers(theme,data);
+    final data = value.listModel[index];
+  return _buildUsers(theme,value.listModel[index]);
   }
   if(value.status== StatusCategory.LastTopics){
+    final data = value.listOfSubjectOfCourse[index];
   return GestureDetector(
   onTap: ()async{
   await PostsController().getPostsOfSubject(data.id);
@@ -357,6 +360,7 @@ class ItemLessonsView extends StatelessWidget {
   );
   }
   if(value.status== StatusCategory.HomeWork){
+    final data = value.listOfExerciseOfCourse[index];
   return GestureDetector(
   onTap: (){
   Navigator.push(
@@ -390,7 +394,7 @@ class ItemLessonsView extends StatelessWidget {
   color: Colors.white,
   fontWeight: FontWeight.bold
   )),
-  Text(data.endDate,
+  Text(data.deadline.substring(0,10),
   style: theme.subtitle2!.
   copyWith(
   color: Colors.white,
