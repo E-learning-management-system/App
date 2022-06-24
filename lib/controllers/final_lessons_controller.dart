@@ -41,11 +41,8 @@ Future<bool> addStudentRequest()async{
     String _url='https://api.piazza.markop.ir/soren/courses/$id/newstudent/$email/';
     try {
       var response = await http.post(Uri.parse(_url),
-        headers: { "content-type": "application/json",
-          "Authorization": "Token " + _token,}, body: jsonEncode({
-          "email": email,
-          "id": id,
-        }),
+        headers: { "Content-Type": "application/json",
+          "Authorization": "Token " + _token,},
       );
       print(response.body);
       final Map<String, dynamic> data = jsonDecode(response.body);

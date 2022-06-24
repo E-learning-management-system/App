@@ -12,9 +12,6 @@ import 'package:project/widgets/text_field_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 class ItemLessonsController extends ChangeNotifier{
-  ItemLessonsController(){
-    setLastTopics();
-  }
 
 
 late int id=0;
@@ -46,7 +43,7 @@ unSavePost(id)async{
         "file":''
       })
   );
-  if(response.statusCode==200){
+  if(response.statusCode==201){
     savedPosts.removeWhere((element) => element.id==id);
     await setItemCategory(StatusCategory.BookMark);
     notifyListeners();

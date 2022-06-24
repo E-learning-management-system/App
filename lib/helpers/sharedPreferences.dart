@@ -5,13 +5,18 @@ import 'package:project/models/exercise_item_model.dart';
 import 'package:project/models/subject_item_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:project/models/lessons_item_model.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class SharedPreferencesTable{
   bool isLogin=false;
   late Map<String,int> lessons;
+  late Map<String,int> topics;
+  late Map<String,int> exercise;
   SharedPreferencesTable(){
     setInitial();
     lessons={'test':0};
+    topics={'test':0};
   }
   SharedPreferences? pref;
   EncryptedSharedPreferences token = EncryptedSharedPreferences();
@@ -24,8 +29,6 @@ class SharedPreferencesTable{
   setLogin(){
     isLogin=true;
   }
-
-
   setInitial()async{
     pref= (await SharedPreferences.getInstance());
   }
@@ -56,6 +59,7 @@ class SharedPreferencesTable{
     List<String> myList=[];
     for(var v in listOfSubject){
       myList.add(v.title);
+      topics[v.title]=v.id;
     }
 
     pref?.setStringList('Subjects', myList);
@@ -68,6 +72,9 @@ class SharedPreferencesTable{
   }
   getLessonId(String title){
     return lessons[title];
+  }
+  getTopicId(String title){
+    return topics[title];
   }
   getSubjects(){
     return pref?.getStringList('Subjects');
@@ -82,6 +89,26 @@ class SharedPreferencesTable{
    return pref?.getString('type');
   }
 
+  getLessonByTitle(String title)async{
+  var  id= getLessonId(title);
+  var data= await getLessonById(id);
+  return data;
+  }
+  Future getLessonById(int id)async{
+     var token=await getToken('token');
+    var url= 'https://api.piazza.markop.ir/soren/course-rud/$id/';
+    var response= await http.get(Uri.parse(url),
+      headers: { "content-type": "application/json",
+        "Authorization": "Token " + token,},
+    );
+
+    print("lesson=   "+ const Utf8Decoder().convert(response.bodyBytes));
+    final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+    if(response.statusCode==200){
+      return LessonsItemModel.fromJson(Map<String,dynamic>.from(data));
+    }
+    return false;
+  }
 
 
 }

@@ -18,6 +18,7 @@ class HomeController extends ChangeNotifier {
     List<String>? lesson=await  sharedPreferences.getLessons();
     List<String>? exercise=await sharedPreferences.getExercises();
     List<String>? subject=await sharedPreferences.getSubjects();
+    listModel.clear();
     if(lesson != null){
       for (var i in lesson){
         listModel.add(ItemCategoryModel(title: i, category: 'Lesson'));
@@ -52,17 +53,15 @@ class HomeController extends ChangeNotifier {
       ]
     ];}
    else{
-    listModel=[
-       for (String i in myList!) ...[
-         ItemCategoryModel(
-             title: i,
-             category: 'Lesson'),
-       ]
-     ];
+     listModel.clear();
+       for (String i in myList!) {
+           listModel.add(ItemCategoryModel(title: i, category: 'Lesson'));
+       }
+
    }
     status = StatusCategory.Lessons;
 
-    // notifyListeners();
+    notifyListeners();
   }
 
  setHomeWork()async {
@@ -98,7 +97,7 @@ class HomeController extends ChangeNotifier {
       ]
     ];}
     status = StatusCategory.LastTopics;
-    // notifyListeners();
+    notifyListeners();
   }
 
  setItemCategory(StatusCategory status) async{

@@ -4,13 +4,16 @@ import 'package:project/controllers/home_controller.dart';
 import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/controllers/subject_controller.dart';
 import 'package:project/helpers/constants.dart';
+import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/helpers/utility.dart';
 import 'package:project/models/item_category_model.dart';
+import 'package:project/views/tab_lessons/item_lessons_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/topAppBar.dart';
 import 'package:provider/provider.dart';
 
 class HomeProfessorView extends StatelessWidget {
+
   const HomeProfessorView({Key? key}) : super(key: key);
   static const String id = '/home_professor';
 
@@ -113,7 +116,7 @@ class HomeProfessorView extends StatelessWidget {
                     itemBuilder:(context, index) {
                       final data = controller.lessonProfessor[index];
 
-                      return cartGenerator(data);
+                      return cartGenerator(data,context);
                     },
                   );
                 } else {
@@ -139,7 +142,7 @@ class HomeProfessorView extends StatelessWidget {
                     itemBuilder:(context, index) {
                       final data = controller.subjectProfessor[index];
 
-                      return cartGenerator(data);
+                      return cartGenerator(data,context,);
                     },
                   );
                 } else {
@@ -154,8 +157,18 @@ class HomeProfessorView extends StatelessWidget {
     );
   }
 
-  Widget cartGenerator(ItemCategoryModel model) {
-    return Card(
+  Widget cartGenerator(ItemCategoryModel model,BuildContext context) {
+    return GestureDetector(
+      onTap: ()async=>{
+        if(model.category=='Lesson'){
+        MaterialPageRoute(
+        builder: (context) => ItemLessonsView(lesson:sharedPreferences.getLessonByTitle(model.title)),
+    )
+        }else{
+
+        }
+      },
+      child: Card(
       margin: EdgeInsets.only(left: 20),
       color: Utility.randomColor(),
       shape: const RoundedRectangleBorder(
@@ -167,8 +180,8 @@ class HomeProfessorView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Image.asset(Utility.randomImage(),
-              height: 100,
-              width: 100,),
+                height: 100,
+                width: 100,),
               Text(
                 model.title,
                 style: TextStyle(
@@ -182,6 +195,6 @@ class HomeProfessorView extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ),);
   }
 }
