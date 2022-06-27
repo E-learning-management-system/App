@@ -23,6 +23,7 @@ import 'package:project/controllers/login_controller.dart';
 import 'package:project/views/Setting_view.dart';
 import 'package:project/views/base_view/base_view.dart';
 import 'package:project/views/forget_password_view.dart';
+import 'package:project/views/forget_verify.dart';
 import 'package:project/views/home_view.dart';
 import 'package:project/views/onboarding_view.dart';
 import 'package:project/views/splash_view.dart';
@@ -137,6 +138,7 @@ class MyApp extends StatelessWidget {
           HomeView.id: (context) => const HomeView(),
           ForgetPasswordView.id: (context) => const ForgetPasswordView(),
           VerifyEmailView.id: (context) => const VerifyEmailView(),
+          VerifyEmailForgetView.id: (context) => const VerifyEmailForgetView(),
           LessonsView.id: (context) => const LessonsView(),
           CreateNewLessonsView.id: (context) => const CreateNewLessonsView(),
           FinalLessonsView.id: (context) => const FinalLessonsView(),

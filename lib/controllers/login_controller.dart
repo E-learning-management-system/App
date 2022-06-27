@@ -11,6 +11,8 @@ class LoginController extends ChangeNotifier
   String? _token;
   String get token=>_token!;
   bool isLoading =false;
+  String _email='';
+  get email=>_email;
 
   Future loginRequest( var email, var password)
   async{
@@ -58,5 +60,23 @@ class LoginController extends ChangeNotifier
     return false;
   }
   final formLoginKey = GlobalKey<FormState>();
+
+  forgetPassword(String email)async{
+    var url='https://api.piazza.markop.ir/forgotpassword/';
+    var response= await http.post(Uri.parse(url),
+      headers: { "content-type": "application/json",},
+        body:jsonEncode({
+          "email": email
+        }),
+    );
+    print(response.statusCode);
+    if(response.statusCode==200){
+      _email=email;
+      return true;
+    }
+      return false;
+
+
+  }
 
 }
