@@ -8,13 +8,13 @@ import 'package:project/controllers/posts_cpntroller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/sharedPreferences.dart';
-import 'package:project/helpers/utility.dart';
 import 'package:project/models/exercise_item_model.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/models/lessons_item_model.dart';
 import 'package:project/models/post_model.dart';
 import 'package:project/views/tab_lessons/last_topic_view.dart';
 import 'package:project/views/tab_lessons/record_home_work_view.dart';
+import 'package:project/views/tab_profile/profile_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/elevation_button.dart';
@@ -28,7 +28,7 @@ class ItemLessonsView extends StatelessWidget {
   static const String id = '/item_lessons_view';
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<ItemLessonsController>(context);
+    final controller = Provider.of<ItemLessonsController>(context,listen: false);
     controller.setId(lesson.id);
     // controller.getSubjectsOfCourse(lesson.id);
     final theme = Theme.of(context).textTheme;
@@ -38,6 +38,10 @@ class ItemLessonsView extends StatelessWidget {
       title: lesson.title,
       context: context
     );
+  }
+
+  Future setLastTopic(ItemLessonsController controller)async{
+    await controller.setItemCategory(StatusCategory.LastTopics);
   }
   Widget _buildBody(
       {required TextTheme theme,
@@ -54,29 +58,29 @@ class ItemLessonsView extends StatelessWidget {
       floatingActionButtonLocation:
       FloatingActionButtonLocation.startFloat,
       body: Column(
-        children: [
-          _buildSearchWidget(),
-          _buildCategoryWidget(),
-          _buildListItems(theme,controller)
-        ],
-      ),
-      floatingActionButton:   Visibility(
+              children: [
+                _buildSearchWidget(),
+                _buildCategoryWidget(),
+                _buildListItems(theme, controller)
+              ],
+            ),
+      floatingActionButton:    Visibility(
         visible: sharedPreferences.getType() == 't' &&
-        controller.status == StatusCategory.LastTopics ||
-            sharedPreferences.getType() == 't' && controller.status == StatusCategory.HomeWork,
+            controller.status == StatusCategory.LastTopics ||
+            controller.status == StatusCategory.HomeWork,
         child: FloatingActionButton.extended(
             backgroundColor: MyColors.blueHex,
             onPressed: ()async {
               if(controller.status == StatusCategory.HomeWork)
-                {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RecordHomeWorkView(exercise: ExerciseItemModel(courseName:'',file:'',id:lesson.id,title: '',teacher: '',date: '',deadline: '',description: '',courseId: 0),),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
-                    EnCreateHomeWork.CreateNew :EnCreateHomeWork.Student )
-                    ),);
-                  return;
-                }
+              {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RecordHomeWorkView(exercise: ExerciseItemModel(courseName:'',file:'',id:lesson.id,title: '',teacher: '',date: '',deadline: '',description: '',courseId: 0),),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
+                  EnCreateHomeWork.CreateNew :EnCreateHomeWork.Student )
+                  ),);
+                return;
+              }
               await controller.openDialog(context);
             },
             elevation: 1,
@@ -274,142 +278,155 @@ class ItemLessonsView extends StatelessWidget {
   Widget _buildListItems(TextTheme theme,ItemLessonsController controller)
   {
     return Expanded(
-      child: Consumer<ItemLessonsController>(
-        builder: (context, value, child) {
-          if(value.isLoading)
-          {
-            return Center(child: CircularProgressIndicator(),);
-          }
-          if(value.listModel.isEmpty)
-            {
-              return EmptyViewWidget();
-            }
+      child:
+      FutureBuilder(
+          future:setLastTopic(controller) ,
+          builder: (context, snapshot) {
+  if (snapshot.connectionState == ConnectionState.waiting) {
+  return const Center(child: CircularProgressIndicator());
+  }
+  return Consumer<ItemLessonsController>(
+  builder: (context, value, child) {
+  if(value.isLoading)
+  {
+  return Center(child: CircularProgressIndicator(),);
+  }
+  if(value.listModel.isEmpty)
+  {
+  return EmptyViewWidget();
+  }
 
-          return ListView.builder(
-          itemCount: value.listModel.length,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-              vertical: 20
-            ),
-            itemBuilder:(context, index) {
-              final data =  value.listModel[index];
-              if(value.status == StatusCategory.BookMark)
-                {
-                  return _buildBookMark(theme,value.saved[index],controller);
-                }
-              if(value.status == StatusCategory.Sp)
-                {
-                  return _buildUsers(theme,data);
-                }
-              if(value.status== StatusCategory.LastTopics){
-                return GestureDetector(
-                  onTap: ()async{
-                   await PostsController().getPostsOfSubject(data.id);
-                      Navigator.push(context,
-                        MaterialPageRoute(
-                        builder: (context) => LastTopicView(subject:data),
-                      ),);
+  return ListView.builder(
+  itemCount: value.listModel.length,
+  padding: const EdgeInsets.symmetric(
+  horizontal: 30,
+  vertical: 20
+  ),
+  itemBuilder:(context, index) {
+  // final data = value.listOfExerciseOfCourse[index];
+  if(value.status == StatusCategory.BookMark)
+  {
+   final data = value.savedPosts[index];
+  return _buildBookMark(theme,value.saved[index],controller);
+  }
+  if(value.status == StatusCategory.Sp)
+  {
+    final data = value.listModel[index];
+  return _buildUsers(theme,value.listModel[index]);
+  }
+  if(value.status== StatusCategory.LastTopics){
+    final data = value.listOfSubjectOfCourse[index];
+  return GestureDetector(
+  onTap: ()async{
+  await PostsController().getPostsOfSubject(data.id);
+  Navigator.push(context,
+  MaterialPageRoute(
+  builder: (context) => LastTopicView(subject:data),
+  ),);
 
 
-                  },
-                  child: SizedBox(
-                    height: 135,
-                    child: Card(
-                      margin: const EdgeInsets.only(top: 30),
-                      color: data.bgColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(data.title,
-                                      style: theme.headline6!.copyWith(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        fontSize: 32,
-                                      )),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }
-              if(value.status== StatusCategory.HomeWork){
-              return GestureDetector(
-                onTap: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RecordHomeWorkView(exercise: data,),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
-                    EnCreateHomeWork.Professor :EnCreateHomeWork.Student )
-                    ),);
+  },
+  child: SizedBox(
+  height: 135,
+  child: Card(
+  margin: const EdgeInsets.only(top: 30),
+  color: data.bgColor,
+  shape: RoundedRectangleBorder(
+  borderRadius: BorderRadius.circular(20)
+  ),
+  child: Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: Center(
+  child: Column(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+  Row(
+  crossAxisAlignment: CrossAxisAlignment.center,
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+  Text(data.title,
+  style: theme.headline6!.copyWith(
+  color: Colors.white,
+  fontWeight: FontWeight.bold,
+  fontSize: 32,
+  )),
+  ],
+  ),
+  ],
+  ),
+  ),
+  ),
+  ),
+  ),
+  );
+  }
+  if(value.status== StatusCategory.HomeWork){
+    final data = value.listOfExerciseOfCourse[index];
+  return GestureDetector(
+  onTap: (){
+  Navigator.push(
+  context,
+  MaterialPageRoute(
+  builder: (context) => RecordHomeWorkView(exercise: data,),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
+  EnCreateHomeWork.Professor :EnCreateHomeWork.Student )
+  ),);
 
-                },
-                child: SizedBox(
-                  height: 120,
-                  child: Card(
-                    margin: const EdgeInsets.only(top: 15),
-                    color: data.bgColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(borderRadiusTxtField)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(data.title,
-                              style: theme.headline6!.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold
-                              )),
-                              Text(Utility.convertToPersian(data.date)??'',
-                                  style: theme.subtitle2!.
-                                  copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.normal
-                                  ))
-                            ],
-                          ),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          Text(data.description,
-                          style: theme.headline6!.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal,
-                          ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
-              }
-              return const Center(child: CircularProgressIndicator());
-            }, );
-        },
-      ),
+  },
+  child: SizedBox(
+  height: 120,
+  child: Card(
+  margin: const EdgeInsets.only(top: 15),
+  color: data.bgColor,
+  shape: RoundedRectangleBorder(
+  borderRadius: BorderRadius.circular(borderRadiusTxtField)
+  ),
+  child: Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: Column(
+  crossAxisAlignment:
+  CrossAxisAlignment.start,
+  children: [
+  Row(
+  mainAxisAlignment:
+  MainAxisAlignment.spaceBetween,
+  children: [
+  Text(data.title,
+  style: theme.headline6!.copyWith(
+  color: Colors.white,
+  fontWeight: FontWeight.bold
+  )),
+  Text(data.deadline.substring(0,10),
+  style: theme.subtitle2!.
+  copyWith(
+  color: Colors.white,
+  fontWeight: FontWeight.normal
+  ))
+  ],
+  ),
+  SizedBox(
+  height: 12,
+  ),
+  Text(data.description,
+  style: theme.headline6!.copyWith(
+  color: Colors.white,
+  fontWeight: FontWeight.normal,
+  ),
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+  )
+  ],
+  ),
+  ),
+  ),
+  ),
+  );
+  }
+  return const Center(child: CircularProgressIndicator());
+  }, );
+  },
+  );
+  },
+      )
     );
   }
 

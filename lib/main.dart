@@ -32,6 +32,7 @@ import 'package:project/views/tab_lessons/final_lessons_view.dart';
 import 'package:project/views/tab_lessons/lessons_view.dart';
 import 'package:project/views/tab_lessons/record_home_work_view.dart';
 import 'package:project/views/tab_lessons/student_delivery_view.dart';
+import 'package:project/views/tab_profile/profile_view.dart';
 import 'package:project/views/verify_email_view.dart';
 import 'package:provider/provider.dart';
 import 'views/login_view.dart';
@@ -111,6 +112,10 @@ class MyApp extends StatelessWidget {
           child: const StudentDeliveryView(title: '',Id: 0),
           create: (context) => StudentDeliveryController(),
         ),
+        ChangeNotifierProvider<ProfileController>(
+          child: const ProfileView(),
+          create: (context) => ProfileController(),
+        ),
       ],
       child: MaterialApp(
         localizationsDelegates: const [
@@ -140,7 +145,8 @@ class MyApp extends StatelessWidget {
           SettingDrawer.id: (context) => const SettingDrawer(),
           SettingView.id: (context) => const SettingView(),
           StudentDeliveryView.id: (context) => const StudentDeliveryView(Id: 0,
-          title: '',)
+          title: '',),
+          ProfileView.id: (context) => const ProfileView()
         },
         title: 'Flutter Demo',
         theme: ThemeApp.theme,
