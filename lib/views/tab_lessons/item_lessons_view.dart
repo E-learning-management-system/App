@@ -14,6 +14,7 @@ import 'package:project/models/lessons_item_model.dart';
 import 'package:project/models/post_model.dart';
 import 'package:project/views/tab_lessons/last_topic_view.dart';
 import 'package:project/views/tab_lessons/record_home_work_view.dart';
+import 'package:project/views/tab_profile/profile_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/elevation_button.dart';
