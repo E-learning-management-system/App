@@ -6,6 +6,9 @@ import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/helpers/utility.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/views/login_view.dart';
+import 'package:project/views/tab_lessons/item_lessons_view.dart';
+import 'package:project/views/tab_lessons/last_topic_view.dart';
+import 'package:project/views/tab_lessons/record_home_work_view.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:provider/provider.dart';
 import 'package:project/controllers/exercise_controller.dart';
@@ -268,7 +271,7 @@ class HomeView extends StatelessWidget {
                           children: snapshot.data!
                               .asMap().entries.map((e) {
 
-                                return cartGenerator(e.value);
+                                return cartGenerator(e.value,controller,context);
                           }).toList()
                       ),
                     );
@@ -288,8 +291,33 @@ class HomeView extends StatelessWidget {
     }
   }
 
-  Widget cartGenerator(ItemCategoryModel model) {
-    return Card(
+  Widget cartGenerator(ItemCategoryModel model,HomeController controller,BuildContext context) {
+    var lesson;
+    var subject;
+    var exer;
+    return GestureDetector(
+
+    onTap: ()async=>{
+      if(model.category=='Lesson'){
+        lesson=await controller.getLessonById(sharedPreferences.getLessonByTitle(model.title)),
+        Navigator.push(context,  MaterialPageRoute(
+            builder: (context) => ItemLessonsView(lesson:lesson)),
+        )
+      }else {
+        if(model.category=='Subject'){
+        subject=await controller.getTopicById(sharedPreferences.getTopicId(model.title)),
+        Navigator.push(context,  MaterialPageRoute(
+            builder: (context) => LastTopicView( subject: subject,)),
+        )
+      }else{
+          exer=await controller.getExerciseById(sharedPreferences.getExerciseByTitle(model.title)),
+          Navigator.push(context,  MaterialPageRoute(
+              builder: (context) => RecordHomeWorkView(exercise: exer,)),
+          )
+        }
+    }
+      },
+    child: Card(
       color: model.bgColor,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -317,6 +345,7 @@ class HomeView extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 

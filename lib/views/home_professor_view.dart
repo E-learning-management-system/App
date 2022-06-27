@@ -8,6 +8,7 @@ import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/helpers/utility.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/views/tab_lessons/item_lessons_view.dart';
+import 'package:project/views/tab_lessons/last_topic_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/topAppBar.dart';
 import 'package:provider/provider.dart';
@@ -116,7 +117,7 @@ class HomeProfessorView extends StatelessWidget {
                     itemBuilder:(context, index) {
                       final data = controller.lessonProfessor[index];
 
-                      return cartGenerator(data,context);
+                      return cartGenerator(data,context,controller);
                     },
                   );
                 } else {
@@ -142,7 +143,7 @@ class HomeProfessorView extends StatelessWidget {
                     itemBuilder:(context, index) {
                       final data = controller.subjectProfessor[index];
 
-                      return cartGenerator(data,context,);
+                      return cartGenerator(data,context,controller);
                     },
                   );
                 } else {
@@ -157,15 +158,22 @@ class HomeProfessorView extends StatelessWidget {
     );
   }
 
-  Widget cartGenerator(ItemCategoryModel model,BuildContext context) {
+  Widget cartGenerator(ItemCategoryModel model,BuildContext context,HomeController controller) {
+    var lesson;
+    var subject;
+
     return GestureDetector(
       onTap: ()async=>{
         if(model.category=='Lesson'){
-        MaterialPageRoute(
-        builder: (context) => ItemLessonsView(lesson:sharedPreferences.getLessonByTitle(model.title)),
-    )
+          lesson=await controller.getLessonById(sharedPreferences.getLessonByTitle(model.title)),
+       Navigator.push(context,  MaterialPageRoute(
+         builder: (context) => ItemLessonsView(lesson:lesson)),
+       )
         }else{
-
+        subject=await controller.getTopicById(sharedPreferences.getTopicId(model.title)),
+    Navigator.push(context,  MaterialPageRoute(
+    builder: (context) => LastTopicView( subject: subject,)),
+    )
         }
       },
       child: Card(
