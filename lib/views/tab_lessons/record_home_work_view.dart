@@ -6,6 +6,7 @@ import 'package:project/controllers/record_home_work_controller.dart';
 import 'package:project/controllers/student_delivery_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
+import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/models/exercise_item_model.dart';
 import 'package:project/views/tab_lessons/item_lessons_view.dart';
 import 'package:project/views/tab_lessons/student_delivery_view.dart';
@@ -415,7 +416,65 @@ class RecordHomeWorkView extends StatelessWidget {
         Visibility(
           visible: enStatus == EnCreateHomeWork.Professor,
           child: InkWell(
+
             onTap: ()async{
+              int count = 0;
+              showDialog<String>(
+                context: context,
+                builder: (BuildContext context) =>
+                    AlertDialog(
+                      content: const Text(
+                          'از حذف این تکلیف مطمئن هستید؟'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () async => {
+              if(await controller.deleteExercise(exercise?.id)){
+              showDialog<String>(
+              context: context,
+              builder: (BuildContext context) =>
+              AlertDialog(
+              content: const Text(
+              'تکلیف با موفقیت حذف شد.'),
+              actions: <Widget>[
+
+              TextButton(
+
+              onPressed: () => Navigator.of(context).popUntil((_) => count++ >= 3),
+              child: const Text('باشه'),
+              ),
+              ],
+              ),
+              )
+
+              }
+              else{
+              showDialog<String>(
+              context: context,
+              builder: (BuildContext context) =>
+              AlertDialog(
+              title: const Text('خطا'),
+              content: const Text(
+              'مشکلی در حذف تکلیف وجود دارد.'),
+              actions: <Widget>[
+              TextButton(
+              onPressed: () => Navigator.of(context).popUntil((_) => count++ >= 2),
+              child: const Text('باشه'),
+              ),
+              ],
+              ),
+              )
+              }
+                          },
+                          child: const Text('بله'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('خیر'),
+                        ),
+                      ],
+                    ),
+              );
+
             },
             child: Container(
               margin: const EdgeInsets.only(right: 30),

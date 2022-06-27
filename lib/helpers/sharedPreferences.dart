@@ -5,8 +5,6 @@ import 'package:project/models/exercise_item_model.dart';
 import 'package:project/models/subject_item_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:project/models/lessons_item_model.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class SharedPreferencesTable{
   bool isLogin=false;
@@ -51,6 +49,7 @@ class SharedPreferencesTable{
     List<String> myList=[];
     for(var v in listOfExercise){
       myList.add(v.title);
+      exercise[v.title]=v.id;
     }
 
     pref?.setStringList('Exercises', myList);
@@ -89,25 +88,13 @@ class SharedPreferencesTable{
    return pref?.getString('type');
   }
 
-  getLessonByTitle(String title)async{
+  getLessonByTitle(String title){
   var  id= getLessonId(title);
-  var data= await getLessonById(id);
-  return data;
+  return id;
   }
-  Future getLessonById(int id)async{
-     var token=await getToken('token');
-    var url= 'https://api.piazza.markop.ir/soren/course-rud/$id/';
-    var response= await http.get(Uri.parse(url),
-      headers: { "content-type": "application/json",
-        "Authorization": "Token " + token,},
-    );
 
-    print("lesson=   "+ const Utf8Decoder().convert(response.bodyBytes));
-    final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
-    if(response.statusCode==200){
-      return LessonsItemModel.fromJson(Map<String,dynamic>.from(data));
-    }
-    return false;
+  getExerciseByTitle(String title){
+    return exercise[title];
   }
 
 

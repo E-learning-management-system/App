@@ -48,24 +48,7 @@ class ExercisesController extends ChangeNotifier
 
 
 
-  Future deleteExercise(id)async{
-    String url='https://api.piazza.markop.ir/soren/exercise-rd/$id/';
-    var  _token = await sharedPreferences.getToken('token');
 
-    var response= await http.delete(Uri.parse(url),
-        headers: { "content-type": "application/json",
-          "Authorization": "Token " + _token,},
-    );
-
-    print("jsonDecode(delete exercise)=   "+const Utf8Decoder().convert(response.bodyBytes));
-    if(response.statusCode==204){
-      notifyListeners();
-      return true;
-    }
-    notifyListeners();
-    return false;
-
-  }
   Future deleteAnswer(id)async{
     String url='https://api.piazza.markop.ir/soren/answer/$id/';
     var  _token = await sharedPreferences.getToken('token');
