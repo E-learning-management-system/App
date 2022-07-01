@@ -1,7 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:project/helpers/constants.dart';
+import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/widgets/elevation_button.dart';
+
+import 'base_view/base_view.dart';
 class EndChangePw extends StatelessWidget {
   const EndChangePw({Key? key}) : super(key: key);
   static const String id = '/end_change_pw';
@@ -22,8 +25,10 @@ class EndChangePw extends StatelessWidget {
             SizedBox(height: 26,),
             ElevationButtonWidget(
                 call: (){
-
-            },)
+                  if(sharedPreferences.getToken('token')!='') {
+                    Navigator.of(context).pushNamed(BaseView.id);
+                  }}
+            ,)
           ],
         ),
       ),

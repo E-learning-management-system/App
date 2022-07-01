@@ -64,8 +64,10 @@ class VerifyEmailController extends ChangeNotifier
 
     if( response.statusCode==200){
       Map<String, dynamic> res = jsonDecode(response.body);
-      var token=res.containsKey("token")?res["token"]:"";
-      sharedPreferences.setToken("token", token);;
+      var token1=res["token"];
+      await sharedPreferences.setToken("token", token1);
+      _token=token1;
+      await getProfile();
       notifyListeners();
       return true;
     }

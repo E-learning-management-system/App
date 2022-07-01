@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../controllers/login_controller.dart';
 import '../controllers/verify_email_controller.dart';
+import 'change_pw_view.dart';
 
 class VerifyEmailForgetView extends StatelessWidget {
   const VerifyEmailForgetView({Key? key}) : super(key: key);
@@ -127,7 +128,7 @@ class VerifyEmailForgetView extends StatelessWidget {
             // Your logic with pin code
             var res= await controller.verifyEmailForget(email,output);
             if(res){
-              Navigator.of(context).pushNamed(OnBoardingView.id);}
+              Navigator.of(context).pushNamed(ChangePwView.id);}
             else{
               showDialog<String>(
                 context: context,

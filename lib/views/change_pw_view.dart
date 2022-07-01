@@ -14,6 +14,7 @@ class ChangePwView extends StatelessWidget {
   static const String id = '/change_pw_view';
   @override
   Widget build(BuildContext context) {
+    String Password='';
     final controller = Provider.of<ChangePwController>(context);
     return Scaffold(
       appBar: AppbarWidget(
@@ -49,16 +50,34 @@ class ChangePwView extends StatelessWidget {
                     obscureText: true
                 ),
                 sizedBox(height: 15),
-                const TextFormFieldWidget(hintText: 'تکرار رمز عبور',
+                TextFormFieldWidget(hintText: 'تکرار رمز عبور',
                     functionValidate: Validator.validatePassword,
-                    obscureText: true),
+                    obscureText: true,
+                onChanged: (String text){Password=text;},),
               ],
             )),
             sizedBox(height: 30),
-            ElevationButtonWidget(call: (){
+            ElevationButtonWidget(call: ()async{
               if(controller.keyForm.currentState!.validate())
                 {
-                  Navigator.pushNamed(context, EndChangePw.id);
+                  var res= await controller.changhPW(Password);
+                  if(res) {
+                    Navigator.pushNamed(context, EndChangePw.id);
+                  } else{
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('خطا'),
+                        content: const Text('مشکلی در تغییر رمز عیور وجود دارد.'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('باشه'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                 }
             },
             )

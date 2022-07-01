@@ -35,7 +35,7 @@ import 'package:project/views/tab_calendar/calendar_view.dart';
 import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
 import 'package:project/views/tab_lessons/final_lessons_view.dart';
 import 'package:project/views/tab_lessons/lessons_view.dart';
-import 'package:project/views/tab_lessons/search_view.dart';
+// import 'package:project/views/tab_lessons/search_view.dart';
 import 'package:project/views/tab_lessons/student_delivery_view.dart';
 import 'package:project/views/tab_profile/profile_view.dart';
 import 'package:project/views/verify_email_view.dart';
@@ -129,7 +129,7 @@ class MyApp extends StatelessWidget {
           create: (context) => ChangePwController(),
         ),
         ChangeNotifierProvider<SearchController>(
-          child: const SearchView(),
+          // child: const SearchView(),
           create: (context) => SearchController(),
         ),
 
@@ -167,7 +167,7 @@ class MyApp extends StatelessWidget {
           title: '',),
           ProfileView.id: (context) => const ProfileView(),
           EndChangePw.id: (context) => const EndChangePw(),
-          SearchView.id: (context) => const SearchView(),
+          // SearchView.id: (context) => const SearchView(),
         },
         title: 'Flutter Demo',
         theme: ThemeApp.theme,

@@ -9,7 +9,7 @@ import 'package:project/models/lessons_item_model.dart';
 import 'package:project/views/login_view.dart';
 import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
 import 'package:project/views/tab_lessons/item_lessons_view.dart';
-import 'package:project/views/tab_lessons/search_view.dart';
+// import 'package:project/views/tab_lessons/search_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/empty_view_widget.dart';
 import 'package:project/widgets/text_field_widget.dart';
@@ -90,7 +90,7 @@ class LessonsView extends StatelessWidget {
         child: TextFormFieldWidget(
           hintText: 'جست و جو',
           onTap: (){
-            Navigator.pushNamed(context, SearchView.id);
+            // Navigator.pushNamed(context, SearchView.id);
           },
           readOnly: true,
           noneEnableBorder: false,
