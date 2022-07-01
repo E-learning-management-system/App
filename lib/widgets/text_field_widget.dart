@@ -24,6 +24,8 @@ class TextFormFieldWidget extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final bool readOnly;
   final Function()? onTap;
+  final Color? textTypeColor;
+  final Color? colorHint;
 
 
   const TextFormFieldWidget(
@@ -47,7 +49,7 @@ class TextFormFieldWidget extends StatelessWidget {
         this.prefixIcon,
         this.readOnly=false,
         this.onChanged,
-       this.onTap}): super(key: key);
+       this.onTap, this.textTypeColor, this.colorHint}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +69,8 @@ class TextFormFieldWidget extends StatelessWidget {
         keyboardType: textInputType,
         textInputAction: actionKeyboard,
         focusNode: focusNode,
-        style: const TextStyle(
-          color: Colors.black,
+        style: TextStyle(
+          color: textTypeColor ?? Colors.black,
           fontSize: 16.0,
         ),
         initialValue: defaultText,
@@ -101,8 +103,8 @@ class TextFormFieldWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular
               (borderRadiusTxtField)
         ),
-          hintStyle: const TextStyle(
-            color: Colors.grey,
+          hintStyle:  TextStyle(
+            color: colorHint ?? Colors.grey,
             fontSize: 14.0,
           ),
           contentPadding:  EdgeInsets.only(

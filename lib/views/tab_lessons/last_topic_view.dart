@@ -589,11 +589,14 @@ class LastTopicView extends StatelessWidget {
   }
   _buildTextFieldComment(TextEditingController controller)
   {
-    return SizedBox(
-      height: 40,
-      child: TextFormFieldWidget(
-        controller: controller,
-          hintText: 'نطر خود را وارد کنید'),
+    return Visibility(
+      visible: sharedPreferences.getType() !='t',
+      child: SizedBox(
+        height: 40,
+        child: TextFormFieldWidget(
+          controller: controller,
+            hintText: 'نطر خود را وارد کنید'),
+      ),
     );
   }
 }
