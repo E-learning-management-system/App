@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:project/controllers/lessons_controller.dart';
-import 'package:project/controllers/verify_email_controller.dart';
-import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/helpers/utility.dart';
@@ -11,8 +9,8 @@ import 'package:project/models/lessons_item_model.dart';
 import 'package:project/views/login_view.dart';
 import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
 import 'package:project/views/tab_lessons/item_lessons_view.dart';
+import 'package:project/views/tab_lessons/search_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
-import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/empty_view_widget.dart';
 import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +35,7 @@ class LessonsView extends StatelessWidget {
         ),
         body: Column(
           children: [
-            _buildSearchWidget(),
+            _buildSearchWidget(context),
             Expanded(
               child: FutureBuilder(
                 future: controller.getLessonsRequest(),
@@ -84,18 +82,22 @@ class LessonsView extends StatelessWidget {
     }
   }
 
-  Widget _buildSearchWidget() {
-    return const Padding(
-      padding: EdgeInsets.all(15),
+  Widget _buildSearchWidget(BuildContext context) {
+    return  Padding(
+      padding: const EdgeInsets.all(15),
       child: SizedBox(
         height: 40,
         child: TextFormFieldWidget(
           hintText: 'جست و جو',
+          onTap: (){
+            Navigator.pushNamed(context, SearchView.id);
+          },
+          readOnly: true,
           noneEnableBorder: false,
           actionKeyboard: TextInputAction.search,
           filled: true,
           fillColor: Colors.white,
-          suffixIcon: Icon(Icons.search),
+          suffixIcon: const Icon(Icons.search),
         ),
       ),
     );
@@ -163,7 +165,6 @@ class LessonsView extends StatelessWidget {
   Widget _buildFloatAc(BuildContext context) {
     if (sharedPreferences.getType() == 't') {
       return FloatingActionButton.extended(
-
           onPressed: () {
             Navigator.of(context).pushNamed(CreateNewLessonsView.id);
           },

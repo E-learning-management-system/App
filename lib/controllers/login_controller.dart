@@ -15,16 +15,29 @@ class LoginController extends ChangeNotifier
   get email=>_email;
 
   Future loginRequest( var email, var password)
-  async{
-    isLoading=true;
+  async {
+
+    isLoading = true;
     notifyListeners();
-    var response= await http.post(Uri.parse(_url),
-      headers: {'Content-type':'application/json'},
-      body: jsonEncode({
-        "email":email,
-        "password":password,
-      }),
-    );
+    print("sadsad");
+    var response ;
+    try {
+       response = await http.post(Uri.parse(_url),
+        headers: {'Content-type': 'application/json'},
+        body: jsonEncode({
+          "email": email,
+          "password": password,
+        }),
+      );
+    } on Exception catch (e) {
+      print("Error  $e}");
+      isLoading = false;
+      notifyListeners();
+
+
+    }
+
+
     print(response.body);
     isLoading=false;
     Map<String, dynamic> res = jsonDecode(response.body);
