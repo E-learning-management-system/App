@@ -13,6 +13,7 @@ import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/models/subject_item_model.dart';
 import 'package:project/views/tab_lessons/create_new_subject.dart';
+import 'package:project/views/tab_profile/profile_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/text_field_widget.dart';
@@ -145,7 +146,8 @@ class LastTopicView extends StatelessWidget {
                     theme: theme,
                     data: data,
                     controller: value,
-                    index: index),
+                    index: index,
+                context: context),
                 Positioned(
                   left: 0,
                   top: 0,
@@ -160,6 +162,7 @@ class LastTopicView extends StatelessWidget {
   { required TextTheme theme,
     required PostItemModel data,
     required PostsController controller,
+    required BuildContext context,
    required int index})
   {
     return Positioned(
@@ -204,9 +207,14 @@ class LastTopicView extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset('$baseUrlImage/ic_profile.png',
+                    GestureDetector(onTap:()=>{
+                      Navigator.push(context,
+                    MaterialPageRoute(
+                    builder: (context) => const ProfileView(),settings: RouteSettings(arguments:data.user_email)
+                    ),)
+                    } ,child: Image.asset('$baseUrlImage/ic_profile.png',
                       height: 25,
-                      width: 25,),
+                      width: 25,),),
                     Container(
                         margin: const EdgeInsets.only(
                             right: 4,
@@ -411,7 +419,7 @@ class LastTopicView extends StatelessWidget {
                  sizedBox(height: 15,),
                 _dividerWith(),
                  sizedBox(height: 15,),
-                _tComment(theme: theme, data: data, controller: controller, index: index),
+                _tComment(theme: theme, data: data, controller: controller, index: index,context: context),
                 _dividerWith(),
                 sizedBox(height: 12),
                 Row(
@@ -436,7 +444,7 @@ class LastTopicView extends StatelessWidget {
                             itemCount: value.postComments[data.id]?.number,
                             itemBuilder: (context, index) {
                               final dataCm =value.postComments[data.id]!.comment[index];
-                              return _itemComment(theme,dataCm);
+                              return _itemComment(theme,dataCm,context);
                             });
                       }
                       return const Text('موردی یافت نشد!');
@@ -487,7 +495,8 @@ class LastTopicView extends StatelessWidget {
   _tComment( { required TextTheme theme,
     required PostItemModel data,
     required PostsController controller,
-    required int index}){
+    required int index,
+  required BuildContext context}){
     if(controller.postComments[data.id]!.isTComment ){
       return Column(
         children: [
@@ -496,7 +505,7 @@ class LastTopicView extends StatelessWidget {
         Center(
           child: Container(
               margin: const EdgeInsets.only(top: 12,bottom: 20),
-              child: _itemComment(theme, controller.postComments[data.id]!.tComment),
+              child: _itemComment(theme, controller.postComments[data.id]!.tComment,context),
         )
         ),
 
@@ -537,7 +546,7 @@ class LastTopicView extends StatelessWidget {
       ),
     );
   }
-  _itemComment(TextTheme theme,CommentItemModel data)
+  _itemComment(TextTheme theme,CommentItemModel data,BuildContext context)
   {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -560,9 +569,14 @@ class LastTopicView extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Image.asset('$baseUrlImage/ic_profile.png',
-                    height: 24,
-                    width: 24,),
+
+                  GestureDetector(onTap:()=>{Navigator.push(context,
+                    MaterialPageRoute(
+                        builder: (context) => const ProfileView(),settings: RouteSettings(arguments:data.user_email)
+                    ),)},
+                      child:Image.asset('$baseUrlImage/ic_profile.png',
+                        height: 24,
+                        width: 24,)),
                   sizedBox(width: 8),
                   Text(data.user_email,
                     style: theme.subtitle2!.copyWith(
