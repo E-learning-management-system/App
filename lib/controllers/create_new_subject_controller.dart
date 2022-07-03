@@ -43,8 +43,6 @@ class CreateNewSubjectController extends ChangeNotifier{
         "file": file!=null ? file!.path : null,
       }),
     );
-
-    print("jsonDecode(add post)=   "+ const Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("id")){
       return true;
