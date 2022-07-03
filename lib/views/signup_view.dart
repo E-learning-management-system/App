@@ -166,14 +166,13 @@ class SignUpView extends StatelessWidget {
                               if (value.formSignupKey.currentState!
                                   .validate()) {
                                 var res= await value.SignUpRequest(_type, _university, _email, _password, _passwordConfirmation);
-                                print(res);
-                                if(res){ Navigator.of(context).pushNamed(VerifyEmailView.id);}
+                                if(res==true){ Navigator.of(context).pushNamed(VerifyEmailView.id);}
                                 else{
                                   showDialog<String>(
                                     context: context,
                                     builder: (BuildContext context) => AlertDialog(
                                       title: const Text('خطا'),
-                                      content: const Text('مشکلی در ثبت نام وحود دارد.'),
+                                      content:  Text(res),
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () => Navigator.pop(context, '/SignUp'),
