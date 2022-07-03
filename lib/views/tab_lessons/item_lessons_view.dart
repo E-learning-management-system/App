@@ -306,13 +306,11 @@ class ItemLessonsView extends StatelessWidget {
   // final data = value.listOfExerciseOfCourse[index];
   if(value.status == StatusCategory.BookMark)
   {
-   final data = value.savedPosts[index];
   return _buildBookMark(theme,value.saved[index],controller);
   }
   if(value.status == StatusCategory.Sp)
   {
-    final data = value.listModel[index];
-  return _buildUsers(theme,value.listModel[index]);
+  return _buildUsers(theme,value.listModel[index],context);
   }
   if(value.status== StatusCategory.LastTopics){
     final data = value.listOfSubjectOfCourse[index];
@@ -553,9 +551,14 @@ class ItemLessonsView extends StatelessWidget {
     );
   }
 
-  Widget _buildUsers(TextTheme theme, LessonsItemModel data)
+  Widget _buildUsers(TextTheme theme, LessonsItemModel data,BuildContext context)
   {
-    return Card(
+    return GestureDetector(onTap:(){
+      Navigator.push(context,
+        MaterialPageRoute(
+            builder: (context) => const ProfileView(),settings: RouteSettings(arguments:data.title)
+        ),);
+    },child: Card(
       color: data.bgColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Padding(
@@ -566,22 +569,22 @@ class ItemLessonsView extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              margin: EdgeInsets.only(right: 12),
+                margin: EdgeInsets.only(right: 12),
                 child: Image.asset('$baseUrlImage/ic_profile.png',
-                height: 50,
-                width: 50,)),
+                  height: 50,
+                  width: 50,)),
             Container(
               margin: EdgeInsets.only(right: 15),
-              child: Text(data.title,
+              child: Text(data.title.length>=23?' ...'+data.title.substring(0,20):data.title,
                   style: theme.bodyLarge!.copyWith(
-                    color: Colors.white
+                      color: Colors.white
                   )),
             ),
 
           ],
         ),
       ),
-    );
+    ),);
   }
 
 }

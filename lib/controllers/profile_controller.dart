@@ -19,7 +19,7 @@ class ProfileController extends ChangeNotifier
     );
     print(response.statusCode);
     if(response.statusCode==200){
-      final Map<String, dynamic> data = jsonDecode(response.body);
+      final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
      try{
        ProfileModel profile=ProfileModel.fromJson(data);
        return profile;

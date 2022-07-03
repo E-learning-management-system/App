@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:project/controllers/home_controller.dart';
 import 'package:project/helpers/sharedPreferences.dart';
@@ -47,6 +48,46 @@ unSavePost(id)async{
     savedPosts.removeWhere((element) => element.id==id);
     await setItemCategory(StatusCategory.BookMark);
     notifyListeners();
+    return true;
+  }
+  notifyListeners();
+  return false;
+}
+getUsers(id)async{
+  isLoading =true;
+  notifyListeners();
+  await sharedPreferences.getToken('token').then((value)=>{_token=value});
+  String url='https://api.piazza.markop.ir/soren/courses/$id/students/';
+
+  var response= await http.get(Uri.parse(url),
+    headers: { "content-type": "application/json",
+      "Authorization": "Token " + _token,},
+  );
+  isLoading =false;
+  notifyListeners();
+  print("jsonDecode(list of users)=   "+const Utf8Decoder().convert(response.bodyBytes));
+  final Map<String, dynamic> data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
+  if(data.containsKey("results")) {
+    if (data["results"].length>0) {
+      final List< dynamic> list = data["results"];
+      listModel=[];
+
+      for(var v in list) {
+        listModel .add(
+            LessonsItemModel(
+                description: '',
+                title: v['email'],
+                endDate: '',
+                examDate: '',
+                id: 4,
+                startDate: '',
+                teacher: ''
+            ),
+        );
+      }
+      return true;
+    }
+    listModel=[];
     return true;
   }
   notifyListeners();
@@ -158,22 +199,9 @@ listModel=savedPosts;
     status = StatusCategory.BookMark;
     notifyListeners();
   }
-
-  void setUsers()
+setUsers()async
   {
-    listModel = [
-      for (int i = 0; i < 3; i++) ...[
-        LessonsItemModel(
-            description: 'انتگرال یگانه',
-            title: 'دانیال صابر',
-            endDate: '1400/11/25',
-            examDate: '',
-            id: 4,
-            startDate: '',
-            teacher: ''
-        ),
-      ]
-    ];
+await getUsers(id);
   }
 
  setItemCategory(StatusCategory status) async{
@@ -191,7 +219,7 @@ listModel=savedPosts;
       return;
     } else {
       this.status = status;
-      setUsers();
+     await setUsers();
       notifyListeners();
     }
   }
