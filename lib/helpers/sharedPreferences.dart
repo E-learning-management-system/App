@@ -11,8 +11,10 @@ class SharedPreferencesTable{
   late Map<String,int> lessons;
   late Map<String,int> topics;
   late Map<String,int> exercise;
+  late List<ExerciseItemModel> e=[];
   SharedPreferencesTable(){
     setInitial();
+    exercise={'test':0};
     lessons={'test':0};
     topics={'test':0};
   }
@@ -46,9 +48,11 @@ class SharedPreferencesTable{
     pref?.setStringList('Lessons', myList);
   }
   setExercise(List<ExerciseItemModel> listOfExercise){
+    e=[];
     List<String> myList=[];
     for(var v in listOfExercise){
       myList.add(v.title);
+      e.add(v);
       exercise[v.title]=v.id;
     }
 
@@ -95,6 +99,9 @@ class SharedPreferencesTable{
 
   getExerciseByTitle(String title){
     return exercise[title];
+  }
+  getE(){
+    return e;
   }
 
 

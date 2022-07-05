@@ -20,28 +20,26 @@ class ExercisesController extends ChangeNotifier
 
   Future getExercisesRequest()
   async{
-
-    // var response= await http.get(Uri.parse(_url),
-    //   headers: { "content-type": "application/json",
-    //     "Authorization": "Token " + _token,},
-    // );
-    //
-    // print("jsonDecode(list of subjects)=   "+jsonDecode(response.body));
-    // final Map<String, dynamic> data = json.decode(response.body);
-    // if(data.containsKey("results")){
-    //   final Map<String, dynamic> list = json.decode(data["results"]);
-    //   for(var v in list.values) {
-    //     v.asMap().forEach((i, value) {
-    //       _listOfSubjects.add(SubjectsItemModel.fromJson(value));
-    //     });
-    //     print(_listOfSubjects);
-    List<ExerciseItemModel> list =[ExerciseItemModel(id: 1, title:" تمرین 1", description: "description", teacher: "teacher", date: "30/4/1380", deadline: "1/5/1390", courseName: "courseName", courseId: 5, file: "file"),];
-        sharedPreferences.setExercise(list);
-    //   }
-    // }
+    final _token=await sharedPreferences.getToken('token');
+var _url='https://api.piazza.markop.ir/soren/studentexercises/';
+    var response= await http.get(Uri.parse(_url),
+      headers: { "content-type": "application/json",
+        "Authorization": "Token " + _token,},
+    );
+List<ExerciseItemModel>listOfExercise=[];
+    print("jsonDecode(list of exercises)=   "+ Utf8Decoder().convert(response.bodyBytes));
+    final Map<String, dynamic> data = json.decode( Utf8Decoder().convert(response.bodyBytes));
+    if(data.containsKey("results")){
+      final List< dynamic> list = data["results"];
+      for(var v in list) {
+           listOfExercise.add(ExerciseItemModel.fromJson(v));
+        }
+    sharedPreferences.setExercise(listOfExercise);
+      notifyListeners();
+      return true;
+      }
     notifyListeners();
-    return true;
-    // return false;
+    return false;
   }
 
  // Future changeExercise()async{}
