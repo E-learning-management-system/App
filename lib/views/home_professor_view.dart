@@ -40,7 +40,7 @@ class HomeProfessorView extends StatelessWidget {
       appBar: TopAppBar('استاد', 1, 'ww'),
       body: SingleChildScrollView(
         padding: EdgeInsets.only(right: 12, left: 12,
-        bottom: 20),
+        bottom: 20,top: 20),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
           Row(

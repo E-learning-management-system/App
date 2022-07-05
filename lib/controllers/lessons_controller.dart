@@ -16,6 +16,25 @@ class LessonsController extends ChangeNotifier
   get listOfLessons=>_listOfLessons;
   late String _token;
 
+  deleteLesson(int id)async {
+    String url='https://api.piazza.markop.ir/soren/course-rud/$id/';
+    var  _token = await sharedPreferences.getToken('token');
+
+    var response= await http.delete(Uri.parse(url),
+      headers: { "content-type": "application/json",
+        "Authorization": "Token " + _token,},
+    );
+
+    print("jsonDecode(delete lesson)=   "+const Utf8Decoder().convert(response.bodyBytes));
+    if(response.statusCode==204){
+
+      await getLessonsRequest();
+      notifyListeners();
+      return true;
+    }
+    notifyListeners();
+    return false;
+  }
   Future getLessonsRequest()
   async{
     _listOfLessons.clear();

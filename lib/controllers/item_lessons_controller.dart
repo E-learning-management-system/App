@@ -81,7 +81,7 @@ getUsers(id)async{
                 examDate: '',
                 id: 4,
                 startDate: '',
-                teacher: ''
+                teacher: v['user_id'].toString()
             ),
         );
       }
@@ -290,5 +290,42 @@ addSubject(int id)async{
 }
 
 
+  deleteUsers(id) async {
+    String url = 'https://api.piazza.markop.ir/soren/student-rd/$id/';
+    var _token = await sharedPreferences.getToken('token');
+print(url);
+    var response = await http.delete(Uri.parse(url),
+      headers: { "content-type": "application/json",
+        "Authorization": "Token " + _token,},
+    );
+
+    print("jsonDecode(delete user)=   " +
+        const Utf8Decoder().convert(response.bodyBytes));
+    if (response.statusCode == 204) {
+      notifyListeners();
+      return true;
+    }
+    notifyListeners();
+    return false;
+  }
+
+  deleteTopic(id)async {
+    String url = 'https://api.piazza.markop.ir/soren/subject-rd/$id/';
+    var _token = await sharedPreferences.getToken('token');
+
+    var response = await http.delete(Uri.parse(url),
+      headers: { "content-type": "application/json",
+        "Authorization": "Token " + _token,},
+    );
+
+    print("jsonDecode(delete subject)=   " +
+        const Utf8Decoder().convert(response.bodyBytes));
+    if (response.statusCode == 204) {
+      notifyListeners();
+      return true;
+    }
+    notifyListeners();
+    return false;
+  }
 
 }
