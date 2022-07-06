@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
+import 'package:project/views/change_pw_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/text_field_widget.dart';
@@ -61,8 +62,9 @@ class ForgetPasswordView extends StatelessWidget {
               child: ElevationButtonWidget(
                 text: 'بازیابی رمز عبور',
                   call: (){
+                    Navigator.pushNamed(context, ChangePwView.id);
 
-                   }),
+                  }),
             )
 
 

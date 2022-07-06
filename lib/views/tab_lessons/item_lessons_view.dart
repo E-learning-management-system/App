@@ -14,6 +14,7 @@ import 'package:project/models/lessons_item_model.dart';
 import 'package:project/models/post_model.dart';
 import 'package:project/views/tab_lessons/last_topic_view.dart';
 import 'package:project/views/tab_lessons/record_home_work_view.dart';
+import 'package:project/views/tab_lessons/search_view.dart';
 import 'package:project/views/tab_profile/profile_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/bottomAppBar.dart';
@@ -59,7 +60,7 @@ class ItemLessonsView extends StatelessWidget {
       FloatingActionButtonLocation.startFloat,
       body: Column(
               children: [
-                _buildSearchWidget(),
+                _buildSearchWidget(context),
                 _buildCategoryWidget(),
                 _buildListItems(theme, controller)
               ],
@@ -97,9 +98,9 @@ class ItemLessonsView extends StatelessWidget {
     );
 
   }
-  Widget _buildSearchWidget()
+  Widget _buildSearchWidget(BuildContext context)
   {
-    return  const Padding(
+    return   Padding(
       padding:EdgeInsets.only(
           top: 50,
           right: 46,
@@ -108,6 +109,11 @@ class ItemLessonsView extends StatelessWidget {
       child: SizedBox(
         height: 40,
         child: TextFormFieldWidget(
+          onTap: (){
+            Navigator.pushNamed(context, SearchView.id);
+
+          },
+          readOnly: true,
           hintText: 'جست و جو',
           noneEnableBorder: false,
           actionKeyboard: TextInputAction.search,
