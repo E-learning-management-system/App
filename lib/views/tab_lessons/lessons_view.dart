@@ -90,11 +90,11 @@ class LessonsView extends StatelessWidget {
       child: SizedBox(
         height: 40,
         child: TextFormFieldWidget(
-          hintText: 'جست و جو',
+          readOnly: true,
           onTap: (){
             // Navigator.pushNamed(context, SearchView.id);
           },
-          readOnly: true,
+          hintText: 'جست و جو',
           noneEnableBorder: false,
           actionKeyboard: TextInputAction.search,
           filled: true,

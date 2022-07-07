@@ -26,7 +26,8 @@ class TextFormFieldWidget extends StatelessWidget {
   final Function()? onTap;
   final Color? textTypeColor;
   final Color? colorHint;
-
+  final bool? autoFocus;
+  final double? borderRadius;
 
   const TextFormFieldWidget(
       {required this.hintText,
@@ -40,6 +41,7 @@ class TextFormFieldWidget extends StatelessWidget {
         this.suffixIcon,
         this.focusNode,
         this.funOnSubmitted,
+        this.autoFocus,
         this.textInputType,
         this.defaultText,
         this.parametersValidate,
@@ -49,7 +51,7 @@ class TextFormFieldWidget extends StatelessWidget {
         this.prefixIcon,
         this.readOnly=false,
         this.onChanged,
-       this.onTap, this.textTypeColor, this.colorHint}): super(key: key);
+       this.onTap, this.textTypeColor, this.colorHint, this.borderRadius}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,7 @@ class TextFormFieldWidget extends StatelessWidget {
         onTap: onTap,
         maxLength: maxLength,
         readOnly: readOnly,
+        autofocus: autoFocus ?? false,
         cursorColor: theme.primaryColor,
         onChanged: onChanged,
         obscureText: obscureText,
@@ -93,7 +96,7 @@ class TextFormFieldWidget extends StatelessWidget {
           ):OutlineInputBorder(
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.circular
-              (borderRadiusTxtField)
+              (borderRadius ?? borderRadiusTxtField)
           ),
           focusedBorder:  noneEnableBorder ?
           OutlineInputBorder(

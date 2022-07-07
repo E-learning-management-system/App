@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
-import 'package:project/views/forget_verify.dart';
-import 'package:project/views/verify_email_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/text_field_widget.dart';
