@@ -13,6 +13,7 @@ import 'package:project/widgets/elevation_button.dart';
 import 'package:provider/provider.dart';
 import 'package:project/controllers/exercise_controller.dart';
 import '../widgets/topAppBar.dart';
+import 'tab_lessons/search_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -55,6 +56,13 @@ class HomeView extends StatelessWidget {
                             width: (screenWidth - 50) * 0.8,
                             height: 50,
                             child: TextFormField(
+                              readOnly: true,
+                              onTap: (){
+                                controller.setItemCategory(StatusCategory.All);
+                                List<ItemCategoryModel> list=controller.listModel;
+                                print(list);
+                                Navigator.pushNamed(context, SearchView.id,arguments: list);
+                              },
                               decoration: InputDecoration(
                                 prefixIcon: Icon(
                                   Icons.search,

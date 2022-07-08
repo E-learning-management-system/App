@@ -15,6 +15,7 @@ import 'package:project/models/post_model.dart';
 import 'package:project/views/tab_lessons/final_lessons_view.dart';
 import 'package:project/views/tab_lessons/last_topic_view.dart';
 import 'package:project/views/tab_lessons/record_home_work_view.dart';
+import 'package:project/views/tab_lessons/search_view.dart';
 import 'package:project/views/tab_profile/profile_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/bottomAppBar.dart';
@@ -60,7 +61,7 @@ class ItemLessonsView extends StatelessWidget {
       FloatingActionButtonLocation.startFloat,
       body: Column(
               children: [
-                _buildSearchWidget(),
+                _buildSearchWidget(context,controller),
                 _buildCategoryWidget(),
                 _buildListItems(theme, controller,context),
 
@@ -99,15 +100,15 @@ class ItemLessonsView extends StatelessWidget {
               Icons.add,
               size: 18,
             ),
-            label:Text(controller.status == StatusCategory.LastTopics?'مبحث جدید':controller.status==StatusCategory.HomeWork?'تکلیف جدید':'دانشجو جدید'),
+            label:Text(controller.button),
       ),
     )
     );
   }
-  Widget _buildSearchWidget()
+  Widget _buildSearchWidget(BuildContext context,ItemLessonsController controller)
   {
-    return  const Padding(
-      padding:EdgeInsets.only(
+    return   Padding(
+      padding:const EdgeInsets.only(
           top: 50,
           right: 46,
           left: 46,
@@ -115,12 +116,26 @@ class ItemLessonsView extends StatelessWidget {
       child: SizedBox(
         height: 40,
         child: TextFormFieldWidget(
+          onTap: (){
+            List<ItemCategoryModel> list=[];
+            for(var i in controller.listModel) {
+              if(controller.status==StatusCategory.LastTopics) {
+                list.add(ItemCategoryModel(title:i.title,category: 'Subject'));
+              }
+              if(controller.status==StatusCategory.HomeWork) {
+                list.add(ItemCategoryModel(title:i.title,category: 'Exercise'));
+              }
+            }
+            Navigator.pushNamed(context, SearchView.id,arguments: list);
+
+          },
+          readOnly: true,
           hintText: 'جست و جو',
           noneEnableBorder: false,
           actionKeyboard: TextInputAction.search,
           filled: true,
           fillColor: Colors.white,
-          suffixIcon: Icon(
+          suffixIcon: const Icon(
               Icons.search),
         ),
       ),

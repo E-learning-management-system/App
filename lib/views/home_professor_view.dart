@@ -8,6 +8,8 @@ import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/helpers/utility.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/views/tab_lessons/item_lessons_view.dart';
+import 'package:project/views/tab_lessons/search_view.dart';
+import 'package:project/views/tab_lessons/item_lessons_view.dart';
 import 'package:project/views/tab_lessons/last_topic_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/topAppBar.dart';
@@ -50,6 +52,13 @@ class HomeProfessorView extends StatelessWidget {
                 width: (MediaQuery.of(context).size.width - 50) * 0.8,
                 height: 50,
                 child: TextFormField(
+                  readOnly: true,
+                  onTap: (){
+                    controller.setItemCategory(StatusCategory.All);
+                    List<ItemCategoryModel> list=controller.listModel;
+                    print(list);
+                    Navigator.pushNamed(context, SearchView.id,arguments: list);
+                  },
                   decoration: InputDecoration(
                     prefixIcon: Icon(
                       Icons.search,
@@ -203,6 +212,6 @@ class HomeProfessorView extends StatelessWidget {
           ),
         ),
       ),
-    ),);
+    ));
   }
 }
