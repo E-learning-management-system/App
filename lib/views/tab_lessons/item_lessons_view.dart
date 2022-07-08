@@ -61,7 +61,7 @@ class ItemLessonsView extends StatelessWidget {
       FloatingActionButtonLocation.startFloat,
       body: Column(
               children: [
-                _buildSearchWidget(context),
+                _buildSearchWidget(context,controller),
                 _buildCategoryWidget(),
                 _buildListItems(theme, controller,context),
 
@@ -100,15 +100,15 @@ class ItemLessonsView extends StatelessWidget {
               Icons.add,
               size: 18,
             ),
-            label:Text(controller.status == StatusCategory.LastTopics?'مبحث جدید':controller.status==StatusCategory.HomeWork?'تکلیف جدید':'دانشجو جدید'),
+            label:Text(controller.button),
       ),
     )
     );
   }
-  Widget _buildSearchWidget(BuildContext context)
+  Widget _buildSearchWidget(BuildContext context,ItemLessonsController controller)
   {
     return   Padding(
-      padding:EdgeInsets.only(
+      padding:const EdgeInsets.only(
           top: 50,
           right: 46,
           left: 46,
@@ -117,7 +117,16 @@ class ItemLessonsView extends StatelessWidget {
         height: 40,
         child: TextFormFieldWidget(
           onTap: (){
-            Navigator.pushNamed(context, SearchView.id);
+            List<ItemCategoryModel> list=[];
+            for(var i in controller.listModel) {
+              if(controller.status==StatusCategory.LastTopics) {
+                list.add(ItemCategoryModel(title:i.title,category: 'Subject'));
+              }
+              if(controller.status==StatusCategory.HomeWork) {
+                list.add(ItemCategoryModel(title:i.title,category: 'Exercise'));
+              }
+            }
+            Navigator.pushNamed(context, SearchView.id,arguments: list);
 
           },
           readOnly: true,
@@ -126,7 +135,7 @@ class ItemLessonsView extends StatelessWidget {
           actionKeyboard: TextInputAction.search,
           filled: true,
           fillColor: Colors.white,
-          suffixIcon: Icon(
+          suffixIcon: const Icon(
               Icons.search),
         ),
       ),

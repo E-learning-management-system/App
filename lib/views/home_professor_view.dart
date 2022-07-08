@@ -54,7 +54,10 @@ class HomeProfessorView extends StatelessWidget {
                 child: TextFormField(
                   readOnly: true,
                   onTap: (){
-                    Navigator.pushNamed(context, SearchView.id);
+                    controller.setItemCategory(StatusCategory.All);
+                    List<ItemCategoryModel> list=controller.listModel;
+                    print(list);
+                    Navigator.pushNamed(context, SearchView.id,arguments: list);
                   },
                   decoration: InputDecoration(
                     prefixIcon: Icon(
@@ -209,6 +212,6 @@ class HomeProfessorView extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ));
   }
 }

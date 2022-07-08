@@ -16,6 +16,8 @@ import 'package:project/widgets/empty_view_widget.dart';
 import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/item_category_model.dart';
+
 class LessonsView extends StatelessWidget {
   const LessonsView({Key? key}) : super(key: key);
   static const String id = '/lessons_view';
@@ -36,7 +38,7 @@ class LessonsView extends StatelessWidget {
         ),
         body: Column(
           children: [
-            _buildSearchWidget(context),
+            _buildSearchWidget(context,controller),
             Expanded(
               child: FutureBuilder(
                 future: controller.getLessonsRequest(),
@@ -84,7 +86,7 @@ class LessonsView extends StatelessWidget {
     }
   }
 
-  Widget _buildSearchWidget(BuildContext context) {
+  Widget _buildSearchWidget(BuildContext context,LessonsController controller) {
     return  Padding(
       padding: const EdgeInsets.all(15),
       child: SizedBox(
@@ -92,7 +94,11 @@ class LessonsView extends StatelessWidget {
         child: TextFormFieldWidget(
           readOnly: true,
           onTap: (){
-            // Navigator.pushNamed(context, SearchView.id);
+            List<ItemCategoryModel> list=[];
+            for(var i in controller.listOfLessons) {
+              list.add(ItemCategoryModel(title:i.title,category: 'Lesson'));
+            }
+            Navigator.pushNamed(context, SearchView.id,arguments: list);
           },
           hintText: 'جست و جو',
           noneEnableBorder: false,

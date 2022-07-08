@@ -74,7 +74,8 @@ class HomeController extends ChangeNotifier {
         listModel.add(ItemCategoryModel(title: i, category: 'Lesson'));
       }
     }
-   if(exercise != null){
+   if(exercise != null&& sharedPreferences.getType()!='t'){
+
      for (var i in exercise){
        listModel.add(ItemCategoryModel(title: i, category: 'Exercise'));
      }

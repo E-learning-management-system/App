@@ -24,12 +24,15 @@ List<PostItemModel> savedPosts=[];
  get listOfExerciseOfCourse=>_listOfExerciseOfCourse;
  get saved=>savedPosts;
 late String _token;
-var status ;
+var status=StatusCategory.LastTopics ;
+var button=' مبحث جدید';
 List<dynamic> listModel = [];
 
 String titleOfNewSubject='';
 
  bool isLoading =false;
+
+
 
 setId(int id){
   this.id=id;
@@ -205,6 +208,9 @@ await getUsers(id);
   }
 
  setItemCategory(StatusCategory status) async{
+  if(status==StatusCategory.All){
+
+  }
 
     if (status == StatusCategory.BookMark) {
       setBookMark();
@@ -212,14 +218,19 @@ await getUsers(id);
     }
     if (status == StatusCategory.HomeWork) {
       await setHomeWork();
+      button='تکلیف جدید';
+      notifyListeners();
       return;
     }
     if (status == StatusCategory.LastTopics) {
       await setLastTopics();
+      button=' مبحث جدید';
+      notifyListeners();
       return;
     } else {
       this.status = status;
      await setUsers();
+      button='دانشجو حدید';
       notifyListeners();
     }
   }

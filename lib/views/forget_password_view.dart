@@ -8,6 +8,7 @@ import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/login_controller.dart';
+import 'forget_verify.dart';
 class ForgetPasswordView extends StatelessWidget {
   const ForgetPasswordView({Key? key}) : super(key: key);
   static const id = '/ForgetPassword';
