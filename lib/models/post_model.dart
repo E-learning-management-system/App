@@ -63,6 +63,11 @@ class PostItemModel {
   get isExpanded => isExpand;
 
   toggleExpand(){
-    isExpand=!isExpand;
+
+    if(isExpand){
+      isExpand=false;
+    }else{
+      isExpand=true;
+    }
   }
 }

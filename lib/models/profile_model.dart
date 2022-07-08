@@ -7,7 +7,6 @@ import 'package:project/helpers/colors.dart';
 class ProfileModel {
 
 
-  int id=0;
   String  name="";
   String  email="";
   String  university="";
@@ -17,7 +16,6 @@ class ProfileModel {
   String bio='';
   String photo='';
   ProfileModel({
-    required this.id,
     required this.name,
     required this.email,
     required this.university,
@@ -29,11 +27,10 @@ class ProfileModel {
   });
 
   ProfileModel.fromJson(Map<String,dynamic> item){
-    id=item["id"];
-    name=item["name"].runtimeType==String?item['name']:'';
+    name=item["name"]??'';
     email=item["email"];
     university=item["university"].runtimeType==String?item["university"]:'';
-    type=item["type"];
+    type=item["type"]??'s';
    date_joined=item["date_joined"];
    last_login=item["last_login"];
   bio=item['bio'].runtimeType==String?item['bio']:'';

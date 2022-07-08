@@ -33,7 +33,7 @@ class LessonsItemModel {
 
   LessonsItemModel.fromJson(Map<String,dynamic> item){
        id=item["id"];
-       title=item["title"];
+       title=item["title"] ?? item['course_title'];
        description=item["description"];
        teacher=item["teacher"].runtimeType==String?item["teacher"]:'';
        startDate=item["start_date"];

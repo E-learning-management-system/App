@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:project/controllers/home_controller.dart';
 import 'package:project/helpers/sharedPreferences.dart';
@@ -23,7 +24,7 @@ List<PostItemModel> savedPosts=[];
  get listOfExerciseOfCourse=>_listOfExerciseOfCourse;
  get saved=>savedPosts;
 late String _token;
-var status = StatusCategory.LastTopics;
+var status ;
 List<dynamic> listModel = [];
 
 String titleOfNewSubject='';
@@ -32,6 +33,65 @@ String titleOfNewSubject='';
 
 setId(int id){
   this.id=id;
+}
+unSavePost(id)async{
+  await sharedPreferences.getToken('token').then((value)=>{_token=value});
+  String  _url= 'https://api.piazza.markop.ir/soren/unsavepost/$id/';
+  var response= await http.post(Uri.parse(_url),
+      headers: { "content-type": "application/json",
+        "Authorization": "Token " + _token,},
+      body: jsonEncode({
+        "file":''
+      })
+  );
+  if(response.statusCode==201){
+    savedPosts.removeWhere((element) => element.id==id);
+    await setItemCategory(StatusCategory.BookMark);
+    notifyListeners();
+    return true;
+  }
+  notifyListeners();
+  return false;
+}
+getUsers(id)async{
+  isLoading =true;
+  notifyListeners();
+  await sharedPreferences.getToken('token').then((value)=>{_token=value});
+  String url='https://api.piazza.markop.ir/soren/courses/$id/students/';
+
+  var response= await http.get(Uri.parse(url),
+    headers: { "content-type": "application/json",
+      "Authorization": "Token " + _token,},
+  );
+  isLoading =false;
+  notifyListeners();
+  print("jsonDecode(list of users)=   "+const Utf8Decoder().convert(response.bodyBytes));
+  final Map<String, dynamic> data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
+  if(data.containsKey("results")) {
+    if (data["results"].length>0) {
+      final List< dynamic> list = data["results"];
+      listModel=[];
+
+      for(var v in list) {
+        listModel .add(
+            LessonsItemModel(
+                description: '',
+                title: v['email'],
+                endDate: '',
+                examDate: '',
+                id: 4,
+                startDate: '',
+                teacher: v['user_id'].toString()
+            ),
+        );
+      }
+      return true;
+    }
+    listModel=[];
+    return true;
+  }
+  notifyListeners();
+  return false;
 }
 getSavedPost()async{
   isLoading =true;
@@ -139,22 +199,9 @@ listModel=savedPosts;
     status = StatusCategory.BookMark;
     notifyListeners();
   }
-
-  void setUsers()
+setUsers()async
   {
-    listModel = [
-      for (int i = 0; i < 3; i++) ...[
-        LessonsItemModel(
-            description: 'انتگرال یگانه',
-            title: 'دانیال صابر',
-            endDate: '1400/11/25',
-            examDate: '',
-            id: 4,
-            startDate: '',
-            teacher: ''
-        ),
-      ]
-    ];
+await getUsers(id);
   }
 
  setItemCategory(StatusCategory status) async{
@@ -172,7 +219,7 @@ listModel=savedPosts;
       return;
     } else {
       this.status = status;
-      setUsers();
+     await setUsers();
       notifyListeners();
     }
   }
@@ -243,5 +290,42 @@ addSubject(int id)async{
 }
 
 
+  deleteUsers(id) async {
+    String url = 'https://api.piazza.markop.ir/soren/student-rd/$id/';
+    var _token = await sharedPreferences.getToken('token');
+print(url);
+    var response = await http.delete(Uri.parse(url),
+      headers: { "content-type": "application/json",
+        "Authorization": "Token " + _token,},
+    );
+
+    print("jsonDecode(delete user)=   " +
+        const Utf8Decoder().convert(response.bodyBytes));
+    if (response.statusCode == 204) {
+      notifyListeners();
+      return true;
+    }
+    notifyListeners();
+    return false;
+  }
+
+  deleteTopic(id)async {
+    String url = 'https://api.piazza.markop.ir/soren/subject-rd/$id/';
+    var _token = await sharedPreferences.getToken('token');
+
+    var response = await http.delete(Uri.parse(url),
+      headers: { "content-type": "application/json",
+        "Authorization": "Token " + _token,},
+    );
+
+    print("jsonDecode(delete subject)=   " +
+        const Utf8Decoder().convert(response.bodyBytes));
+    if (response.statusCode == 204) {
+      notifyListeners();
+      return true;
+    }
+    notifyListeners();
+    return false;
+  }
 
 }

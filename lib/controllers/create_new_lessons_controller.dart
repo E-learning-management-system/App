@@ -66,8 +66,9 @@ class CreateNewLessonsController extends ChangeNotifier
     );
 
     notifyListeners();
-    print("jsonDecode(new lesson)=   "+Utf8Decoder().convert(response.bodyBytes));
+    print(response.statusCode);
     final Map<String, dynamic> data = jsonDecode(Utf8Decoder().convert(response.bodyBytes));
+
     if(data.containsKey("id")){
       await sharedPreferences.setLessonTitle(cnNameLessons.text);
       await sharedPreferences.addLessons(cnNameLessons.text,  data['id']);
@@ -75,6 +76,9 @@ class CreateNewLessonsController extends ChangeNotifier
       cnDesc.clear();
 
       return true;
+    }
+    if(response.statusCode==400){
+      return'تاریخ پایان نمی تواند قیل از تاریخ شروع باشد.';
     }
     return false;
   }

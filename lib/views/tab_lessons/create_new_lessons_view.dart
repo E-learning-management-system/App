@@ -74,9 +74,25 @@ class CreateNewLessonsView extends StatelessWidget {
                 if(controller.form.currentState!.validate())
                   {
                    var res= await controller.createNewLessonsRequest();
-                   if(res){ Navigator.of(context).pushNamed(FinalLessonsView.id);}
+                   if(res==true){ Navigator.of(context).pushNamed(FinalLessonsView.id);}
                    else{
-                     showDialog<String>(
+                     if(res.runtimeType==String){
+                       showDialog<String>(
+                         context: context,
+                         builder: (BuildContext context) => AlertDialog(
+                           title: const Text('خطا'),
+                           content:  Text(res),
+                           actions: <Widget>[
+                             TextButton(
+                               onPressed: () => Navigator.pop(context, '/create_new_lessons'),
+                               child: const Text('باشه'),
+                             ),
+                           ],
+                         ),
+                       );
+                     }
+                    else {
+                       showDialog<String>(
                        context: context,
                        builder: (BuildContext context) => AlertDialog(
                          title: const Text('خطا'),
@@ -89,6 +105,7 @@ class CreateNewLessonsView extends StatelessWidget {
                          ],
                        ),
                      );
+                     }
                    }
                   }
 

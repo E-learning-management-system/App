@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:jalali_table_calendar/jalali_table_calendar.dart';
 import 'package:project/controllers/calendar_controller.dart';
 import 'package:project/helpers/utility.dart';
+import 'package:project/models/exercise_item_model.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:provider/provider.dart';
+
+import '../../helpers/sharedPreferences.dart';
+import '../tab_lessons/item_lessons_view.dart';
+import '../tab_lessons/record_home_work_view.dart';
 
 class CalendarView extends StatelessWidget {
   const CalendarView({Key? key}) : super(key: key);
@@ -48,8 +53,18 @@ class CalendarView extends StatelessWidget {
           }),
     );
   }
+  Future<List<ExerciseItemModel>> myExercise(CalendarController controller)async{
+    await controller.getCalendar();
+    return controller.listModel;
+  }
+
 
   Widget _buildListView(CalendarController controller, TextTheme theme) {
+
+    return FutureBuilder<List<ExerciseItemModel>>(
+    future:myExercise(controller) ,
+    builder: (context, snapshot) {
+    if (snapshot.connectionState!=ConnectionState.waiting) {
     return Expanded(
         child: ListView.builder(
       padding: const EdgeInsets.only(top: 15, right: 12, left: 12, bottom: 15),
@@ -57,10 +72,18 @@ class CalendarView extends StatelessWidget {
       itemCount: controller.listModel.length,
       itemBuilder: (context, index) {
         final data = controller.listModel[index];
-        return Card(
+        return GestureDetector(onTap: ()=>{
+        Navigator.push(
+        context,
+        MaterialPageRoute(
+        builder: (context) => RecordHomeWorkView(exercise: data,),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
+        EnCreateHomeWork.Professor :EnCreateHomeWork.Student )
+        ),)
+        },
+        child: Card(
           color: Utility.randomColor(),
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           margin: const EdgeInsets.only(top: 20),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -80,7 +103,7 @@ class CalendarView extends StatelessWidget {
                     ),
                     sizedBox(width: 8),
                     Text(
-                      data.date,
+                      data.date.substring(0,10),
                       style: theme.bodyLarge,
                     ),
                   ],
@@ -88,8 +111,11 @@ class CalendarView extends StatelessWidget {
               ],
             ),
           ),
-        );
+        ),);
       },
-    ));
+    ));}
+    else {
+      return const Center(child: CircularProgressIndicator(),);
+    }},);
   }
 }

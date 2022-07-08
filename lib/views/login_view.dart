@@ -82,29 +82,49 @@ class LoginView extends StatelessWidget {
                                   }
                                 return  ElevationButtonWidget(
                                   call: () async {
+
                                     if (controller.formLoginKey.currentState!
                                         .validate()) {
                                       var res = await controller.loginRequest(
                                           _email, _password);
-                                      if (res) {
+                                      if (res==true) {
                                         Navigator.of(context)
                                             .pushNamed(BaseView.id);
-                                      } else { showDialog<String>(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            AlertDialog(
-                                              title: const Text('خطا'),
-                                              content: const Text(
-                                                  'مشکلی در ورود وجود دارد.'),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  onPressed: () => Navigator.pop(
-                                                      context, '/Login'),
-                                                  child: const Text('باشه'),
-                                                ),
-                                              ],
-                                            ),
-                                      );
+                                      } else { if(res.runtimeType==String){
+                                        showDialog<String>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                                title: const Text('خطا'),
+                                                content:  Text(
+                                                    res),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () => Navigator.pop(
+                                                        context, '/Login'),
+                                                    child: const Text('باشه'),
+                                                  ),
+                                                ],
+                                              ),
+                                        );
+                                      }else{
+                                        showDialog<String>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                                title: const Text('خطا'),
+                                                content: const Text(
+                                                    'مشکلی در ورود وجود دارد.لطفا کمی بعد تلاش کنید.'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () => Navigator.pop(
+                                                        context, '/Login'),
+                                                    child: const Text('باشه'),
+                                                  ),
+                                                ],
+                                              ),
+                                        );
+                                      }
                                       }
                                     }
                                   },

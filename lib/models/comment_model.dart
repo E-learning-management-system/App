@@ -26,7 +26,7 @@ class CommentItemModel {
 
   CommentItemModel.fromJson(Map<String,dynamic> item){
     id=item['id'];
-    user_photo=item['user_photo'];
+    user_photo=item['user_photo'] ?? '' ;
     user_email=item['user_email'];
     is_teacher=item['is_teacher'];
     post_id=item['post_id'];

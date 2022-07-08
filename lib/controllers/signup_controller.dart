@@ -28,12 +28,15 @@ class SignUpController extends ChangeNotifier
      isLoading = false;
      notifyListeners();
    // print("jsonDecode(response.body)=   "+jsonDecode(response.body));
-   print ("email="+email);
-   if(jsonDecode(response.body)==email){
+   print (response.statusCode);
+   if(response.statusCode==201){
      _email=email;
      return true;
    }
-   return false;
+   if(response.statusCode==400){
+     return"ایمیل وارد شده قبلا ثبت نام شده است.";
+   }
+     return'مشکلی در ثبت نام وجود دارد لطفا بعدا تلاش نمایید.';
   }
 
   String dropdownValue = "انتخاب کنید";

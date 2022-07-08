@@ -9,9 +9,14 @@ import 'package:project/models/lessons_item_model.dart';
 class SharedPreferencesTable{
   bool isLogin=false;
   late Map<String,int> lessons;
+  late Map<String,int> topics;
+  late Map<String,int> exercise;
+  late List<ExerciseItemModel> e=[];
   SharedPreferencesTable(){
     setInitial();
+    exercise={'test':0};
     lessons={'test':0};
+    topics={'test':0};
   }
   SharedPreferences? pref;
   EncryptedSharedPreferences token = EncryptedSharedPreferences();
@@ -24,8 +29,6 @@ class SharedPreferencesTable{
   setLogin(){
     isLogin=true;
   }
-
-
   setInitial()async{
     pref= (await SharedPreferences.getInstance());
   }
@@ -45,9 +48,12 @@ class SharedPreferencesTable{
     pref?.setStringList('Lessons', myList);
   }
   setExercise(List<ExerciseItemModel> listOfExercise){
+    e=[];
     List<String> myList=[];
     for(var v in listOfExercise){
       myList.add(v.title);
+      e.add(v);
+      exercise[v.title]=v.id;
     }
 
     pref?.setStringList('Exercises', myList);
@@ -56,6 +62,7 @@ class SharedPreferencesTable{
     List<String> myList=[];
     for(var v in listOfSubject){
       myList.add(v.title);
+      topics[v.title]=v.id;
     }
 
     pref?.setStringList('Subjects', myList);
@@ -68,6 +75,9 @@ class SharedPreferencesTable{
   }
   getLessonId(String title){
     return lessons[title];
+  }
+  getTopicId(String title){
+    return topics[title];
   }
   getSubjects(){
     return pref?.getStringList('Subjects');
@@ -82,6 +92,17 @@ class SharedPreferencesTable{
    return pref?.getString('type');
   }
 
+  getLessonByTitle(String title){
+  var  id= getLessonId(title);
+  return id;
+  }
+
+  getExerciseByTitle(String title){
+    return exercise[title];
+  }
+  getE(){
+    return e;
+  }
 
 
 }

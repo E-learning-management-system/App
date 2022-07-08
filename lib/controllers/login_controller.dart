@@ -11,19 +11,24 @@ class LoginController extends ChangeNotifier
   String? _token;
   String get token=>_token!;
   bool isLoading =false;
+  String _email='';
+  get email=>_email;
 
   Future loginRequest( var email, var password)
-  async{
-    isLoading=true;
+  async {
+
+    isLoading = true;
     notifyListeners();
-    var response= await http.post(Uri.parse(_url),
-      headers: {'Content-type':'application/json'},
-      body: jsonEncode({
-        "email":email,
-        "password":password,
-      }),
-    );
-    print(response.body);
+    var response = await http.post(Uri.parse(_url),
+        headers: {'Content-type': 'application/json'},
+        body: jsonEncode({
+          "email": email,
+          "password": password,
+        }),
+      );
+
+
+
     isLoading=false;
     Map<String, dynamic> res = jsonDecode(response.body);
     _token=res.containsKey("token")?res["token"]:"";
@@ -35,10 +40,14 @@ class LoginController extends ChangeNotifier
      await getProfile();
       return true;
     }
-    else {
+    print(response.statusCode);
+    if(response.statusCode==400){
+      return 'رمز عبور وارد شده اشتباه است.';
+    }
+
       isLoading=false;
       return false;
-    }
+
   }
 
   getProfile()async{
@@ -58,5 +67,23 @@ class LoginController extends ChangeNotifier
     return false;
   }
   final formLoginKey = GlobalKey<FormState>();
+
+  forgetPassword(String email)async{
+    var url='https://api.piazza.markop.ir/forgotpassword/';
+    var response= await http.post(Uri.parse(url),
+      headers: { "content-type": "application/json",},
+        body:jsonEncode({
+          "email": email
+        }),
+    );
+    print(response.statusCode);
+    if(response.statusCode==200){
+      _email=email;
+      return true;
+    }
+      return false;
+
+
+  }
 
 }

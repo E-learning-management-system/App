@@ -8,11 +8,14 @@ import 'package:project/controllers/posts_cpntroller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/sharedPreferences.dart';
+import 'package:project/models/exercise_item_model.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/models/lessons_item_model.dart';
 import 'package:project/models/post_model.dart';
+import 'package:project/views/tab_lessons/final_lessons_view.dart';
 import 'package:project/views/tab_lessons/last_topic_view.dart';
 import 'package:project/views/tab_lessons/record_home_work_view.dart';
+import 'package:project/views/tab_profile/profile_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/elevation_button.dart';
@@ -26,8 +29,9 @@ class ItemLessonsView extends StatelessWidget {
   static const String id = '/item_lessons_view';
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<ItemLessonsController>(context);
+    final controller = Provider.of<ItemLessonsController>(context,listen: false);
     controller.setId(lesson.id);
+    // controller.getSubjectsOfCourse(lesson.id);
     final theme = Theme.of(context).textTheme;
     return _buildBody(
       controller: controller,
@@ -35,6 +39,10 @@ class ItemLessonsView extends StatelessWidget {
       title: lesson.title,
       context: context
     );
+  }
+
+  Future setLastTopic(ItemLessonsController controller)async{
+    await controller.setItemCategory(StatusCategory.LastTopics);
   }
   Widget _buildBody(
       {required TextTheme theme,
@@ -51,25 +59,36 @@ class ItemLessonsView extends StatelessWidget {
       floatingActionButtonLocation:
       FloatingActionButtonLocation.startFloat,
       body: Column(
-        children: [
-          _buildSearchWidget(),
-          _buildCategoryWidget(),
-          _buildListItems(theme)
-        ],
-      ),
-      floatingActionButton:   Visibility(
-        visible: sharedPreferences.getType() == 't' &&
-        controller.status == StatusCategory.LastTopics ||
-        controller.status == StatusCategory.HomeWork,
+              children: [
+                _buildSearchWidget(),
+                _buildCategoryWidget(),
+                _buildListItems(theme, controller,context),
+
+               ],
+            ),
+      floatingActionButton:    Visibility(
+        visible: sharedPreferences.getType() == 't' && controller.status != StatusCategory.BookMark,
         child: FloatingActionButton.extended(
             backgroundColor: MyColors.blueHex,
             onPressed: ()async {
               if(controller.status == StatusCategory.HomeWork)
-                {
-                Navigator.pushNamed(context,RecordHomeWorkView.id,
-                arguments: false);
-                  return;
-                }
+              {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RecordHomeWorkView(exercise: ExerciseItemModel(courseName:'',file:'',id:lesson.id,title: '',teacher: '',date: '',deadline: '',description: '',courseId: 0),),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
+                  EnCreateHomeWork.CreateNew :EnCreateHomeWork.Student )
+                  ),);
+                return;
+              }
+              if(controller.status==StatusCategory.Sp){
+                sharedPreferences.setLessonTitle(lesson.title);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const FinalLessonsView(),),);
+                return;
+              }
               await controller.openDialog(context);
             },
             elevation: 1,
@@ -80,11 +99,10 @@ class ItemLessonsView extends StatelessWidget {
               Icons.add,
               size: 18,
             ),
-            label: controller.status == StatusCategory.HomeWork?
-            const Text('تکلیف جدید'):const Text('مبحث جدید')),
+            label:Text(controller.status == StatusCategory.LastTopics?'مبحث جدید':controller.status==StatusCategory.HomeWork?'تکلیف جدید':'دانشجو جدید'),
       ),
+    )
     );
-
   }
   Widget _buildSearchWidget()
   {
@@ -264,144 +282,231 @@ class ItemLessonsView extends StatelessWidget {
           ),
     );
   }
-  Widget _buildListItems(TextTheme theme)
+  Widget _buildListItems(TextTheme theme,ItemLessonsController controller,BuildContext context)
   {
     return Expanded(
-      child: Consumer<ItemLessonsController>(
-        builder: (context, value, child) {
-          if(value.isLoading)
-          {
-            return Center(child: CircularProgressIndicator(),);
+      child:FutureBuilder(
+        future:setLastTopic(controller) ,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
           }
-          if(value.listModel.isEmpty)
-            {
-              return EmptyViewWidget();
-            }
+          return Consumer<ItemLessonsController>(
+            builder: (context, value, child) {
+              if(value.isLoading)
+              {
+                return Center(child: CircularProgressIndicator(),);
+              }
+              if(value.listModel.isEmpty)
+              {
+                return EmptyViewWidget();
+              }
 
-          return ListView.builder(
-          itemCount: value.listModel.length,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-              vertical: 20
-            ),
-            itemBuilder:(context, index) {
-              final data =  value.listModel[index];
-              if(value.status == StatusCategory.BookMark)
-                {
-                  return _buildBookMark(theme,value.saved[index]);
-                }
-              if(value.status == StatusCategory.Sp)
-                {
-                  return _buildUsers(theme,data);
-                }
-              if(value.status== StatusCategory.LastTopics){
-                return GestureDetector(
-                  onTap: ()async{
-                   await PostsController().getPostsOfSubject(data.id);
-                      Navigator.push(context,
-                        MaterialPageRoute(
-                        builder: (context) => LastTopicView(subject:data),
-                      ),);
+              return ListView.builder(
+                itemCount: value.listModel.length,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 20
+                ),
+                itemBuilder:(context, index) {
+                  // final data = value.listOfExerciseOfCourse[index];
+                  if(value.status == StatusCategory.BookMark)
+                  {
+                    return _buildBookMark(theme,value.saved[index],controller);
+                  }
+                  if(value.status == StatusCategory.Sp)
+                  {
+                    return _buildUsers(theme,value.listModel[index],context,controller);
+                  }
+                  if(value.status== StatusCategory.LastTopics){
+                    final data = value.listOfSubjectOfCourse[index];
+                    return GestureDetector(
+                      onTap: ()async{
+                        await PostsController().getPostsOfSubject(data.id);
+                        Navigator.push(context,
+                          MaterialPageRoute(
+                            builder: (context) => LastTopicView(subject:data),
+                          ),);
 
 
-                  },
-                  child: SizedBox(
-                    height: 135,
-                    child: Card(
-                      margin: const EdgeInsets.only(top: 30),
-                      color: data.bgColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
+                      },
+                      child: SizedBox(
+                        height: 135,
+                        child: Card(
+                          margin: const EdgeInsets.only(top: 30),
+                          color: data.bgColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(data.title,
-                                      style: theme.headline6!.copyWith(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        fontSize: 32,
-                                      )),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    // mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(padding: const EdgeInsets.all(10.0),child:  Text(data.title,
+                                          style: theme.headline6!.copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 32,
+                                          )),),
+                                      const Spacer(),
+                                      IconButton(
+                                          hoverColor: Colors.white,
+                                          onPressed: ()async{
+                                            int count = 0;
+                                            showDialog<String>(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  AlertDialog(
+                                                    content: const Text(
+                                                        'از حذف این مبحث مطمئن هستید؟'),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        onPressed: () async => {
+                                                          if(await controller.deleteTopic(data.id)){
+                                                            showDialog<String>(
+                                                              context: context,
+                                                              builder: (BuildContext context) =>
+                                                                  AlertDialog(
+                                                                    content: const Text(
+                                                                        ' با موفقیت حذف شد.'),
+                                                                    actions: <Widget>[
+
+                                                                      TextButton(
+
+                                                                        onPressed: ()async =>
+                                                                        {
+                                                                        await controller.setItemCategory(StatusCategory.LastTopics),
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .popUntil((_) =>
+                                                                            count++ >=
+                                                                            2)
+                                                                  },
+                                                                        child: const Text('باشه'),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                            )
+
+                                                          }
+                                                          else{
+                                                            showDialog<String>(
+                                                              context: context,
+                                                              builder: (BuildContext context) =>
+                                                                  AlertDialog(
+                                                                    title: const Text('خطا'),
+                                                                    content: const Text(
+                                                                        'مشکلی در حذف مبحث وجود دارد.'),
+                                                                    actions: <Widget>[
+                                                                      TextButton(
+                                                                        onPressed: () => Navigator.of(context).popUntil((_) => count++ >= 2),
+                                                                        child: const Text('باشه'),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                            )
+                                                          }
+                                                        },
+                                                        child: const Text('بله'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () => Navigator.pop(context),
+                                                        child: const Text('خیر'),
+                                                      ),
+                                                    ],
+                                                  ),
+                                            );}, icon: const Icon(
+                                        Icons.delete_forever_rounded,
+                                        size:30 ,
+                                        color:Colors.white ,))
+                                    ],
+                                  ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              }
-              if(value.status== StatusCategory.HomeWork){
-              return GestureDetector(
-                onTap: (){
-                  Navigator.of(context).pushNamed(RecordHomeWorkView.id,
-                  arguments: true);
-                },
-                child: SizedBox(
-                  height: 120,
-                  child: Card(
-                    margin: const EdgeInsets.only(top: 15),
-                    color: data.bgColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(borderRadiusTxtField)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(data.title,
-                              style: theme.headline6!.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold
-                              )),
-                              Text(data.endDate,
-                                  style: theme.subtitle2!.
-                                  copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.normal
-                                  ))
-                            ],
+                    );
+                  }
+                  if(value.status== StatusCategory.HomeWork){
+                    final data = value.listOfExerciseOfCourse[index];
+                    return GestureDetector(
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RecordHomeWorkView(exercise: data,),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
+                          EnCreateHomeWork.Professor :EnCreateHomeWork.Student )
+                          ),);
+
+                      },
+                      child: SizedBox(
+                        height: 120,
+                        child: Card(
+                          margin: const EdgeInsets.only(top: 15),
+                          color: data.bgColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(borderRadiusTxtField)
                           ),
-                          SizedBox(
-                            height: 12,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(data.title,
+                                        style: theme.headline6!.copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold
+                                        )),
+                                    Text(data.deadline.substring(0,10),
+                                        style: theme.subtitle2!.
+                                        copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.normal
+                                        ))
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                Text(data.description,
+                                  style: theme.headline6!.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              ],
+                            ),
                           ),
-                          Text(data.description,
-                          style: theme.headline6!.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal,
-                          ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          )
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              );
-              }
-              return const Center(child: CircularProgressIndicator());
-            }, );
+                    );
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                }, );
+            },
+          );
         },
       ),
+
     );
   }
 
-  Widget _buildBookMark(TextTheme theme, PostItemModel data)
+  Widget _buildBookMark(TextTheme theme, PostItemModel data,ItemLessonsController controller)
   {
     return Card(
       color: Colors.white,
@@ -423,7 +528,14 @@ class ItemLessonsView extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,),
                 ),
-                IconButton(onPressed: ()async{},
+                IconButton(onPressed: ()async{
+
+                 var res= await controller.unSavePost(data.id);
+                 if(res){
+                   print('delete');
+
+                 }
+                },
                     icon: const Icon(
                       Icons.delete,
                       size: 18,
@@ -517,9 +629,14 @@ class ItemLessonsView extends StatelessWidget {
     );
   }
 
-  Widget _buildUsers(TextTheme theme, LessonsItemModel data)
+  Widget _buildUsers(TextTheme theme, LessonsItemModel data,BuildContext context,ItemLessonsController controller)
   {
-    return Card(
+    return GestureDetector(onTap:(){
+      Navigator.push(context,
+        MaterialPageRoute(
+            builder: (context) => const ProfileView(),settings: RouteSettings(arguments:data.title)
+        ),);
+    },child: Card(
       color: data.bgColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Padding(
@@ -530,22 +647,92 @@ class ItemLessonsView extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              margin: EdgeInsets.only(right: 12),
+                margin: EdgeInsets.only(right: 12),
                 child: Image.asset('$baseUrlImage/ic_profile.png',
-                height: 50,
-                width: 50,)),
+                  height: 50,
+                  width: 50,)),
             Container(
               margin: EdgeInsets.only(right: 15),
-              child: Text(data.title,
-                  style: theme.bodyLarge!.copyWith(
-                    color: Colors.white
+              child: Text(data.title.length>=20?' ...'+data.title.substring(0,20):data.title,
+                  style: theme.bodyMedium!.copyWith(
+                      color: Colors.white
                   )),
             ),
+            const Spacer(),
+            IconButton(onPressed: ()async{
+              int count = 0;
+              showDialog<String>(
+                context: context,
+                builder: (BuildContext context) =>
+                    AlertDialog(
+                      content: const Text(
+                          'از حذف این دانشجو مطمئن هستید؟'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () async => {
+                            if(await controller.deleteUsers(data.teacher)){
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    AlertDialog(
+                                      content: const Text(
+                                          ' با موفقیت حذف شد.'),
+                                      actions: <Widget>[
+
+                                        TextButton(
+
+                                          onPressed: ()async=>
+                                          {
+                                            await controller.setItemCategory(StatusCategory.Sp),
+                                            Navigator.of(context)
+                                                .popUntil((_) => count++ >= 2)
+                                          },
+                                          child: const Text('باشه'),
+                                        ),
+                                      ],
+                                    ),
+                              )
+
+                            }
+                            else{
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    AlertDialog(
+                                      title: const Text('خطا'),
+                                      content: const Text(
+                                          'مشکلی در حذف دانشجو وجود دارد.'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () => Navigator.of(context).popUntil((_) => count++ >= 2),
+                                          child: const Text('باشه'),
+                                        ),
+                                      ],
+                                    ),
+                              )
+                            }
+                          },
+                          child: const Text('بله'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('خیر'),
+                        ),
+                      ],
+                    ),
+              );}, icon: const Icon(Icons.delete_forever_rounded,size:22 ,color:Colors.white70 ,))
+
 
           ],
         ),
       ),
-    );
+    ),);
   }
 
+}
+
+enum EnCreateHomeWork{
+  Student,
+  Professor,
+  CreateNew
 }

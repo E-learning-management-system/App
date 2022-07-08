@@ -3,8 +3,12 @@ import 'package:project/controllers/home_controller.dart';
 import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/controllers/subject_controller.dart';
 import 'package:project/helpers/sharedPreferences.dart';
+import 'package:project/helpers/utility.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/views/login_view.dart';
+import 'package:project/views/tab_lessons/item_lessons_view.dart';
+import 'package:project/views/tab_lessons/last_topic_view.dart';
+import 'package:project/views/tab_lessons/record_home_work_view.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:provider/provider.dart';
 import 'package:project/controllers/exercise_controller.dart';
@@ -113,57 +117,62 @@ class HomeView extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                ElevationButtonWidget(
-                                  icon: Icons.local_fire_department,
-                                  text: 'همه',
-                                  call: () async {
-                                    await Lessons.getLessonsRequest();
-                                    await Subjects.getSubjectsRequest();
-                                    await Exercise.getExercisesRequest();
-                                    await controller
-                                        .setItemCategory(StatusCategory.All);
-                                  },
-                                  iconColor:
-                                      controller.status == StatusCategory.All
-                                          ? Colors.lightBlue
-                                          : Colors.white,
-                                  primaryColor:
-                                      controller.status == StatusCategory.All
-                                          ? Colors.lightBlue
-                                          : Colors.white,
-                                  textColor:
-                                      controller.status == StatusCategory.All
-                                          ? Colors.white
-                                          : Colors.black,
-                                  bgColorIcon:
-                                      controller.status != StatusCategory.All
-                                          ? Colors.lightBlue
-                                          : Colors.white,
+                                Expanded(
+                                  child: ElevationButtonWidget(
+                                    icon: Icons.local_fire_department,
+                                    text: 'همه',
+                                    call: () async {
+                                      await Lessons.getLessonsRequest();
+                                      await Subjects.getSubjectsRequest();
+                                      await Exercise.getExercisesRequest();
+                                      await controller
+                                          .setItemCategory(StatusCategory.All);
+                                    },
+                                    iconColor:
+                                        controller.status == StatusCategory.All
+                                            ? Colors.lightBlue
+                                            : Colors.white,
+                                    primaryColor:
+                                        controller.status == StatusCategory.All
+                                            ? Colors.lightBlue
+                                            : Colors.white,
+                                    textColor:
+                                        controller.status == StatusCategory.All
+                                            ? Colors.white
+                                            : Colors.black,
+                                    bgColorIcon:
+                                        controller.status != StatusCategory.All
+                                            ? Colors.lightBlue
+                                            : Colors.white,
+                                  ),
                                 ),
-                                ElevationButtonWidget(
-                                  icon: Icons.bolt,
-                                  text: 'دروس',
-                                  call: () async {
-                                    await Lessons.getLessonsRequest();
-                                    await controller.setItemCategory(
-                                        StatusCategory.Lessons);
-                                  },
-                                  iconColor: controller.status ==
-                                          StatusCategory.Lessons
-                                      ? Colors.orange
-                                      : Colors.white,
-                                  primaryColor: controller.status ==
-                                          StatusCategory.Lessons
-                                      ? Colors.orange
-                                      : Colors.white,
-                                  textColor: controller.status ==
-                                          StatusCategory.Lessons
-                                      ? Colors.white
-                                      : Colors.black,
-                                  bgColorIcon: controller.status !=
-                                          StatusCategory.Lessons
-                                      ? Colors.orange
-                                      : Colors.white,
+                                SizedBox(width: 8,),
+                                Expanded(
+                                  child: ElevationButtonWidget(
+                                    icon: Icons.bolt,
+                                    text: 'دروس',
+                                    call: () async {
+                                      await Lessons.getLessonsRequest();
+                                      await controller.setItemCategory(
+                                          StatusCategory.Lessons);
+                                    },
+                                    iconColor: controller.status ==
+                                            StatusCategory.Lessons
+                                        ? Colors.orange
+                                        : Colors.white,
+                                    primaryColor: controller.status ==
+                                            StatusCategory.Lessons
+                                        ? Colors.orange
+                                        : Colors.white,
+                                    textColor: controller.status ==
+                                            StatusCategory.Lessons
+                                        ? Colors.white
+                                        : Colors.black,
+                                    bgColorIcon: controller.status !=
+                                            StatusCategory.Lessons
+                                        ? Colors.orange
+                                        : Colors.white,
+                                  ),
                                 ),
                               ],
                             ),
@@ -173,55 +182,60 @@ class HomeView extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                ElevationButtonWidget(
-                                  icon: Icons.assignment_rounded,
-                                  text: 'تکالیف',
-                                  call: () async {
-                                    await Exercise.getExercisesRequest();
-                                    await controller.setItemCategory(
-                                        StatusCategory.HomeWork);
-                                  },
-                                  iconColor: controller.status ==
-                                          StatusCategory.HomeWork
-                                      ? Colors.green
-                                      : Colors.white,
-                                  primaryColor: controller.status ==
-                                          StatusCategory.HomeWork
-                                      ? Colors.green
-                                      : Colors.white,
-                                  textColor: controller.status ==
-                                          StatusCategory.HomeWork
-                                      ? Colors.white
-                                      : Colors.black,
-                                  bgColorIcon: controller.status !=
-                                          StatusCategory.HomeWork
-                                      ? Colors.green
-                                      : Colors.white,
-                                ),
-                                ElevationButtonWidget(
+                                Expanded(
+                                  child: ElevationButtonWidget(
                                     icon: Icons.assignment_rounded,
-                                    text: 'آخرین مباحث',
+                                    text: 'تکالیف',
                                     call: () async {
-                                      await Subjects.getSubjectsRequest();
+                                      await Exercise.getExercisesRequest();
                                       await controller.setItemCategory(
-                                          StatusCategory.LastTopics);
+                                          StatusCategory.HomeWork);
                                     },
                                     iconColor: controller.status ==
-                                            StatusCategory.LastTopics
-                                        ? Color(0xff4b2b99)
+                                            StatusCategory.HomeWork
+                                        ? Colors.green
                                         : Colors.white,
                                     primaryColor: controller.status ==
-                                            StatusCategory.LastTopics
-                                        ? Color(0xff4b2b99)
+                                            StatusCategory.HomeWork
+                                        ? Colors.green
                                         : Colors.white,
                                     textColor: controller.status ==
-                                            StatusCategory.LastTopics
+                                            StatusCategory.HomeWork
                                         ? Colors.white
                                         : Colors.black,
                                     bgColorIcon: controller.status !=
-                                            StatusCategory.LastTopics
-                                        ? Color(0xff4b2b99)
-                                        : Colors.white),
+                                            StatusCategory.HomeWork
+                                        ? Colors.green
+                                        : Colors.white,
+                                  ),
+                                ),
+                                SizedBox(width: 8,),
+                                Expanded(
+                                  child: ElevationButtonWidget(
+                                      icon: Icons.assignment_rounded,
+                                      text: 'آخرین مباحث',
+                                      call: () async {
+                                        await Subjects.getSubjectsRequest();
+                                        await controller.setItemCategory(
+                                            StatusCategory.LastTopics);
+                                      },
+                                      iconColor: controller.status ==
+                                              StatusCategory.LastTopics
+                                          ? Color(0xff4b2b99)
+                                          : Colors.white,
+                                      primaryColor: controller.status ==
+                                              StatusCategory.LastTopics
+                                          ? Color(0xff4b2b99)
+                                          : Colors.white,
+                                      textColor: controller.status ==
+                                              StatusCategory.LastTopics
+                                          ? Colors.white
+                                          : Colors.black,
+                                      bgColorIcon: controller.status !=
+                                              StatusCategory.LastTopics
+                                          ? Color(0xff4b2b99)
+                                          : Colors.white),
+                                ),
                               ],
                             ),
                           ),
@@ -255,8 +269,11 @@ class HomeView extends StatelessWidget {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: snapshot.data!
-                              .map((e) => cartGenerator(e))
-                              .toList()),
+                              .asMap().entries.map((e) {
+
+                                return cartGenerator(e.value,controller,context);
+                          }).toList()
+                      ),
                     );
                   } else {
                     return const Center(child: CircularProgressIndicator(),);
@@ -274,8 +291,33 @@ class HomeView extends StatelessWidget {
     }
   }
 
-  Widget cartGenerator(ItemCategoryModel model) {
-    return Card(
+  Widget cartGenerator(ItemCategoryModel model,HomeController controller,BuildContext context) {
+    var lesson;
+    var subject;
+    var exer;
+    return GestureDetector(
+
+    onTap: ()async=>{
+      if(model.category=='Lesson'){
+        lesson=await controller.getLessonById(sharedPreferences.getLessonByTitle(model.title)),
+        Navigator.push(context,  MaterialPageRoute(
+            builder: (context) => ItemLessonsView(lesson:lesson)),
+        )
+      }else {
+        if(model.category=='Subject'){
+        subject=await controller.getTopicById(sharedPreferences.getTopicId(model.title)),
+        Navigator.push(context,  MaterialPageRoute(
+            builder: (context) => LastTopicView( subject: subject,)),
+        )
+      }else{
+          exer=await controller.getExerciseById(sharedPreferences.getExerciseByTitle(model.title)),
+          Navigator.push(context,  MaterialPageRoute(
+              builder: (context) => RecordHomeWorkView(exercise: exer,)),
+          )
+        }
+    }
+      },
+    child: Card(
       color: model.bgColor,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -289,7 +331,7 @@ class HomeView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(child: Image.asset(model.urlImage)),
+                Container(child: Image.asset(Utility.randomImage())),
                 Text(
                   model.title,
                   style: TextStyle(
@@ -303,6 +345,7 @@ class HomeView extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 

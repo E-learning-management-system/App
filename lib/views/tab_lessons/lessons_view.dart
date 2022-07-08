@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:project/controllers/lessons_controller.dart';
-import 'package:project/controllers/verify_email_controller.dart';
-import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/helpers/utility.dart';
@@ -11,8 +9,9 @@ import 'package:project/models/lessons_item_model.dart';
 import 'package:project/views/login_view.dart';
 import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
 import 'package:project/views/tab_lessons/item_lessons_view.dart';
+import 'package:project/views/tab_lessons/search_view.dart';
+// import 'package:project/views/tab_lessons/search_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
-import 'package:project/widgets/bottomAppBar.dart';
 import 'package:project/widgets/empty_view_widget.dart';
 import 'package:project/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +22,7 @@ class LessonsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<LessonsController>(context, listen: false);
+    final controller = Provider.of<LessonsController>(context);
     final theme = Theme.of(context).textTheme;
 
     if (sharedPreferences.isLogin) {
@@ -37,7 +36,7 @@ class LessonsView extends StatelessWidget {
         ),
         body: Column(
           children: [
-            _buildSearchWidget(),
+            _buildSearchWidget(context),
             Expanded(
               child: FutureBuilder(
                 future: controller.getLessonsRequest(),
@@ -60,7 +59,8 @@ class LessonsView extends StatelessWidget {
                           index: index + 1,
                           data: data,
                           theme: theme,
-                          context: context);
+                          context: context,
+                      controller: controller);
                     },
                   );
                 },
@@ -84,18 +84,22 @@ class LessonsView extends StatelessWidget {
     }
   }
 
-  Widget _buildSearchWidget() {
-    return const Padding(
-      padding: EdgeInsets.all(15),
+  Widget _buildSearchWidget(BuildContext context) {
+    return  Padding(
+      padding: const EdgeInsets.all(15),
       child: SizedBox(
         height: 40,
         child: TextFormFieldWidget(
           hintText: 'جست و جو',
+          onTap: (){
+            // Navigator.pushNamed(context, SearchView.id);
+          },
+          readOnly: true,
           noneEnableBorder: false,
           actionKeyboard: TextInputAction.search,
           filled: true,
           fillColor: Colors.white,
-          suffixIcon: Icon(Icons.search),
+          suffixIcon: const Icon(Icons.search),
         ),
       ),
     );
@@ -105,7 +109,8 @@ class LessonsView extends StatelessWidget {
       {required LessonsItemModel data,
       required int index,
       required TextTheme theme,
-      required BuildContext context}) {
+      required BuildContext context,
+      required LessonsController controller}) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -123,21 +128,26 @@ class LessonsView extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              Image.asset(
+                Utility.randomImage(),
+                height: 100,
+                width: 100,
+              ),
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(data.title,
-                        style: theme.bodySmall!.copyWith(color: Colors.white),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,),
+                      style: theme.bodySmall!.copyWith(color: Colors.white),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,),
                     const SizedBox(
                       height: 15,
                     ),
                     Visibility(
                       visible: sharedPreferences.getType() == 't',
                       child: Text(
-                        'تاریخ امتحان : ${Utility.convertToPersian(data.examDate)}',
+                        'تاریخ امتحان : ${(data.examDate.substring(0,10))}',
                         style: theme.caption!.copyWith(color: Colors.white),
                       ),
                       replacement: Text(
@@ -148,11 +158,68 @@ class LessonsView extends StatelessWidget {
                   ],
                 ),
               ),
-              Image.asset(
-                Utility.randomImage(),
-                height: 100,
-                width: 100,
-              ),
+              Visibility( visible: sharedPreferences.getType() == 't',child:  IconButton(
+                  hoverColor: Colors.white,
+                  onPressed: ()async{
+                    int count = 0;
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          AlertDialog(
+                            content: const Text(
+                                'از حذف این درس مطمئن هستید؟'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () async => {
+                                  if(await controller.deleteLesson(data.id)){
+                                    showDialog<String>(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          AlertDialog(
+                                            content: const Text(
+                                                ' با موفقیت حذف شد.'),
+                                            actions: <Widget>[
+
+                                              TextButton(
+
+                                                onPressed: () => Navigator.of(context).popUntil((_) => count++ >= 2),
+                                                child: const Text('باشه'),
+                                              ),
+                                            ],
+                                          ),
+                                    )
+
+                                  }
+                                  else{
+                                    showDialog<String>(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          AlertDialog(
+                                            title: const Text('خطا'),
+                                            content: const Text(
+                                                'مشکلی در حذف درس وجود دارد.'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () => Navigator.of(context).popUntil((_) => count++ >= 2),
+                                                child: const Text('باشه'),
+                                              ),
+                                            ],
+                                          ),
+                                    )
+                                  }
+                                },
+                                child: const Text('بله'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('خیر'),
+                              ),
+                            ],
+                          ),
+                    );}, icon: const Icon(
+                Icons.delete_forever_rounded,
+                size:22 ,
+                color:Colors.white ,))),
             ],
           ),
         ),
@@ -163,7 +230,6 @@ class LessonsView extends StatelessWidget {
   Widget _buildFloatAc(BuildContext context) {
     if (sharedPreferences.getType() == 't') {
       return FloatingActionButton.extended(
-
           onPressed: () {
             Navigator.of(context).pushNamed(CreateNewLessonsView.id);
           },

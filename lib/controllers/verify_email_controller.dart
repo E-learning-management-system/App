@@ -44,6 +44,39 @@ class VerifyEmailController extends ChangeNotifier
       return false;
     }
   }
+  Future verifyEmailForget( var email, var code)
+  async{
+    print(code);
+    isLoading=true;
+    notifyListeners();
+    var url='https://api.piazza.markop.ir/forgotpassword/verification/';
+    var response= await http.put(Uri.parse(url),
+      headers: {'Content-type':'application/json'},
+      body: jsonEncode({
+        "email":email,
+        "code":code,
+      }),
+    );
+    isLoading=false;
+    notifyListeners();
+
+    print(const Utf8Decoder().convert(response.bodyBytes));
+
+    if( response.statusCode==200){
+      Map<String, dynamic> res = jsonDecode(response.body);
+      var token1=res["token"];
+      await sharedPreferences.setToken("token", token1);
+      _token=token1;
+      await getProfile();
+      notifyListeners();
+      return true;
+    }
+    else {
+      notifyListeners();
+      return false;
+    }
+  }
+
 
   getProfile()async{
     var url='https://api.piazza.markop.ir/profile/';
