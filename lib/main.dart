@@ -32,6 +32,7 @@ import 'package:project/views/home_view.dart';
 import 'package:project/views/onboarding_view.dart';
 import 'package:project/views/splash_view.dart';
 import 'package:project/views/tab_calendar/calendar_view.dart';
+import 'package:project/views/tab_lessons/answer_view.dart';
 import 'package:project/views/tab_lessons/create_new_lessons_view.dart';
 import 'package:project/views/tab_lessons/final_lessons_view.dart';
 import 'package:project/views/tab_lessons/lessons_view.dart';
@@ -168,6 +169,7 @@ class MyApp extends StatelessWidget {
           ProfileView.id: (context) => const ProfileView(),
           EndChangePw.id: (context) => const EndChangePw(),
           SearchView.id: (context) => const SearchView(),
+          AnswerView.id:(context)=>  AnswerView(),
         },
         title: 'Flutter Demo',
         theme: ThemeApp.theme,
