@@ -24,7 +24,10 @@ class SettingView extends StatefulWidget {
 }
 
 class _SettingViewState extends State<SettingView> {
-  final _priceFocusNode = FocusNode();
+  final _nameFocusNode = FocusNode();
+  final _emailFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
+  final _universityFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
   TextEditingController _bioController = new TextEditingController();
   TextEditingController _nameController = new TextEditingController();
@@ -37,13 +40,16 @@ class _SettingViewState extends State<SettingView> {
     _bioController.text = 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزم';
     _nameController.text = 'دانیال صابر';
     _uniController.text = 'خوارزمی';
-    _passController.text = 'cheekym@gmail.com';
+    _passController.text = 'Password\$r#';
     _emailController.text = 'cheekym@gmail.com';
   }
 
   @override
   void dispose() {
-    _priceFocusNode.dispose();
+    _nameFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _universityFocusNode.dispose();
     _descriptionFocusNode.dispose();
     super.dispose();
   }
@@ -208,7 +214,7 @@ class _SettingViewState extends State<SettingView> {
                       fontFamily: 'BLotus',
                     ),
                     decoration: InputDecoration(
-                      fillColor: MyColors.appBarColor,
+                      fillColor: Colors.red,
                       border: myinputborder(),
                       enabledBorder: myinputborder(),
                     ),
@@ -216,7 +222,7 @@ class _SettingViewState extends State<SettingView> {
                     keyboardType: TextInputType.multiline,
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(_priceFocusNode);
+                      FocusScope.of(context).requestFocus(_nameFocusNode);
                     },
                   ),
                   Row(
@@ -258,7 +264,7 @@ class _SettingViewState extends State<SettingView> {
                           controller: _nameController,
                           // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.grey,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'BLotus',
@@ -271,9 +277,10 @@ class _SettingViewState extends State<SettingView> {
 
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.next,
+                          focusNode: _nameFocusNode,
                           onFieldSubmitted: (_) {
                             FocusScope.of(context)
-                                .requestFocus(_priceFocusNode);
+                                .requestFocus(_universityFocusNode);
                           },
                         ),
                       ),
@@ -286,7 +293,7 @@ class _SettingViewState extends State<SettingView> {
                           controller: _uniController,
                           // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.grey,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'BLotus',
@@ -299,9 +306,10 @@ class _SettingViewState extends State<SettingView> {
 
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.next,
+                          focusNode: _universityFocusNode,
+
                           onFieldSubmitted: (_) {
-                            FocusScope.of(context)
-                                .requestFocus(_priceFocusNode);
+                            FocusScope.of(context).requestFocus();
                           },
                         ),
                       ),
@@ -324,7 +332,7 @@ class _SettingViewState extends State<SettingView> {
                     controller: _emailController,
                     // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.grey,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'BLotus',
@@ -338,8 +346,9 @@ class _SettingViewState extends State<SettingView> {
 
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
+                    focusNode: _emailFocusNode,
                     onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(_priceFocusNode);
+                      FocusScope.of(context).requestFocus(_passwordFocusNode);
                     },
                   ),
                   Padding(
@@ -360,7 +369,7 @@ class _SettingViewState extends State<SettingView> {
                     textDirection: TextDirection.ltr,
                     // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.grey,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'BLotus',
@@ -372,10 +381,11 @@ class _SettingViewState extends State<SettingView> {
                     ),
 
                     keyboardType: TextInputType.visiblePassword,
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(_priceFocusNode);
-                    },
+                    textInputAction: TextInputAction.done,
+                    focusNode: _passwordFocusNode,
+                    // onFieldSubmitted: (_) {
+                    //   FocusScope.of(context).requestFocus(_priceFocusNode);
+                    // },
                   ),
                 ],
                 padding: EdgeInsets.all(30),
