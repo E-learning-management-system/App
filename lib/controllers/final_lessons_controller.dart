@@ -39,7 +39,7 @@ Future<bool> addStudentRequest()async{
   for(var email in listItems){
     email= email.replaceAll('@', '%40');
     String _url='https://api.piazza.markop.ir/soren/courses/$id/newstudent/$email/';
-    try {
+
       var response = await http.post(Uri.parse(_url),
         headers: { "Content-Type": "application/json",
           "Authorization": "Token " + _token,},
@@ -50,11 +50,8 @@ Future<bool> addStudentRequest()async{
       if(!data.containsKey("id")){
         isLoading=false;
         return false;}
-    }catch(e){
-      print('error:'+e.toString());
-  isLoading=false;
-  return false;
-  }
+    isLoading=false;
+    return true;
   }
   isLoading=false;
     return true;

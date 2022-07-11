@@ -28,6 +28,7 @@ class RecordHomeWorkController extends ChangeNotifier
 
     if (result != null) {
       file = File(result.files.single.path!);
+      print(file);
       notifyListeners();
     } else {
     }
@@ -97,6 +98,7 @@ class RecordHomeWorkController extends ChangeNotifier
     String url='https://api.piazza.markop.ir/soren/exercises/$id/newanswer/';
     var  _token = await sharedPreferences.getToken('token');
     var des=await keyEditor.currentState?.getText();
+    print(des);
     var response= await http.post(Uri.parse(url),
         headers: { "content-type": "application/json",
           "Authorization": "Token " + _token,},body:

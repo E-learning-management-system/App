@@ -81,6 +81,7 @@ class FinalLessonsView extends StatelessWidget {
                     }
                   return ElevationButtonWidget(
                     call: ()async{
+                      int count = 0;
                       var res= await controller.addStudentRequest();
                       if(res){
                         showDialog<String>(
@@ -92,8 +93,7 @@ class FinalLessonsView extends StatelessWidget {
                                     'دانشجویان با موفقیت اضافه شدند.'),
                                 actions: <Widget>[
                                   TextButton(
-                                    onPressed: () => Navigator.pop(
-                                        context, LessonsView.id),
+                                    onPressed: () => Navigator.of(context).popUntil((_) => count++ >= 3),
                                     child: const Text('باشه'),
                                   ),
                                 ],

@@ -28,7 +28,7 @@ class RecordHomeWorkView extends StatelessWidget {
     final controller = Provider.of<RecordHomeWorkController>(context);
     final theme = Theme.of(context).textTheme;
     var enStatus = ModalRoute.of(context)!.settings.arguments as EnCreateHomeWork;
-    final deliveryController = Provider.of<StudentDeliveryController>(context);
+    final deliveryController = Provider.of<StudentDeliveryController>(context,listen: false);
     controller.setTitle(exercise?.title);
     controller.setDes(exercise?.description);
 
@@ -493,7 +493,7 @@ class RecordHomeWorkView extends StatelessWidget {
   }
 
   Future<bool> getStudents(StudentDeliveryController deliveryController)async{
-    await deliveryController.getNotAnswerStudent(exercise?.id);
+    await deliveryController.getAnswerStudent(exercise?.id);
     await deliveryController.getNotAnswerStudent(exercise?.id);
     return true;
   }
@@ -509,127 +509,129 @@ class RecordHomeWorkView extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (!snapshot.hasData) {
-            int delivery=0;
-            int notDelivery=0;
-            return Column
-              (
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTitleText(theme, 'آمار تحویل تکلیف'),
-                Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.all(8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                height: 12,
-                                width: 12,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.green,
-                                ),
-                              ),
-                              sizedBox(width: 8),
-                              GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(
-                                        builder: (context) =>
-                                            StudentDeliveryView(Id: exercise!.id,
-                                              title: exercise!.title,),
-                                        settings: const RouteSettings(
-                                            arguments: true)
-                                    )
-                                    );
-                                  },
-                                  child: Text(
-                                    delivery.toString()+"  دانشجو تحویل داده اند"
-                                       ,
-                                    style: TextStyle(color: Colors.blue),
-                                  )),
-                            ],
-                          ),
-                          sizedBox(height: 15),
-                          Row(
-                            children: [
-                              Container(
-                                height: 12,
-                                width: 12,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.red,
-                                ),
-                              ),
-                              sizedBox(width: 8),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) =>
-                                          StudentDeliveryView(Id: exercise!.id,
-                                            title: exercise!.title,),
-                                      settings: const RouteSettings(
-                                          arguments: false)
-                                  )
-                                  );
-                                },
-                                child: Text(
-                                notDelivery.toString()+"دانشجو تحویل نداده اند" ,
-                                    style: const TextStyle(color: Colors.blue)),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      sizedBox(width: 8),
-                      PieChart(
-                        dataMap: {
-                          'true': delivery.toDouble(),
-                          'false': notDelivery.toDouble()
-                        },
-                        animationDuration: const Duration(milliseconds: 800),
-                        chartLegendSpacing: 15,
-                        chartRadius: MediaQuery
-                            .of(context)
-                            .size
-                            .width / 3.2,
-                        initialAngleInDegree: 0,
-                        chartType: ChartType.ring,
-                        ringStrokeWidth: 14,
-                        legendOptions: const LegendOptions(
-                          showLegends: false,
-                        ),
-                        centerText: controller.calPercentage(
-                            delivery, delivery + notDelivery),
-                        totalValue: delivery.toDouble() + notDelivery,
-                        colorList: const [
-                          Colors.green,
-                          Colors.red,
-                        ],
-                        chartValuesOptions: const ChartValuesOptions(
-                            showChartValueBackground: false,
-                            showChartValues: false,
-                            showChartValuesInPercentage: true,
-                            showChartValuesOutside: false,
-                            decimalPlaces: 0,
-                            chartValueStyle: TextStyle(
-                              fontSize: 12,
-                              color: Colors.blue,
-                            )),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          }
+          // if (!snapshot.hasData) {
+          //   int delivery=0;
+          //   int notDelivery=0;
+          //   return Column
+          //     (
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       _buildTitleText(theme, 'آمار تحویل تکلیف'),
+          //       Container(
+          //         color: Colors.white,
+          //         padding: EdgeInsets.all(8),
+          //         child: Row(
+          //           mainAxisAlignment: MainAxisAlignment.center,
+          //           children: [
+          //             Column(
+          //               crossAxisAlignment: CrossAxisAlignment.start,
+          //               children: [
+          //                 Row(
+          //                   children: [
+          //                     Container(
+          //                       height: 12,
+          //                       width: 12,
+          //                       decoration: const BoxDecoration(
+          //                         shape: BoxShape.circle,
+          //                         color: Colors.green,
+          //                       ),
+          //                     ),
+          //                     sizedBox(width: 8),
+          //                     GestureDetector(
+          //                         onTap: () {
+          //                           Navigator.push(context, MaterialPageRoute(
+          //                               builder: (context) =>
+          //                                   StudentDeliveryView(Id: exercise!.id,
+          //                                     title: exercise!.title,),
+          //                               settings: const RouteSettings(
+          //                                   arguments: true)
+          //                           )
+          //                           );
+          //                         },
+          //                         child: Text(
+          //                           delivery.toString()+"  دانشجو تحویل داده اند"
+          //                              ,
+          //                           style: TextStyle(color: Colors.blue),
+          //                         )),
+          //                   ],
+          //                 ),
+          //                 sizedBox(height: 15),
+          //                 Row(
+          //                   children: [
+          //                     Container(
+          //                       height: 12,
+          //                       width: 12,
+          //                       decoration: const BoxDecoration(
+          //                         shape: BoxShape.circle,
+          //                         color: Colors.red,
+          //                       ),
+          //                     ),
+          //                     sizedBox(width: 8),
+          //                     GestureDetector(
+          //                       onTap: () {
+          //                         Navigator.push(context, MaterialPageRoute(
+          //                             builder: (context) =>
+          //                                 StudentDeliveryView(Id: exercise!.id,
+          //                                   title: exercise!.title,),
+          //                             settings: const RouteSettings(
+          //                                 arguments: false)
+          //                         )
+          //                         );
+          //                       },
+          //                       child: Text(
+          //                       notDelivery.toString()+"دانشجو تحویل نداده اند" ,
+          //                           style: const TextStyle(color: Colors.blue)),
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ],
+          //             ),
+          //             sizedBox(width: 8),
+          //             PieChart(
+          //               dataMap: {
+          //                 'true': delivery.toDouble(),
+          //                 'false': notDelivery.toDouble()
+          //               },
+          //               animationDuration: const Duration(milliseconds: 800),
+          //               chartLegendSpacing: 15,
+          //               chartRadius: MediaQuery
+          //                   .of(context)
+          //                   .size
+          //                   .width / 3.2,
+          //               initialAngleInDegree: 0,
+          //               chartType: ChartType.ring,
+          //               ringStrokeWidth: 14,
+          //               legendOptions: const LegendOptions(
+          //                 showLegends: false,
+          //               ),
+          //               centerText: controller.calPercentage(
+          //                   delivery, delivery + notDelivery),
+          //               totalValue: delivery.toDouble() + notDelivery,
+          //               colorList: const [
+          //                 Colors.green,
+          //                 Colors.red,
+          //               ],
+          //               chartValuesOptions: const ChartValuesOptions(
+          //                   showChartValueBackground: false,
+          //                   showChartValues: false,
+          //                   showChartValuesInPercentage: true,
+          //                   showChartValuesOutside: false,
+          //                   decimalPlaces: 0,
+          //                   chartValueStyle: TextStyle(
+          //                     fontSize: 12,
+          //                     color: Colors.blue,
+          //                   )),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ],
+          //   );
+          // }
           int delivery=deliveryController.answerStudent[exercise?.id]!.length;
           int notDelivery=deliveryController.notAnswerStudent[exercise?.id]!.length;
+          print("delivery"+delivery.toString());
+          print(  "notdelivery"+notDelivery.toString());
           return Column
             (
             crossAxisAlignment: CrossAxisAlignment.start,

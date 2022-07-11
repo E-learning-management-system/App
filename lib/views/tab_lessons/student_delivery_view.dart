@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:project/controllers/student_delivery_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
+import 'package:project/models/answer_model.dart';
+import 'package:project/views/tab_lessons/answer_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/empty_view_widget.dart';
 import 'package:provider/provider.dart';
+
+import '../../helpers/sharedPreferences.dart';
+import 'item_lessons_view.dart';
 class StudentDeliveryView extends StatelessWidget {
   const StudentDeliveryView({Key? key,required this.title,required this.Id}) : super(key: key);
   static const String id = '/student_delivery';
@@ -14,10 +19,11 @@ class StudentDeliveryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isComplete = ModalRoute.of(context)!.settings.arguments as bool;
-    final cnt = Provider.of<StudentDeliveryController>(context);
+    final cnt = Provider.of<StudentDeliveryController>(context,listen: false);
     Future<List<String>?> list()async{
      if(isComplete){
        await cnt.getAnswerStudent(Id);
+       await cnt.getAnswers(Id);
        return cnt.answerStudent[Id];
      }else{
        await cnt.getNotAnswerStudent(Id);
@@ -55,7 +61,15 @@ class StudentDeliveryView extends StatelessWidget {
                       itemExtent: 80,
                       itemBuilder: (context, index) {
                         final data = isComplete? cnt.answerStudent[Id]![index]: cnt.notAnswerStudent[Id]![index];
-                        return Card(
+                        return GestureDetector(onTap: (){
+                          if(isComplete) {
+                            Navigator.push(context, MaterialPageRoute(
+                            builder: (context) =>
+                                AnswerView(answer: cnt.answers[data],),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
+                          EnCreateHomeWork.Professor :EnCreateHomeWork.Student )
+                          ),);
+                          }
+                          },child: Card(
                           margin: const EdgeInsets.only(top: 20),
                           color: MyColors.blueAccentHex,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -83,7 +97,7 @@ class StudentDeliveryView extends StatelessWidget {
                               ],
                             ),
                           ),
-                        );
+                        ),);
                       },
                     );
                   },
