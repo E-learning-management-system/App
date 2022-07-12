@@ -198,16 +198,13 @@ class _SettingViewState extends State<SettingView> {
                 key: _form,
                 child: ListView(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(
-                        'بیوگرافی',
-                        style: TextStyle(
-                          color: Color(0xff181818),
-                          fontSize: 18,
-                          fontWeight: FontWeight.normal,
-                          fontFamily: 'BLotus',
-                        ),
+                    Text(
+                      'بیوگرافی',
+                      style: TextStyle(
+                        color: Color(0xff181818),
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal,
+                        fontFamily: 'BLotus',
                       ),
                     ),
                     TextFormField(
@@ -236,7 +233,10 @@ class _SettingViewState extends State<SettingView> {
                     Row(
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          padding: const EdgeInsets.only(
+                            top: 22,
+                            bottom: 3,
+                          ),
                           child: Text(
                             'نام و نام خانوادگی',
                             style: TextStyle(
@@ -251,7 +251,10 @@ class _SettingViewState extends State<SettingView> {
                           width: 80,
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          padding: const EdgeInsets.only(
+                            top: 22,
+                            bottom: 3,
+                          ),
                           child: Text(
                             'دانشگاه',
                             style: TextStyle(
@@ -326,7 +329,7 @@ class _SettingViewState extends State<SettingView> {
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      padding: const EdgeInsets.only(top: 11),
                       child: Text(
                         'ایمیل',
                         style: TextStyle(
@@ -363,7 +366,7 @@ class _SettingViewState extends State<SettingView> {
                       },
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      padding: const EdgeInsets.only(top: 11),
                       child: Text(
                         'رمز عبور',
                         style: TextStyle(
@@ -399,49 +402,52 @@ class _SettingViewState extends State<SettingView> {
                         _saveForm();
                       },
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: MyColors.blueHex,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 25,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 36),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: MyColors.blueHex,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 25,
+                                ),
                               ),
-                            ),
-                            onPressed: _saveForm,
-                            child: const Text(
-                              'ذخیره',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'BLotus',
+                              onPressed: _saveForm,
+                              child: const Text(
+                                'ذخیره',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'BLotus',
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Container(
-                          child: InkWell(
-                            child: const Text(
-                              'حذف حساب کاربری',
-                              style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                color: Colors.red,
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'BLotus',
+                          Container(
+                            child: InkWell(
+                              child: const Text(
+                                'حذف حساب کاربری',
+                                style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.red,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'BLotus',
+                                ),
                               ),
+                              onTap: () => Navigator.of(context)
+                                  .pushReplacementNamed(SettingDrawer.id),
                             ),
-                            onTap: () => Navigator.of(context)
-                                .pushReplacementNamed(SettingDrawer.id),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
-                  padding: EdgeInsets.all(30),
+                  padding: EdgeInsets.only(top: 26, left: 33, right: 32),
                 ),
               ),
             ),
