@@ -150,16 +150,14 @@ class SettingDrawer extends StatelessWidget {
                         print("tapped");
                       },
                       child: new Container(
+                        margin: EdgeInsets.only(left: 0),
                         child: InkWell(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            child: SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: ClipOval(
-                                child: Image.asset(
-                                  "assets/images/Icon_metro_question.png",
-                                ),
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: ClipOval(
+                              child: Image.asset(
+                                "assets/images/Icon_metro_question.png",
                               ),
                             ),
                           ),

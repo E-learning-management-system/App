@@ -103,7 +103,6 @@ class MyApp extends StatelessWidget {
           create: (context) => PostsController(),
         ),
         ChangeNotifierProvider<CreateNewSubjectController>(
-
           create: (context) => CreateNewSubjectController(),
         ),
         ChangeNotifierProvider<RecordHomeWorkController>(
@@ -117,14 +116,13 @@ class MyApp extends StatelessWidget {
           create: (context) => StudentDeliveryController(),
         ),
         ChangeNotifierProvider<StudentDeliveryController>(
-          child: const StudentDeliveryView(title: '',Id: 0),
+          child: const StudentDeliveryView(title: '', Id: 0),
           create: (context) => StudentDeliveryController(),
         ),
         ChangeNotifierProvider<ProfileController>(
           child: const ProfileView(),
           create: (context) => ProfileController(),
         ),
-
         ChangeNotifierProvider<ChangePwController>(
           child: const ChangePwView(),
           create: (context) => ChangePwController(),
@@ -133,7 +131,6 @@ class MyApp extends StatelessWidget {
           child: const SearchView(),
           create: (context) => SearchController(),
         ),
-
       ],
       child: MaterialApp(
         localizationsDelegates: const [
@@ -164,12 +161,14 @@ class MyApp extends StatelessWidget {
           BaseView.id: (context) => const BaseView(),
           SettingDrawer.id: (context) => const SettingDrawer(),
           SettingView.id: (context) => const SettingView(),
-          StudentDeliveryView.id: (context) => const StudentDeliveryView(Id: 0,
-          title: '',),
+          StudentDeliveryView.id: (context) => const StudentDeliveryView(
+                Id: 0,
+                title: '',
+              ),
           ProfileView.id: (context) => const ProfileView(),
           EndChangePw.id: (context) => const EndChangePw(),
           SearchView.id: (context) => const SearchView(),
-          AnswerView.id:(context)=>  AnswerView(),
+          AnswerView.id: (context) => AnswerView(),
         },
         title: 'Flutter Demo',
         theme: ThemeApp.theme,
@@ -180,7 +179,6 @@ class MyApp extends StatelessWidget {
           );
         },
         initialRoute: SplashView.id,
-
       ),
     );
   }
