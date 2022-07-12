@@ -25,7 +25,6 @@ class HomeController extends ChangeNotifier {
         "Authorization": "Token " + token,},
     );
 
-    print("lesson=   "+ const Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
     if(response.statusCode==200){
       return LessonsItemModel.fromJson(Map<String,dynamic>.from(data));
@@ -40,7 +39,6 @@ class HomeController extends ChangeNotifier {
         "Authorization": "Token " + token,},
     );
 
-    print("exercise=   "+ const Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
     if(response.statusCode==200){
       return ExerciseItemModel.fromJson(Map<String,dynamic>.from(data));
@@ -55,7 +53,6 @@ class HomeController extends ChangeNotifier {
         "Authorization": "Token " + token,},
     );
 
-    print("topic=   "+ const Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
     if(response.statusCode==200){
       return SubjectsItemModel.fromJson(Map<String,dynamic>.from(data));

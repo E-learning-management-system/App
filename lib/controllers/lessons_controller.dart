@@ -25,7 +25,6 @@ class LessonsController extends ChangeNotifier
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(delete lesson)=   "+const Utf8Decoder().convert(response.bodyBytes));
     if(response.statusCode==204){
 
       await getLessonsRequest();
@@ -43,8 +42,6 @@ class LessonsController extends ChangeNotifier
       headers: { "content-type": "application/json",
         "Authorization": "Token " + _token,},
     );
-
-    print("jsonDecode(list of lesson)=   "+ Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = jsonDecode(Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("results")){
       final List< dynamic> list = data["results"];

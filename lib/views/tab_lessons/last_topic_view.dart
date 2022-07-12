@@ -519,6 +519,7 @@ class LastTopicView extends StatelessWidget {
 
     }
     else{
+      var techCom='';
       return Column(
         children: [
           Text('پاسخ استاد',style: theme.bodyText1!.copyWith(
@@ -527,11 +528,18 @@ class LastTopicView extends StatelessWidget {
           Stack(
             children: [
               TextFormFieldWidget(hintText: 'متن را وارد کنید',
-              maxLines: 6,),
+              maxLines: 6,
+                onChanged: (value){ techCom=value;},
+              ),
               Positioned(
                 bottom: 0,
                 right: 0,
-                child: TextButton(onPressed: (){},
+                child: TextButton(
+                    onPressed: ()async{
+                  if(techCom!='') {
+                    await controller.addComment(techCom, data.id);
+                  }
+                },
                   child: Text('ارسال')),)
             ],
           ),

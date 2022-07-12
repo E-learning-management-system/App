@@ -31,7 +31,6 @@ class SubjectsController extends ChangeNotifier
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(list of subjects)=   "+Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = jsonDecode(Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("results")){
       final List< dynamic> list = data["results"];
@@ -57,8 +56,6 @@ class SubjectsController extends ChangeNotifier
       headers: { "content-type": "application/json",
         "Authorization": "Token " + _token,},
     );
-
-    print("jsonDecode(list of subjects)=   "+jsonDecode(response.body));
     final Map<String, dynamic> data = json.decode(response.body);
     if(data.containsKey("results")){
       List<SubjectsItemModel> list1=[];

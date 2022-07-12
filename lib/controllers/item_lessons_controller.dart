@@ -68,7 +68,6 @@ getUsers(id)async{
   );
   isLoading =false;
   notifyListeners();
-  print("jsonDecode(list of users)=   "+const Utf8Decoder().convert(response.bodyBytes));
   final Map<String, dynamic> data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
   if(data.containsKey("results")) {
     if (data["results"].length>0) {
@@ -106,7 +105,6 @@ getSavedPost()async{
       "Authorization": "Token " + _token,},
   );
 
-  print("jsonDecode(list of savedPosts)=   "+Utf8Decoder().convert(response.bodyBytes));
   final Map<String, dynamic> data = json.decode(Utf8Decoder().convert(response.bodyBytes));
   if(data.containsKey("results")){
     if (data["results"].length>0) {
@@ -136,7 +134,6 @@ async{
   );
   isLoading =false;
   notifyListeners();
-  print("jsonDecode(list of subjects)=   "+Utf8Decoder().convert(response.bodyBytes));
   final Map<String, dynamic> data = json.decode(Utf8Decoder().convert(response.bodyBytes));
   if(data.containsKey("results")) {
     if (data["results"].length>0) {
@@ -165,7 +162,6 @@ async{
   );
   isLoading =false;
   notifyListeners();
-  print("jsonDecode(list of subjects)=   "+const Utf8Decoder().convert(response.bodyBytes));
   final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
   if(data.containsKey("results")) {
     if (data["results"].length>0) {
@@ -291,7 +287,6 @@ addSubject(int id)async{
   );
   isLoading =false;
   notifyListeners();
-  print("jsonDecode(add subject)=   "+ const Utf8Decoder().convert(response.bodyBytes));
   final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
   if(data.containsKey("id")){
     return true;
@@ -304,14 +299,11 @@ addSubject(int id)async{
   deleteUsers(id) async {
     String url = 'https://api.piazza.markop.ir/soren/student-rd/$id/';
     var _token = await sharedPreferences.getToken('token');
-print(url);
     var response = await http.delete(Uri.parse(url),
       headers: { "content-type": "application/json",
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(delete user)=   " +
-        const Utf8Decoder().convert(response.bodyBytes));
     if (response.statusCode == 204) {
       notifyListeners();
       return true;
@@ -329,8 +321,6 @@ print(url);
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(delete subject)=   " +
-        const Utf8Decoder().convert(response.bodyBytes));
     if (response.statusCode == 204) {
       notifyListeners();
       return true;

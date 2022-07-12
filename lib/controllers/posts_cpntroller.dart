@@ -39,7 +39,6 @@ class PostsController extends ChangeNotifier
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(list of Posts)=   "+const Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("results")){
       if (data["results"].length>0) {
@@ -70,7 +69,6 @@ class PostsController extends ChangeNotifier
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(list of comments)=   "+const Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("results")){
       List <CommentItemModel> comments=[];
@@ -98,7 +96,6 @@ class PostsController extends ChangeNotifier
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(list of likes)=   "+const Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("results")){
       if (data["results"].length>0) {
@@ -128,7 +125,6 @@ class PostsController extends ChangeNotifier
       })
     );
 
-    print("jsonDecode(save post)=   "+const Utf8Decoder().convert(response.bodyBytes));
     if(response.statusCode==200){
       savedPosts.add(data);
       notifyListeners();
@@ -167,7 +163,6 @@ class PostsController extends ChangeNotifier
       }),
     );
 
-    print("jsonDecode(comment post)=   "+const Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("id")){
       postComments[id]!.comment.add(CommentItemModel.fromJson(data));
@@ -207,7 +202,6 @@ class PostsController extends ChangeNotifier
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(like post)=   "+const Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("id")){
 
