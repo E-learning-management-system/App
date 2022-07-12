@@ -21,9 +21,11 @@ dependencies:
   cupertino_icons: ^1.0.2
 #  persian_datetime_picker: ^2.4.0
   encrypted_shared_preferences: ^3.0.0
+  path_provider: ^2.0.11
   shared_preferences: ^2.0.15
-
-  
+  http_parser: ^4.0.1
+  permission_handler: ^8.3.0
+  dio: ^4.0.6
   file_picker: ^4.5.1
   flutter_summernote: ^1.0.0
   bottom_navy_bar: ^6.0.0

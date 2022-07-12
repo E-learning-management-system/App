@@ -17,7 +17,7 @@ class StudentDeliveryController extends ChangeNotifier
 {
   late Map <int , List<String>> answerStudent={};
   late Map <int , List<String>> notAnswerStudent={};
-  late Map <String , AnswerItemModel> answers={};
+  late List<AnswerItemModel> answers=[];
 
   Future getAnswerStudent(id)async{
     answerStudent[id]=[];
@@ -28,15 +28,18 @@ class StudentDeliveryController extends ChangeNotifier
     "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(list of answer student)=   "+const Utf8Decoder().convert(response.bodyBytes));
-    final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+    // print("jsonDecode(list of answer student)=   "+const Utf8Decoder().convert(response.bodyBytes));
+
     if(response.statusCode==200){
+      final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
     if (data["results"].length>0) {
     final List< dynamic> list = data["results"];
     for(var v in list) {
     answerStudent[id]?.add(v['email']);
     }
+
     }
+    await getAnswers(id);
     notifyListeners();
     return true;
     }
@@ -57,7 +60,6 @@ class StudentDeliveryController extends ChangeNotifier
     print("jsonDecode(list of not answer student)=   "+const Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
     if(response.statusCode==200){
-
       if (data["results"].length>0) {
         final List< dynamic> list = data["results"];
         for(var v in list) {
@@ -77,17 +79,18 @@ class StudentDeliveryController extends ChangeNotifier
       headers: { "content-type": "application/json",
         "Authorization": "Token " + _token,},
     );
-
-    print("jsonDecode(list of answers)=   "+const Utf8Decoder().convert(response.bodyBytes));
-    final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
     if(response.statusCode==200){
+      final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
       if (data["results"].length>0) {
-        final List< dynamic> list = data["results"];
+        final List<  dynamic> list = data["results"];
         for(var v in list) {
-          answers[v['user_email']]=AnswerItemModel.fromJson(v);
-
+          print(v['user_email']);
+          answers.add(
+              AnswerItemModel.fromJson(Map<String,dynamic>.from(v))
+          );
+          print(v['user_email']);
         }
-        print(answers);
+
       }
       notifyListeners();
       return true;

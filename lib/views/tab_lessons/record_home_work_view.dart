@@ -29,8 +29,9 @@ class RecordHomeWorkView extends StatelessWidget {
     final theme = Theme.of(context).textTheme;
     var enStatus = ModalRoute.of(context)!.settings.arguments as EnCreateHomeWork;
     final deliveryController = Provider.of<StudentDeliveryController>(context,listen: false);
+    RegExp exp = RegExp(r"<[^>]*>",multiLine: true,caseSensitive: true);
     controller.setTitle(exercise?.title);
-    controller.setDes(exercise?.description);
+    controller.setDes(exercise?.description.replaceAll(exp, ' '));
 
     String? title='';
     if(enStatus==EnCreateHomeWork.CreateNew){
@@ -100,7 +101,7 @@ class RecordHomeWorkView extends StatelessWidget {
           enStatus)),
           Visibility(
             visible:  enStatus != EnCreateHomeWork.CreateNew,
-            child: _downloadFile(theme,enStatus),),
+            child: _downloadFile(theme,enStatus,controller),),
           sizedBox(height: 15),
           Visibility(
               visible: enStatus == EnCreateHomeWork.Student,
@@ -179,7 +180,7 @@ class RecordHomeWorkView extends StatelessWidget {
    );
   }
 
-  _downloadFile(TextTheme theme,EnCreateHomeWork enStatus) {
+  _downloadFile(TextTheme theme,EnCreateHomeWork enStatus,RecordHomeWorkController controller) {
     return Column(
       children: [
         Container(
@@ -194,13 +195,17 @@ class RecordHomeWorkView extends StatelessWidget {
                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Row(
                 children: [
-                  Text(
+                  GestureDetector(onTap: ()async{
+                  print ( 'download');
+                    await controller.downloadFile(exercise?.file,exercise?.id);
+                  },child:  Text(
                     'دانلود فایل',
                     style: theme.subtitle1!.copyWith(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
                         fontFamily: fontLotus),
-                  ),
+                  ),),
+
                   Visibility(
                     visible: enStatus == EnCreateHomeWork.Professor,
                       child: const Text(' / ')),
@@ -216,7 +221,7 @@ class RecordHomeWorkView extends StatelessWidget {
                 ],
               ),
               Text(
-                'file.pdf',
+                'file.png',
                 style: theme.subtitle2!.copyWith(
                   color: Colors.red,
                 ),
@@ -493,8 +498,8 @@ class RecordHomeWorkView extends StatelessWidget {
   }
 
   Future<bool> getStudents(StudentDeliveryController deliveryController)async{
-    await deliveryController.getAnswerStudent(exercise?.id);
     await deliveryController.getNotAnswerStudent(exercise?.id);
+    await deliveryController.getAnswerStudent(exercise?.id);
     return true;
   }
 
@@ -630,8 +635,6 @@ class RecordHomeWorkView extends StatelessWidget {
           // }
           int delivery=deliveryController.answerStudent[exercise?.id]!.length;
           int notDelivery=deliveryController.notAnswerStudent[exercise?.id]!.length;
-          print("delivery"+delivery.toString());
-          print(  "notdelivery"+notDelivery.toString());
           return Column
             (
             crossAxisAlignment: CrossAxisAlignment.start,

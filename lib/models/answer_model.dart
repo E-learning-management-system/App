@@ -14,7 +14,6 @@ class AnswerItemModel {
   String  name="";
   String  user_email='';
   String file='';
-  Color? bgColor;
   AnswerItemModel({
     required this.id,
     required this.exercise_title,
@@ -24,22 +23,18 @@ class AnswerItemModel {
     required this.name,
     required this.user_email,
     required this.file,
-  }){
-    int num= id %(listOfColors.length);
-    bgColor=listOfColors[num];
-  }
+  });
 
   AnswerItemModel.fromJson(Map<String,dynamic> item){
+    print('id');
     id=item["id"];
     exercise_title=item["exercise_title"];
     description=item["description"];
-    name=item["name"];
+    name=item["name"]??'';
     exercise_id=item["exercise_id"];
     user_email=item["user_email"];
     date=item["date"];
     file=item['file']?? '';
-    int num= id %(listOfColors.length);
-    bgColor=listOfColors[num];
-
+    print('end');
   }
 }

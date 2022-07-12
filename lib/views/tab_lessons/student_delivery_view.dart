@@ -23,7 +23,7 @@ class StudentDeliveryView extends StatelessWidget {
     Future<List<String>?> list()async{
      if(isComplete){
        await cnt.getAnswerStudent(Id);
-       await cnt.getAnswers(Id);
+       print("print");
        return cnt.answerStudent[Id];
      }else{
        await cnt.getNotAnswerStudent(Id);
@@ -65,7 +65,8 @@ class StudentDeliveryView extends StatelessWidget {
                           if(isComplete) {
                             Navigator.push(context, MaterialPageRoute(
                             builder: (context) =>
-                                AnswerView(answer: cnt.answers[data],),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
+                                AnswerView(answer: cnt.answers.where((element) =>
+                                element.user_email == data).toList()[0],),settings: RouteSettings(arguments:sharedPreferences.getType() == 't'?
                           EnCreateHomeWork.Professor :EnCreateHomeWork.Student )
                           ),);
                           }
