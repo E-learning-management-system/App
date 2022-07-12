@@ -29,6 +29,8 @@ class _SettingViewState extends State<SettingView> {
   final _passwordFocusNode = FocusNode();
   final _universityFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
+  final _form = GlobalKey<FormState>();
+
   TextEditingController _bioController = new TextEditingController();
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _uniController = new TextEditingController();
@@ -52,6 +54,10 @@ class _SettingViewState extends State<SettingView> {
     _universityFocusNode.dispose();
     _descriptionFocusNode.dispose();
     super.dispose();
+  }
+
+  void _saveForm() {
+    _form.currentState!.save();
   }
 
   @override
@@ -187,211 +193,259 @@ class _SettingViewState extends State<SettingView> {
             ],
           ),
           Container(
-              child: Expanded(
-            child: Form(
-              child: ListView(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      'بیوگرافی',
+            child: Expanded(
+              child: Form(
+                key: _form,
+                child: ListView(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        'بیوگرافی',
+                        style: TextStyle(
+                          color: Color(0xff181818),
+                          fontSize: 18,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'BLotus',
+                        ),
+                      ),
+                    ),
+                    TextFormField(
+                      autofocus: false,
+                      controller: _bioController,
+                      // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
                       style: TextStyle(
-                        color: Color(0xff181818),
-                        fontSize: 18,
-                        fontWeight: FontWeight.normal,
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                         fontFamily: 'BLotus',
                       ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: myinputborder(),
+                        enabledBorder: myinputborder(),
+                      ),
+                      maxLines: 3,
+                      keyboardType: TextInputType.multiline,
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(_nameFocusNode);
+                      },
                     ),
-                  ),
-                  TextFormField(
-                    autofocus: false,
-                    controller: _bioController,
-                    // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'BLotus',
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            'نام و نام خانوادگی',
+                            style: TextStyle(
+                              color: Color(0xff181818),
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
+                              fontFamily: 'BLotus',
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            'دانشگاه',
+                            style: TextStyle(
+                              color: Color(0xff181818),
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
+                              fontFamily: 'BLotus',
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    decoration: InputDecoration(
-                      fillColor: Colors.red,
-                      border: myinputborder(),
-                      enabledBorder: myinputborder(),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            autofocus: false,
+                            controller: _nameController,
+                            // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'BLotus',
+                            ),
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: myinputborder(),
+                              enabledBorder: myinputborder(),
+                            ),
+
+                            keyboardType: TextInputType.text,
+                            textInputAction: TextInputAction.next,
+                            focusNode: _nameFocusNode,
+                            onFieldSubmitted: (_) {
+                              FocusScope.of(context)
+                                  .requestFocus(_universityFocusNode);
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            autofocus: false,
+                            controller: _uniController,
+                            // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'BLotus',
+                            ),
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: myinputborder(),
+                              enabledBorder: myinputborder(),
+                            ),
+
+                            keyboardType: TextInputType.text,
+                            textInputAction: TextInputAction.next,
+                            focusNode: _universityFocusNode,
+
+                            onFieldSubmitted: (_) {
+                              FocusScope.of(context).requestFocus();
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                    maxLines: 3,
-                    keyboardType: TextInputType.multiline,
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(_nameFocusNode);
-                    },
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text(
-                          'نام و نام خانوادگی',
-                          style: TextStyle(
-                            color: Color(0xff181818),
-                            fontSize: 18,
-                            fontWeight: FontWeight.normal,
-                            fontFamily: 'BLotus',
-                          ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        'ایمیل',
+                        style: TextStyle(
+                          color: Color(0xff181818),
+                          fontSize: 18,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'BLotus',
                         ),
                       ),
-                      SizedBox(
-                        width: 80,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text(
-                          'دانشگاه',
-                          style: TextStyle(
-                            color: Color(0xff181818),
-                            fontSize: 18,
-                            fontWeight: FontWeight.normal,
-                            fontFamily: 'BLotus',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          autofocus: false,
-                          controller: _nameController,
-                          // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'BLotus',
-                          ),
-                          decoration: InputDecoration(
-                            fillColor: MyColors.appBarColor,
-                            border: myinputborder(),
-                            enabledBorder: myinputborder(),
-                          ),
-
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          focusNode: _nameFocusNode,
-                          onFieldSubmitted: (_) {
-                            FocusScope.of(context)
-                                .requestFocus(_universityFocusNode);
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Expanded(
-                        child: TextFormField(
-                          autofocus: false,
-                          controller: _uniController,
-                          // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'BLotus',
-                          ),
-                          decoration: InputDecoration(
-                            fillColor: MyColors.appBarColor,
-                            border: myinputborder(),
-                            enabledBorder: myinputborder(),
-                          ),
-
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          focusNode: _universityFocusNode,
-
-                          onFieldSubmitted: (_) {
-                            FocusScope.of(context).requestFocus();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      'ایمیل',
+                    ),
+                    TextFormField(
+                      autofocus: false,
+                      controller: _emailController,
+                      // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
                       style: TextStyle(
-                        color: Color(0xff181818),
-                        fontSize: 18,
-                        fontWeight: FontWeight.normal,
+                        color: Colors.grey,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                         fontFamily: 'BLotus',
                       ),
-                    ),
-                  ),
-                  TextFormField(
-                    autofocus: false,
-                    controller: _emailController,
-                    // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'BLotus',
-                    ),
-                    textDirection: TextDirection.ltr,
-                    decoration: InputDecoration(
-                      fillColor: MyColors.appBarColor,
-                      border: myinputborder(),
-                      enabledBorder: myinputborder(),
-                    ),
+                      textDirection: TextDirection.ltr,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: myinputborder(),
+                        enabledBorder: myinputborder(),
+                      ),
 
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    focusNode: _emailFocusNode,
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(_passwordFocusNode);
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      'رمز عبور',
-                      style: TextStyle(
-                        color: Color(0xff181818),
-                        fontSize: 18,
-                        fontWeight: FontWeight.normal,
-                        fontFamily: 'BLotus',
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      focusNode: _emailFocusNode,
+                      onFieldSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(_passwordFocusNode);
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        'رمز عبور',
+                        style: TextStyle(
+                          color: Color(0xff181818),
+                          fontSize: 18,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'BLotus',
+                        ),
                       ),
                     ),
-                  ),
-                  TextFormField(
-                    autofocus: false,
-                    controller: _passController,
-                    textDirection: TextDirection.ltr,
-                    // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'BLotus',
-                    ),
-                    decoration: InputDecoration(
-                      fillColor: MyColors.appBarColor,
-                      border: myinputborder(),
-                      enabledBorder: myinputborder(),
-                    ),
+                    TextFormField(
+                      autofocus: false,
+                      controller: _passController,
+                      textDirection: TextDirection.ltr,
+                      // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'BLotus',
+                      ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: myinputborder(),
+                        enabledBorder: myinputborder(),
+                      ),
 
-                    keyboardType: TextInputType.visiblePassword,
-                    textInputAction: TextInputAction.done,
-                    focusNode: _passwordFocusNode,
-                    // onFieldSubmitted: (_) {
-                    //   FocusScope.of(context).requestFocus(_priceFocusNode);
-                    // },
-                  ),
-                ],
-                padding: EdgeInsets.all(30),
+                      keyboardType: TextInputType.visiblePassword,
+                      textInputAction: TextInputAction.done,
+                      focusNode: _passwordFocusNode,
+                      onFieldSubmitted: (_) {
+                        _saveForm();
+                      },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: MyColors.blueHex,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 25,
+                              ),
+                            ),
+                            onPressed: _saveForm,
+                            child: const Text(
+                              'ذخیره',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'BLotus',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: InkWell(
+                            child: const Text(
+                              'حذف حساب کاربری',
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Colors.red,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'BLotus',
+                              ),
+                            ),
+                            onTap: () => Navigator.of(context)
+                                .pushReplacementNamed(SettingDrawer.id),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                  padding: EdgeInsets.all(30),
+                ),
               ),
             ),
-          )),
+          ),
         ],
       ),
     );

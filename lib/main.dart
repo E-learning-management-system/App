@@ -168,7 +168,7 @@ class MyApp extends StatelessWidget {
           ProfileView.id: (context) => const ProfileView(),
           EndChangePw.id: (context) => const EndChangePw(),
           SearchView.id: (context) => const SearchView(),
-          AnswerView.id:(context)=>  AnswerView(),
+          AnswerView.id: (context) => AnswerView(),
         },
         title: 'Flutter Demo',
         theme: ThemeApp.theme,
