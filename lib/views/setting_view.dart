@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:project/controllers/home_controller.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:project/controllers/lessons_controller.dart';
 import 'package:project/controllers/subject_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/models/item_category_model.dart';
+import 'package:project/views/change_pw_view.dart';
 import 'package:project/views/home_view.dart';
 import 'package:project/views/login_view.dart';
 import 'package:project/views/setting_drawer_view.dart';
@@ -30,7 +32,7 @@ class _SettingViewState extends State<SettingView> {
   final _universityFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
-
+  var my_color_variable;
   TextEditingController _bioController = new TextEditingController();
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _uniController = new TextEditingController();
@@ -39,6 +41,7 @@ class _SettingViewState extends State<SettingView> {
   @override
   void initState() {
     super.initState();
+    my_color_variable = MyColors.lightGreen;
     _bioController.text = 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزم';
     _nameController.text = 'دانیال صابر';
     _uniController.text = 'خوارزمی';
@@ -57,6 +60,10 @@ class _SettingViewState extends State<SettingView> {
   }
 
   void _saveForm() {
+    final isValid = _form.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
     _form.currentState!.save();
   }
 
@@ -229,6 +236,13 @@ class _SettingViewState extends State<SettingView> {
                       onFieldSubmitted: (_) {
                         FocusScope.of(context).requestFocus(_nameFocusNode);
                       },
+                      validator: (value) {
+                        if (value!.length > 50) {
+                          return 'بیوگرافی باید کمتر از 50 کاراکتر باشد.';
+                        }
+
+                        return null;
+                      },
                     ),
                     Row(
                       children: <Widget>[
@@ -294,6 +308,16 @@ class _SettingViewState extends State<SettingView> {
                               FocusScope.of(context)
                                   .requestFocus(_universityFocusNode);
                             },
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'نام و نام خانوادگی نباید خالی باشد.';
+                              }
+                              if (value.length > 10) {
+                                return 'نام و نام خانوادگی باید کمتر از 10 کاراکتر باشد.';
+                              }
+
+                              return null;
+                            },
                           ),
                         ),
                         SizedBox(
@@ -324,6 +348,16 @@ class _SettingViewState extends State<SettingView> {
                             onFieldSubmitted: (_) {
                               FocusScope.of(context).requestFocus();
                             },
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'نام دانشگاه نباید خالی باشد.';
+                              }
+                              if (value.length > 10) {
+                                return 'دانشگاه باید کمتر از 10 کاراکتر باشد.';
+                              }
+
+                              return null;
+                            },
                           ),
                         ),
                       ],
@@ -352,6 +386,14 @@ class _SettingViewState extends State<SettingView> {
                       ),
                       textDirection: TextDirection.ltr,
                       decoration: InputDecoration(
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.all(0.0),
+                          child: Icon(
+                            Icons.brightness_1_rounded,
+                            size: 15,
+                            color: my_color_variable,
+                          ), // icon is 48px widget.
+                        ),
                         filled: true,
                         fillColor: Colors.white,
                         border: myinputborder(),
@@ -359,10 +401,30 @@ class _SettingViewState extends State<SettingView> {
                       ),
 
                       keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
+                      textInputAction: TextInputAction.done,
                       focusNode: _emailFocusNode,
                       onFieldSubmitted: (_) {
-                        FocusScope.of(context).requestFocus(_passwordFocusNode);
+                        _saveForm();
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'ایمیل نباید خالی باشد.';
+                        }
+                        if (!EmailValidator.validate(value, true)) {
+                          setState(
+                            () {
+                              my_color_variable = Colors.red;
+                            },
+                          );
+                        } else {
+                          setState(
+                            () {
+                              my_color_variable = MyColors.lightGreen;
+                            },
+                          );
+
+                          return null;
+                        }
                       },
                     ),
                     Padding(
@@ -378,6 +440,7 @@ class _SettingViewState extends State<SettingView> {
                       ),
                     ),
                     TextFormField(
+                      readOnly: true,
                       autofocus: false,
                       controller: _passController,
                       textDirection: TextDirection.ltr,
@@ -389,6 +452,24 @@ class _SettingViewState extends State<SettingView> {
                         fontFamily: 'BLotus',
                       ),
                       decoration: InputDecoration(
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.all(0.0),
+                          child: new Container(
+                            child: InkWell(
+                              onTap: () => Navigator.of(context)
+                                  .pushNamed(ChangePwView.id),
+                              child: SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: ClipOval(
+                                  child: Image.asset(
+                                    "assets/images/Icon feather-edit-2.png",
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                         filled: true,
                         fillColor: Colors.white,
                         border: myinputborder(),
