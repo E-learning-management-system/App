@@ -24,7 +24,8 @@ class AnswerView extends StatelessWidget {
     controller.setTitle(answer?.user_email);
     controller.setDes(answer?.description);
 
-    String? title=(answer?.exercise_title)!+'/'+(answer?.user_email)!;
+    String? title=((answer?.exercise_title)!+'/'+(answer?.user_email)!).length>28?
+    ((answer?.exercise_title)!+'/'+(answer?.user_email)!).substring(0,25)+'...' : ((answer?.exercise_title)!+'/'+(answer?.user_email)!);
     return Scaffold(
       appBar: AppbarWidget(
         text: title,
@@ -68,7 +69,7 @@ class AnswerView extends StatelessWidget {
           sizedBox(height: 15),
           _buildTitleText(theme, 'توضیح'),
           _buildTextField(controller.desController,enStatus, maxLine: true),
-          _downloadFile(theme,enStatus),
+          _downloadFile(theme,enStatus,controller),
           sizedBox(height: 15),
           sizedBox(height: 30),
           // _buildButton(theme, enStatus,controller,context),
@@ -102,7 +103,7 @@ class AnswerView extends StatelessWidget {
     );
   }
 
-  _downloadFile(TextTheme theme,EnCreateHomeWork enStatus) {
+  _downloadFile(TextTheme theme,EnCreateHomeWork enStatus,RecordHomeWorkController controller) {
     return Column(
       children: [
         Container(
@@ -117,13 +118,15 @@ class AnswerView extends StatelessWidget {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Row(
                 children: [
-                  Text(
+                  GestureDetector(onTap: ()async{
+                    await controller.downloadFile(answer!.file,answer!.id);
+                    },child: Text(
                     'دانلود فایل',
                     style: theme.subtitle1!.copyWith(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
                         fontFamily: fontLotus),
-                  ),
+                  ),)
 
                 ],
               ),

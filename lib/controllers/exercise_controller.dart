@@ -27,7 +27,6 @@ var _url='https://api.piazza.markop.ir/soren/studentexercises/';
         "Authorization": "Token " + _token,},
     );
 List<ExerciseItemModel>listOfExercise=[];
-    print("jsonDecode(list of exercises)=   "+ Utf8Decoder().convert(response.bodyBytes));
     final Map<String, dynamic> data = json.decode( Utf8Decoder().convert(response.bodyBytes));
     if(data.containsKey("results")){
       final List< dynamic> list = data["results"];

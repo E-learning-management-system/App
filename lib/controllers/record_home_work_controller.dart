@@ -1,13 +1,17 @@
 
 
-import 'dart:io';
 import 'dart:convert';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_summernote/flutter_summernote.dart';
 import 'package:jalali_table_calendar/jalali_table_calendar.dart';
 import 'package:project/helpers/sharedPreferences.dart';
+import 'package:dio/dio.dart' ;
+import 'package:permission_handler/permission_handler.dart';
+
 
 class RecordHomeWorkController extends ChangeNotifier
 {
@@ -24,11 +28,10 @@ class RecordHomeWorkController extends ChangeNotifier
   File? file;
   String? date;
   void uploadFile() async{
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-    if (result != null) {
-      file = File(result.files.single.path!);
-      print(file);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: [ 'png']);
+    if(result != null) {
+      file = File(result.files.first.path!);
+      print(file!.path);
       notifyListeners();
     } else {
     }
@@ -36,7 +39,6 @@ class RecordHomeWorkController extends ChangeNotifier
   void deleteFile()async{
     if(file!=null)
     {
-      file!.delete();
       file=null;
     }
     notifyListeners();
@@ -51,22 +53,37 @@ class RecordHomeWorkController extends ChangeNotifier
   Future newExercise(id)async{
     String url='https://api.piazza.markop.ir/soren/courses/$id/newexercise/';
    var  _token = await sharedPreferences.getToken('token');
+    RegExp exp = RegExp(r"<[^>]*>",multiLine: true,caseSensitive: true);
     var des=await keyEditor.currentState?.getText();
+    print('file:   '+file!.path!);
+    var headers = {
+      "content-type":'multipart/form-data',
+      "Authorization": "Token " + _token,
+    };
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+    request.fields.addAll({
+              "title": titleController.text,
+              "description": des!.replaceAll(exp, ' '),
+              "deadline": date! ,
+    });
+    request.files
+        .add(await http.MultipartFile.fromPath('file', file!.path!));
+    request.headers.addAll(headers);
 
-    var response= await http.post(Uri.parse(url),
-        headers: { "content-type": "application/json",
-          "Authorization": "Token " + _token,},body:
-        jsonEncode
-          ({
-          "title": titleController.text,
-          "description": des,
-          "deadline": date! ,
-          "file": file,
+    var response = await request.send();
+  //   var response=await http.post(Uri.parse(url),
+  //       headers: {
+  //     // "content-type": "application/json",
+  //     //   "Authorization": "Token " + _token,},
+  //     "content-type":'multipart/form-data',
+  //     "Authorization": "Token " + _token,
+  //   },
+  // body: jsonEncode({
+  //     "title": titleController.text, "description":  des , "deadline": date, "file":file!.path!
+  //   }) );
 
-        })
-    );
-
-    print("jsonDecode(new exercise)=   "+const Utf8Decoder().convert(response.bodyBytes));
+    // print("request(new exercise)=   "+request.fields.toString());
+    print("response status code(new exercise)=   "+(response.statusCode.toString()));
     if(response.statusCode==201){
       notifyListeners();
       return true;
@@ -118,6 +135,33 @@ class RecordHomeWorkController extends ChangeNotifier
     notifyListeners();
     return false;
 
+  }
+  Future<String> getFilePath(id) async {
+    Directory appDocumentsDirectory = await getApplicationDocumentsDirectory(); // 1
+    String appDocumentsPath = appDocumentsDirectory.path; // 2
+    String filePath = '$appDocumentsPath/file$id.png'; // 3
+
+    return filePath;
+  }
+  Future  downloadFile(file,id)async{
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.storage,
+      //add more permission to request here.
+    ].request();
+
+    if(statuses[Permission.storage]!.isGranted){
+        String savePath = await getFilePath(id);
+    var response = await Dio().download(file,savePath,onReceiveProgress: (received, total) {
+      if (total != -1) {
+        print((received / total * 100).toStringAsFixed(0) + "%");
+        //you can build progressbar feature too
+      }
+    });
+        print("File is saved to $savePath.");
+    return true;
+    }
+    print("No permission to read and write.");
+    return false;
   }
 
   void showDate(BuildContext context)async{
