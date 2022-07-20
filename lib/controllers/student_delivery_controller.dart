@@ -57,9 +57,10 @@ class StudentDeliveryController extends ChangeNotifier
         "Authorization": "Token " + _token,},
     );
 
-    print("jsonDecode(list of not answer student)=   "+const Utf8Decoder().convert(response.bodyBytes));
-    final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+    // print("jsonDecode(list of not answer student)=   "+const Utf8Decoder().convert(response.bodyBytes));
+
     if(response.statusCode==200){
+      final Map<String, dynamic> data = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
       if (data["results"].length>0) {
         final List< dynamic> list = data["results"];
         for(var v in list) {

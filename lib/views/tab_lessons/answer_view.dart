@@ -69,7 +69,7 @@ class AnswerView extends StatelessWidget {
           sizedBox(height: 15),
           _buildTitleText(theme, 'توضیح'),
           _buildTextField(controller.desController,enStatus, maxLine: true),
-          _downloadFile(theme,enStatus,controller),
+          _downloadFile(theme,enStatus,controller,context),
           sizedBox(height: 15),
           sizedBox(height: 30),
           // _buildButton(theme, enStatus,controller,context),
@@ -103,7 +103,7 @@ class AnswerView extends StatelessWidget {
     );
   }
 
-  _downloadFile(TextTheme theme,EnCreateHomeWork enStatus,RecordHomeWorkController controller) {
+  _downloadFile(TextTheme theme,EnCreateHomeWork enStatus,RecordHomeWorkController controller,BuildContext context) {
     return Column(
       children: [
         Container(
@@ -119,14 +119,30 @@ class AnswerView extends StatelessWidget {
               Row(
                 children: [
                   GestureDetector(onTap: ()async{
-                    await controller.downloadFile(answer!.file,answer!.id);
-                    },child: Text(
+                    print ( 'download');
+                    var res= await controller.downloadFile(answer?.file,answer?.id);
+                    if(res.runtimeType==String){
+                      showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            AlertDialog(
+                              content: Text(res),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('باشه'),
+                                ),
+                              ],
+                            ),
+                      );
+                    }
+                  },child:  Text(
                     'دانلود فایل',
                     style: theme.subtitle1!.copyWith(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
                         fontFamily: fontLotus),
-                  ),)
+                  ),),
 
                 ],
               ),

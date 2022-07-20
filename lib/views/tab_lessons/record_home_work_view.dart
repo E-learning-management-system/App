@@ -101,7 +101,7 @@ class RecordHomeWorkView extends StatelessWidget {
           enStatus)),
           Visibility(
             visible:  enStatus != EnCreateHomeWork.CreateNew,
-            child: _downloadFile(theme,enStatus,controller),),
+            child: _downloadFile(context,theme,enStatus,controller),),
           sizedBox(height: 15),
           Visibility(
               visible: enStatus == EnCreateHomeWork.Student,
@@ -180,7 +180,7 @@ class RecordHomeWorkView extends StatelessWidget {
    );
   }
 
-  _downloadFile(TextTheme theme,EnCreateHomeWork enStatus,RecordHomeWorkController controller) {
+  _downloadFile(BuildContext context,TextTheme theme,EnCreateHomeWork enStatus,RecordHomeWorkController controller) {
     return Column(
       children: [
         Container(
@@ -197,7 +197,22 @@ class RecordHomeWorkView extends StatelessWidget {
                 children: [
                   GestureDetector(onTap: ()async{
                   print ( 'download');
-                    await controller.downloadFile(exercise?.file,exercise?.id);
+                   var res= await controller.downloadFile(exercise?.file,exercise?.id);
+                   if(res.runtimeType==String){
+                     showDialog<String>(
+                       context: context,
+                       builder: (BuildContext context) =>
+                           AlertDialog(
+                             content: Text(res),
+                             actions: <Widget>[
+                               TextButton(
+                                 onPressed: () => Navigator.pop(context),
+                                 child: const Text('باشه'),
+                               ),
+                             ],
+                           ),
+                     );
+                   }
                   },child:  Text(
                     'دانلود فایل',
                     style: theme.subtitle1!.copyWith(

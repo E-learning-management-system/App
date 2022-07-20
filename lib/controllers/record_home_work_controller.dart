@@ -1,6 +1,9 @@
 
 
 import 'dart:convert';
+import 'dart:async';
+import 'package:async/async.dart';
+import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +12,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_summernote/flutter_summernote.dart';
 import 'package:jalali_table_calendar/jalali_table_calendar.dart';
 import 'package:project/helpers/sharedPreferences.dart';
-import 'package:dio/dio.dart' ;
+import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 
@@ -27,6 +30,7 @@ class RecordHomeWorkController extends ChangeNotifier
   }
   File? file;
   String? date;
+  bool isLoading=false;
   void uploadFile() async{
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: [ 'png']);
     if(result != null) {
@@ -55,35 +59,24 @@ class RecordHomeWorkController extends ChangeNotifier
    var  _token = await sharedPreferences.getToken('token');
     RegExp exp = RegExp(r"<[^>]*>",multiLine: true,caseSensitive: true);
     var des=await keyEditor.currentState?.getText();
-    print('file:   '+file!.path!);
-    var headers = {
-      "content-type":'multipart/form-data',
-      "Authorization": "Token " + _token,
-    };
-    var request = http.MultipartRequest('POST', Uri.parse(url));
-    request.fields.addAll({
-              "title": titleController.text,
-              "description": des!.replaceAll(exp, ' '),
-              "deadline": date! ,
-    });
-    request.files
-        .add(await http.MultipartFile.fromPath('file', file!.path!));
+
+    var request = http.MultipartRequest("POST",Uri.parse(url));
+    Map<String, String> headers = { "Authorization": "Token $_token"};
+    var stream = http.ByteStream(DelegatingStream.typed(file!.openRead()));
+
+    var length = await file?.length();
+
+    var multipartFile = http.MultipartFile('file', stream, length!,
+        filename: basename(file!.path));
+    request.files.add(multipartFile);
     request.headers.addAll(headers);
+    request.fields.addAll({"title": titleController.text,
+      "description": des!.replaceAll(exp, ' '),
+      "deadline": date! });
 
     var response = await request.send();
-  //   var response=await http.post(Uri.parse(url),
-  //       headers: {
-  //     // "content-type": "application/json",
-  //     //   "Authorization": "Token " + _token,},
-  //     "content-type":'multipart/form-data',
-  //     "Authorization": "Token " + _token,
-  //   },
-  // body: jsonEncode({
-  //     "title": titleController.text, "description":  des , "deadline": date, "file":file!.path!
-  //   }) );
-
-    // print("request(new exercise)=   "+request.fields.toString());
     print("response status code(new exercise)=   "+(response.statusCode.toString()));
+    print("response =   "+(request.toString()));
     if(response.statusCode==201){
       notifyListeners();
       return true;
@@ -137,16 +130,26 @@ class RecordHomeWorkController extends ChangeNotifier
 
   }
   Future<String> getFilePath(id) async {
-    Directory appDocumentsDirectory = await getApplicationDocumentsDirectory(); // 1
-    String appDocumentsPath = appDocumentsDirectory.path; // 2
-    String filePath = '$appDocumentsPath/file$id.png'; // 3
+      Directory? directory = await getExternalStorageDirectory();
+      String newPath = "";
+      List<String> paths = directory!.path.split("/");
+      for (int x = 1; x < paths.length; x++) {
+        String folder = paths[x];
+        if (folder != "Android") {
+          newPath += "/" + folder;
+        } else {
+          break;
+        }
+      }
 
-    return filePath;
+    return newPath+'/file$id.png';
   }
   Future  downloadFile(file,id)async{
+    isLoading=true;
     Map<Permission, PermissionStatus> statuses = await [
       Permission.storage,
-      //add more permission to request here.
+      Permission.accessMediaLocation,
+      Permission.manageExternalStorage
     ].request();
 
     if(statuses[Permission.storage]!.isGranted){
@@ -157,10 +160,11 @@ class RecordHomeWorkController extends ChangeNotifier
         //you can build progressbar feature too
       }
     });
-        print("File is saved to $savePath.");
-    return true;
+        isLoading=false;
+    return " فایل در آدرس $savePath ذخیره شد. ";
     }
     print("No permission to read and write.");
+    isLoading=false;
     return false;
   }
 
