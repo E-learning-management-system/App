@@ -15,6 +15,7 @@ class MyColors {
   static Color iconColor = HexColor.fromHex('#707070');
   static Color drawerColor = HexColor.fromHex('#636363');
   static Color drawerRed = HexColor.fromHex('#ff0000');
+  static Color lightGreen = HexColor.fromHex('#28fa66');
 }
 
 extension HexColor on Color {
@@ -27,6 +28,7 @@ extension HexColor on Color {
 }
 
 final listOfColors = [
+  MyColors.lightGreen,
   MyColors.orange,
   MyColors.blueDark,
   MyColors.greyHex,
