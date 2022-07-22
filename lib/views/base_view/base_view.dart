@@ -45,7 +45,7 @@ class _BaseViewState extends State<BaseView> {
     return BottomNavyBar(
       selectedIndex: selectIndex,
       onItemSelected: (index) => setState(() {
-        if (index == 3) {
+        if (index == 4) {
           return;
         }
         selectIndex = index;
@@ -82,7 +82,7 @@ class _BaseViewState extends State<BaseView> {
           textAlign: TextAlign.center,
           icon: const Icon(Icons.person),
           title: Text(
-            'Settings',
+            'تنظیمات',
             style: styleText,
           ),
         ),

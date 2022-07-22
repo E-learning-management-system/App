@@ -19,6 +19,7 @@ import 'package:project/controllers/signup_controller.dart';
 import 'package:project/controllers/student_delivery_controller.dart';
 import 'package:project/controllers/subject_controller.dart';
 import 'package:project/controllers/verify_email_controller.dart';
+import 'package:project/controllers/change_password_controller.dart';
 
 import 'package:project/helpers/them_app.dart';
 import 'package:project/controllers/login_controller.dart';
@@ -44,6 +45,7 @@ import 'package:provider/provider.dart';
 import 'views/login_view.dart';
 import 'views/signup_view.dart';
 import 'views/setting_drawer_view.dart';
+import 'views/change_password_view.dart';
 
 void main() {
   runApp(MyApp());
@@ -127,6 +129,10 @@ class MyApp extends StatelessWidget {
           child: const ChangePwView(),
           create: (context) => ChangePwController(),
         ),
+        ChangeNotifierProvider<ChangePasswordController>(
+          child: const ChangePwView(),
+          create: (context) => ChangePasswordController(),
+        ),
         ChangeNotifierProvider<SearchController>(
           child: const SearchView(),
           create: (context) => SearchController(),
@@ -158,6 +164,7 @@ class MyApp extends StatelessWidget {
           FinalLessonsView.id: (context) => const FinalLessonsView(),
           CalendarView.id: (context) => const CalendarView(),
           ChangePwView.id: (context) => const ChangePwView(),
+          ChangePasswordView.id: (context) => const ChangePasswordView(),
           BaseView.id: (context) => const BaseView(),
           SettingDrawer.id: (context) => const SettingDrawer(),
           SettingView.id: (context) => const SettingView(),

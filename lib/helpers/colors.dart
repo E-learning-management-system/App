@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MyColors {
   static Color purpleHex = HexColor.fromHex('9100c5');
   static Color greyHex = HexColor.fromHex('b9b8bf');
-
+  static Color darkBlue = HexColor.fromHex('#0464fc');
   static Color blueHex = HexColor.fromHex('#2a70e2');
   static Color blueAccentHex = HexColor.fromHex('51c3fe');
   static Color bgColor = HexColor.fromHex('f5fbff');
@@ -16,6 +16,7 @@ class MyColors {
   static Color drawerColor = HexColor.fromHex('#636363');
   static Color drawerRed = HexColor.fromHex('#ff0000');
   static Color lightGreen = HexColor.fromHex('#28fa66');
+  static Color hintColor = HexColor.fromHex('#838383');
 }
 
 extension HexColor on Color {
@@ -28,6 +29,8 @@ extension HexColor on Color {
 }
 
 final listOfColors = [
+  MyColors.hintColor,
+  MyColors.darkBlue,
   MyColors.lightGreen,
   MyColors.orange,
   MyColors.blueDark,

@@ -16,35 +16,32 @@ import 'package:project/widgets/topAppBar.dart';
 import 'package:provider/provider.dart';
 
 class HomeProfessorView extends StatelessWidget {
-
   const HomeProfessorView({Key? key}) : super(key: key);
   static const String id = '/home_professor';
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<HomeController>(context,listen: false);
+    final controller = Provider.of<HomeController>(context, listen: false);
     final Lessons = Provider.of<LessonsController>(context);
     final Subjects = Provider.of<SubjectsController>(context);
     final theme = Theme.of(context).textTheme;
-   myLessons() async{
-     await Lessons.getLessonsRequest();
-     await controller
-         .setItemCategory(StatusCategory.Lessons);
-     return controller.lessonProfessor;
-   }
-    mySubjects() async{
+    myLessons() async {
+      await Lessons.getLessonsRequest();
+      await controller.setItemCategory(StatusCategory.Lessons);
+      return controller.lessonProfessor;
+    }
+
+    mySubjects() async {
       await Subjects.getSubjectsRequest();
-      await controller
-          .setItemCategory(StatusCategory.LastTopics);
+      await controller.setItemCategory(StatusCategory.LastTopics);
       return controller.subjectProfessor;
     }
-    return Scaffold(
-      appBar: TopAppBar('استاد', 1, 'ww'),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.only(right: 12, left: 12,
-        bottom: 20,top: 20),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
+    return Scaffold(
+      appBar: TopAppBar('استاد', 0, 'ww'),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(right: 12, left: 12, bottom: 20, top: 20),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -53,11 +50,12 @@ class HomeProfessorView extends StatelessWidget {
                 height: 50,
                 child: TextFormField(
                   readOnly: true,
-                  onTap: (){
+                  onTap: () {
                     controller.setItemCategory(StatusCategory.All);
-                    List<ItemCategoryModel> list=controller.listModel;
+                    List<ItemCategoryModel> list = controller.listModel;
                     print(list);
-                    Navigator.pushNamed(context, SearchView.id,arguments: list);
+                    Navigator.pushNamed(context, SearchView.id,
+                        arguments: list);
                   },
                   decoration: InputDecoration(
                     prefixIcon: Icon(
@@ -86,8 +84,7 @@ class HomeProfessorView extends StatelessWidget {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.circular(12.0),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
                           primary: Colors.lightBlue),
                       onPressed: () async {
@@ -107,111 +104,127 @@ class HomeProfessorView extends StatelessWidget {
             ],
           ),
           sizedBox(height: 15),
-
           Text(
             'دروس',
             style: theme.headline6,
           ),
           SizedBox(
             height: 180,
-            child:
-            FutureBuilder<List<ItemCategoryModel>>(
-              future:myLessons() ,
+            child: FutureBuilder<List<ItemCategoryModel>>(
+              future: myLessons(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return   ListView.builder(
+                  return ListView.builder(
                     itemExtent: 270,
                     itemCount: snapshot.data!.length,
                     scrollDirection: Axis.horizontal,
-                    itemBuilder:(context, index) {
+                    itemBuilder: (context, index) {
                       final data = controller.lessonProfessor[index];
 
-                      return cartGenerator(data,context,controller);
+                      return cartGenerator(data, context, controller);
                     },
                   );
                 } else {
-                  return const Center(child: CircularProgressIndicator(),);
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
               },
             ),
-
           ),
           sizedBox(height: 12),
-          Text('اخرین مباحث',
-            style: theme.headline6,),
+          Text(
+            'اخرین مباحث',
+            style: theme.headline6,
+          ),
           SizedBox(
             height: 180,
-            child:  FutureBuilder<List<ItemCategoryModel>>(
-              future:mySubjects() ,
+            child: FutureBuilder<List<ItemCategoryModel>>(
+              future: mySubjects(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return   ListView.builder(
+                  return ListView.builder(
                     itemExtent: 250,
                     itemCount: snapshot.data!.length,
                     scrollDirection: Axis.horizontal,
-                    itemBuilder:(context, index) {
+                    itemBuilder: (context, index) {
                       final data = controller.subjectProfessor[index];
 
-                      return cartGenerator(data,context,controller);
+                      return cartGenerator(data, context, controller);
                     },
                   );
                 } else {
-                  return const Center(child: CircularProgressIndicator(),);
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
               },
             ),
           ),
-
         ]),
       ),
     );
   }
 
-  Widget cartGenerator(ItemCategoryModel model,BuildContext context,HomeController controller) {
+  Widget cartGenerator(ItemCategoryModel model, BuildContext context,
+      HomeController controller) {
     var lesson;
     var subject;
 
     return GestureDetector(
-      onTap: ()async=>{
-        if(model.category=='Lesson'){
-          lesson=await controller.getLessonById(sharedPreferences.getLessonByTitle(model.title)),
-       Navigator.push(context,  MaterialPageRoute(
-         builder: (context) => ItemLessonsView(lesson:lesson)),
-       )
-        }else{
-        subject=await controller.getTopicById(sharedPreferences.getTopicId(model.title)),
-    Navigator.push(context,  MaterialPageRoute(
-    builder: (context) => LastTopicView( subject: subject,)),
-    )
-        }
-      },
-      child: Card(
-      margin: EdgeInsets.only(left: 20),
-      color: Utility.randomColor(),
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(30))),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Image.asset(Utility.randomImage(),
-                height: 100,
-                width: 100,),
-              Text(
-                model.title,
-                style: TextStyle(
-                  color: Color.fromARGB(255, 253, 251, 251),
-                  fontFamily: fontLotus,
-                  fontSize: 16,
-                ),
-                maxLines: 1,
+        onTap: () async => {
+              if (model.category == 'Lesson')
+                {
+                  lesson = await controller.getLessonById(
+                      sharedPreferences.getLessonByTitle(model.title)),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ItemLessonsView(lesson: lesson)),
+                  )
+                }
+              else
+                {
+                  subject = await controller
+                      .getTopicById(sharedPreferences.getTopicId(model.title)),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LastTopicView(
+                              subject: subject,
+                            )),
+                  )
+                }
+            },
+        child: Card(
+          margin: EdgeInsets.only(left: 20),
+          color: Utility.randomColor(),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(30))),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Image.asset(
+                    Utility.randomImage(),
+                    height: 100,
+                    width: 100,
+                  ),
+                  Text(
+                    model.title,
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 253, 251, 251),
+                      fontFamily: fontLotus,
+                      fontSize: 16,
+                    ),
+                    maxLines: 1,
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    ));
+        ));
   }
 }
