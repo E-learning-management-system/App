@@ -30,11 +30,15 @@ class ChangePasswordController extends ChangeNotifier {
       isLoading = false;
       sharedPreferences.setLogin();
       notifyListeners();
-      return true;
+      return 'ok';
+    } else if (response.statusCode == 400) {
+      isLoading = false;
+      notifyListeners();
+      return 'old';
     } else {
       isLoading = false;
       notifyListeners();
-      return false;
+      return 'others';
     }
   }
 }

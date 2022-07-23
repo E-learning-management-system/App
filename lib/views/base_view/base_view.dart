@@ -7,6 +7,7 @@ import 'package:project/views/setting_view.dart';
 import 'package:project/views/tab_calendar/calendar_view.dart';
 import 'package:project/views/tab_lessons/lessons_view.dart';
 import 'package:project/views/setting_view.dart';
+import 'package:project/views/change_password_view.dart';
 
 class BaseView extends StatefulWidget {
   const BaseView({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class _BaseViewState extends State<BaseView> {
     ],
     const LessonsView(),
     const CalendarView(),
-    const SettingView()
+    const SettingView(),
   ];
   final styleText = const TextStyle(
     fontSize: 16,
@@ -48,6 +49,7 @@ class _BaseViewState extends State<BaseView> {
         if (index == 4) {
           return;
         }
+
         selectIndex = index;
       }),
       animationDuration: const Duration(milliseconds: 200),
