@@ -20,6 +20,7 @@ import 'package:project/controllers/student_delivery_controller.dart';
 import 'package:project/controllers/subject_controller.dart';
 import 'package:project/controllers/verify_email_controller.dart';
 import 'package:project/controllers/change_password_controller.dart';
+import 'package:project/controllers/delete_account_controller.dart';
 
 import 'package:project/helpers/them_app.dart';
 import 'package:project/controllers/login_controller.dart';
@@ -42,10 +43,11 @@ import 'package:project/views/tab_lessons/student_delivery_view.dart';
 import 'package:project/views/tab_profile/profile_view.dart';
 import 'package:project/views/verify_email_view.dart';
 import 'package:provider/provider.dart';
+import 'package:project/views/delete_account_view.dart';
 import 'views/login_view.dart';
 import 'views/signup_view.dart';
 import 'views/setting_drawer_view.dart';
-import 'views/change_password_view.dart';
+import 'package:project/views/change_password_view.dart';
 
 void main() {
   runApp(MyApp());
@@ -130,13 +132,17 @@ class MyApp extends StatelessWidget {
           create: (context) => ChangePwController(),
         ),
         ChangeNotifierProvider<ChangePasswordController>(
-          child: const ChangePwView(),
+          child: const ChangePasswordView(),
           create: (context) => ChangePasswordController(),
         ),
         ChangeNotifierProvider<SearchController>(
           child: const SearchView(),
           create: (context) => SearchController(),
         ),
+        //    ChangeNotifierProvider<DeleteAccountController>(
+        //   child: const DeleteAccountController(),
+        //   create: (context) => DeleteAccountController(),
+        // ),
       ],
       child: MaterialApp(
         localizationsDelegates: const [
@@ -176,6 +182,7 @@ class MyApp extends StatelessWidget {
           EndChangePw.id: (context) => const EndChangePw(),
           SearchView.id: (context) => const SearchView(),
           AnswerView.id: (context) => AnswerView(),
+          DeleteAccountView.id: (context) => DeleteAccountView(),
         },
         title: 'Flutter Demo',
         theme: ThemeApp.theme,

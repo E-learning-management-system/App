@@ -19,6 +19,7 @@ class MyColors {
   static Color hintColor = HexColor.fromHex('#838383');
   static Color inpBorderColor = HexColor.fromHex('#dbeff9');
   static Color darkButtonColor = HexColor.fromHex('#4c4ffa');
+  static Color redButtonColor = HexColor.fromHex('#fe7062');
 }
 
 extension HexColor on Color {
@@ -31,6 +32,7 @@ extension HexColor on Color {
 }
 
 final listOfColors = [
+  MyColors.redButtonColor,
   MyColors.darkButtonColor,
   MyColors.inpBorderColor,
   MyColors.hintColor,

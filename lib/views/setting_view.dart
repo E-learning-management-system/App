@@ -7,6 +7,7 @@ import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/models/item_category_model.dart';
 import 'package:project/views/change_password_view.dart';
+import 'package:project/views/delete_account_view.dart';
 import 'package:project/views/home_view.dart';
 import 'package:project/views/login_view.dart';
 import 'package:project/views/setting_drawer_view.dart';
@@ -531,7 +532,7 @@ class _SettingViewState extends State<SettingView> {
                                   ),
                                 ),
                                 onTap: () => Navigator.of(context)
-                                    .pushReplacementNamed(SettingDrawer.id),
+                                    .pushNamed(DeleteAccountView.id),
                               ),
                             ),
                           ],
@@ -583,9 +584,7 @@ class CustomShape extends CustomClipper<Path> {
     path.lineTo(size.width, 0);
     path.moveTo(0, size.height);
     path.quadraticBezierTo(size.width * 0.7, size.height * 0.7, size.width, 0);
-    // double degToRad(num deg) => deg * (Math.pi / 180.0);
-    // path.addArc(Rect.from(Offset(size.width/2,size.height/2), size.width, size.height), degToRad(360),
-    //     degToRad(360));
+
     path.close();
     return path;
   }

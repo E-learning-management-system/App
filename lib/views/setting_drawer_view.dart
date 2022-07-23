@@ -8,6 +8,7 @@ import 'package:project/models/item_category_model.dart';
 import 'package:project/views/Setting_view.dart';
 import 'package:project/views/home_view.dart';
 import 'package:project/views/login_view.dart';
+import 'package:project/views/splash_view.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:provider/provider.dart';
 import 'package:project/controllers/exercise_controller.dart';
@@ -195,9 +196,8 @@ class SettingDrawer extends StatelessWidget {
                   ),
                   ListTile(
                     leading: InkWell(
-                      onTap: () {
-                        print("tapped");
-                      },
+                      onTap: () => Navigator.of(context)
+                          .pushReplacementNamed(SplashView.id),
                       child: new Container(
                         child: InkWell(
                           child: Icon(
@@ -217,13 +217,12 @@ class SettingDrawer extends StatelessWidget {
                       ),
                     ),
                     trailing: InkWell(
-                      onTap: () {
-                        print("tapped");
-                      },
+                      onTap: () => Navigator.of(context)
+                          .pushReplacementNamed(SplashView.id),
                       child: new Container(
                         child: InkWell(
                           onTap: () => Navigator.of(context)
-                              .pushReplacementNamed(SettingView.id),
+                              .pushReplacementNamed(SplashView.id),
                           child: Icon(
                             Icons.arrow_forward_ios,
                             color: MyColors.iconColor,
