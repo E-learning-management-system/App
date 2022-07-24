@@ -140,10 +140,10 @@ class MyApp extends StatelessWidget {
           child: const SearchView(),
           create: (context) => SearchController(),
         ),
-        //    ChangeNotifierProvider<DeleteAccountController>(
-        //   child: const DeleteAccountController(),
-        //   create: (context) => DeleteAccountController(),
-        // ),
+        ChangeNotifierProvider<DeleteAccountController>(
+          child: const DeleteAccountView(),
+          create: (context) => DeleteAccountController(),
+        ),
         ChangeNotifierProvider<ChangeSettingControler>(
           child: const SettingView(),
           create: (context) => ChangeSettingControler(),

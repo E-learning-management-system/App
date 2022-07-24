@@ -3,7 +3,7 @@ import 'package:project/controllers/delete_account_controller.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/constants.dart';
 import 'package:project/helpers/validator.dart';
-import 'package:project/views/end_change_pw.dart';
+import 'package:project/views/splash_view.dart';
 import 'package:project/widgets/app_bar_widget.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:project/widgets/text_field_widget.dart';
@@ -16,8 +16,7 @@ class DeleteAccountView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String sPassword = '';
-
-    final _form = GlobalKey<FormState>();
+    final controller = Provider.of<DeleteAccountController>(context);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -69,8 +68,7 @@ class DeleteAccountView extends StatelessWidget {
             ),
             sizedBox(height: 25),
             Form(
-              // key: controller.keyForm,
-              key: _form,
+              key: controller.keyForm,
               child: Column(
                 children: [
                   sizedBox(height: 36),
@@ -141,50 +139,34 @@ class DeleteAccountView extends StatelessWidget {
             ),
             sizedBox(height: 36),
             ElevationButtonWidget(
-                width: 158,
-                height: 44,
-                text: "حذف حساب کاربری",
-                primaryColor: MyColors.redButtonColor,
-                call: () {}
-                // () async {
-                //   if (controller.keyForm.currentState!.validate()) {
-                //     var res =
-                //         await controller.changePassword(Password, oldPassword);
-                //     if (res == 'ok') {
-                //       Navigator.pushNamed(context, splashView.id);
-                //     } else if (res == 'old') {
-                //       showDialog<String>(
-                //         context: context,
-                //         builder: (BuildContext context) => AlertDialog(
-                //           title: const Text('خطا'),
-                //           content: const Text('رمز قبلی اشتباه می باشد.'),
-                //           actions: <Widget>[
-                //             TextButton(
-                //               onPressed: () => Navigator.pop(context),
-                //               child: const Text('باشه'),
-                //             ),
-                //           ],
-                //         ),
-                //       );
-                //     } else {
-                //       showDialog<String>(
-                //         context: context,
-                //         builder: (BuildContext context) => AlertDialog(
-                //           title: const Text('خطا'),
-                //           content:
-                //               const Text('مشکلی در تغییر رمز عیور وجود دارد.'),
-                //           actions: <Widget>[
-                //             TextButton(
-                //               onPressed: () => Navigator.pop(context),
-                //               child: const Text('باشه'),
-                //             ),
-                //           ],
-                //         ),
-                //       );
-                //     }
-                //   }
-                // },
-                )
+              width: 158,
+              height: 44,
+              text: "حذف حساب کاربری",
+              primaryColor: MyColors.redButtonColor,
+              call: () async {
+                if (controller.keyForm.currentState!.validate()) {
+                  var res = await controller.deleteAccount();
+                  if (res == 'ok') {
+                    Navigator.pushNamed(context, SplashView.id);
+                  } else {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('خطا'),
+                        content:
+                            const Text('مشکلی در حذف حساب کاربری وجود دارد.'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('باشه'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                }
+              },
+            )
           ],
         ),
       ),
