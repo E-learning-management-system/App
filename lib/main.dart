@@ -15,6 +15,7 @@ import 'package:project/controllers/posts_cpntroller.dart';
 import 'package:project/controllers/profile_controller.dart';
 import 'package:project/controllers/record_home_work_controller.dart';
 import 'package:project/controllers/search_controller.dart';
+import 'package:project/controllers/setting_controller.dart';
 import 'package:project/controllers/signup_controller.dart';
 import 'package:project/controllers/student_delivery_controller.dart';
 import 'package:project/controllers/subject_controller.dart';
@@ -143,6 +144,10 @@ class MyApp extends StatelessWidget {
         //   child: const DeleteAccountController(),
         //   create: (context) => DeleteAccountController(),
         // ),
+        ChangeNotifierProvider<ChangeSettingControler>(
+          child: const SettingView(),
+          create: (context) => ChangeSettingControler(),
+        ),
       ],
       child: MaterialApp(
         localizationsDelegates: const [
