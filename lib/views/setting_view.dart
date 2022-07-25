@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:project/controllers/home_controller.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:project/controllers/lessons_controller.dart';
+import 'dart:io';
+
 import 'package:project/controllers/setting_controller.dart';
-import 'package:project/controllers/subject_controller.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:project/helpers/colors.dart';
 import 'package:project/helpers/sharedPreferences.dart';
 import 'package:project/models/item_category_model.dart';
@@ -15,9 +16,10 @@ import 'package:project/views/login_view.dart';
 import 'package:project/views/setting_drawer_view.dart';
 import 'package:project/widgets/elevation_button.dart';
 import 'package:provider/provider.dart';
-import 'package:project/controllers/exercise_controller.dart';
+
 import '../widgets/topAppBar.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:project/pickers/user_image_picker.dart';
 import 'dart:math' as Math;
 
 class SettingView extends StatefulWidget {
@@ -30,6 +32,8 @@ class SettingView extends StatefulWidget {
 }
 
 class _SettingViewState extends State<SettingView> {
+  File? _pickedImage;
+
   final _nameFocusNode = FocusNode();
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
@@ -47,11 +51,12 @@ class _SettingViewState extends State<SettingView> {
   @override
   void initState() {
     super.initState();
+
     my_color_variable = MyColors.lightGreen;
     // _bioController.text = 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزم';
     // _nameController.text = 'دانیال صابر';
     // _uniController.text = 'خوارزمی';
-    _photoController.text = _passController.text = 'Password\$r#';
+    _passController.text = 'Password\$r#';
     // _emailController.text = 'cheekym@gmail.com';
   }
 
@@ -65,30 +70,39 @@ class _SettingViewState extends State<SettingView> {
     super.dispose();
   }
 
-  void _saveForm() {
-    // final isValid = _form.currentState!.validate();
-    // if (!isValid) {
-    //   return;
-    // }
-    // _form.currentState!.save();
+  void _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    final File? imagefile = File(image!.path);
+
+    setState(() {
+      _pickedImage = imagefile!;
+      // _photoController.text=imagefile!.path;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<ChangeSettingControler>(context);
-
+    String name = '';
+    String bio = '';
+    String photo = '';
+    String email = '';
     Future<ProfileModel> profile() async {
       var res = await controller.getProfile();
       if (res != false) {
         return res;
       }
+
       return ProfileModel(
           name: '',
           email: '',
           university: '',
           type: '',
           date_joined: '',
-          last_login: '');
+          last_login: '',
+          bio: '',
+          photo: '');
     }
 
     if (sharedPreferences.isLogin) {
@@ -100,132 +114,132 @@ class _SettingViewState extends State<SettingView> {
               return const Center(child: CircularProgressIndicator());
             }
             ProfileModel profile = snapshot.data as ProfileModel;
-            return Column(
-              children: <Widget>[
-                // height: 160.0,
+            // _emailController.text = profile.email;
+            // _nameController.text = profile.name;
+            // _bioController.text = profile.bio;
+            // _photoController.text = profile.photo;
+            return Form(
+              key: controller.keyForm,
+              child: Column(
+                children: <Widget>[
+                  // height: 160.0,
 
-                Container(
-                  child: Stack(
-                    children: <Widget>[
-                      ClipPath(
-                        clipper: CustomShape(),
-                        child: Container(
-                          height: 175,
-                          width: double.infinity,
-                          color: MyColors.blueAccentHex,
-                        ),
-                      ),
-                      Positioned(
-                        top: 60.0,
-                        left: 320.0,
-                        right: 0.0,
-                        child: Center(
-                          child: new Container(
-                            child: new Material(
-                              child: new InkWell(
-                                onTap: () {
-                                  print("tapped");
-                                },
-                                child: new Container(
-                                  child: InkWell(
-                                    onTap: () => Navigator.of(context)
-                                        .pushReplacementNamed(SettingDrawer.id),
-                                    child: Icon(
-                                      Icons.menu,
-                                      color: MyColors.iconColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              color: Colors.transparent,
-                            ),
+                  Container(
+                    child: Stack(
+                      children: <Widget>[
+                        ClipPath(
+                          clipper: CustomShape(),
+                          child: Container(
+                            height: 175,
+                            width: double.infinity,
+                            color: MyColors.blueAccentHex,
                           ),
                         ),
-                      ),
-                      Positioned(
-                        top: 80.0,
-                        left: 0.0,
-                        right: 0.0,
-                        child: new Center(
-                          child: new Container(
-                            child: new Material(
-                              child: new InkWell(
-                                onTap: () {
-                                  print("tapped");
-                                },
-                                child: new Container(
-                                  width: 75.0,
-                                  height: 75.0,
-                                  child: InkWell(
-                                    onTap: () => {},
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.transparent,
-                                      child: SizedBox(
-                                        width: 60,
-                                        height: 60,
-                                        child: ClipOval(
-                                          child: Image.asset(
-                                            "assets/images/ic_profile.png",
-                                          ),
-                                        ),
+                        Positioned(
+                          top: 60.0,
+                          left: 320.0,
+                          right: 0.0,
+                          child: Center(
+                            child: new Container(
+                              child: new Material(
+                                child: new InkWell(
+                                  onTap: () {
+                                    print("tapped");
+                                  },
+                                  child: new Container(
+                                    child: InkWell(
+                                      onTap: () => Navigator.of(context)
+                                          .pushReplacementNamed(
+                                              SettingDrawer.id),
+                                      child: Icon(
+                                        Icons.menu,
+                                        color: MyColors.iconColor,
                                       ),
                                     ),
                                   ),
                                 ),
+                                color: Colors.transparent,
                               ),
-                              color: Colors.transparent,
                             ),
                           ),
                         ),
+                        Positioned(
+                          top: 80.0,
+                          left: 0.0,
+                          right: 0.0,
+                          // child: UserImagePicker(),
+                          child: new Center(
+                            child: new Container(
+                              width: 75.0,
+                              height: 75.0,
+                              child: CircleAvatar(
+                                backgroundColor: Colors.transparent,
+                                backgroundImage:
+
+                                    // profile.photo !=null ? Image.network('https://googleflutter.com/sample_image.jpg') as ImageProvider:
+
+                                    _pickedImage != null
+                                        ? FileImage(_pickedImage!)
+                                        : FileImage(File(_photoController.text))
+
+                                // AssetImage(
+                                //         "assets/images/ic_profile.png")
+                                //     as ImageProvider
+
+                                ,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 60.0,
+                          left: 55.0,
+                          right: 0.0,
+                          child: InkWell(
+                            onTap: _pickImage,
+                            child: new Center(
+                              child: new Container(
+                                width: 75.0,
+                                height: 75.0,
+                                child: Image.asset("assets/images/camera.png"),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: Text(
+                          profile.name,
+                          style: TextStyle(
+                            color: Color(0xff181818),
+                            fontSize: 26,
+                            fontWeight: FontWeight.normal,
+                            fontFamily: 'BLotus',
+                          ),
+                        ),
                       ),
-                      Positioned(
-                        top: 60.0,
-                        left: 55.0,
-                        right: 0.0,
-                        child: new Center(
-                          child: new Container(
-                            width: 75.0,
-                            height: 75.0,
-                            child: Image.asset("assets/images/camera.png"),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          'دانشجوی مهندسی کامپیوتر ${profile.university} ',
+                          style: TextStyle(
+                            color: Color(0xff181818),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'BLotus',
                           ),
                         ),
                       ),
                     ],
                   ),
-                ),
-
-                Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Text(
-                        profile.name,
-                        style: TextStyle(
-                          color: Color(0xff181818),
-                          fontSize: 26,
-                          fontWeight: FontWeight.normal,
-                          fontFamily: 'BLotus',
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: Text(
-                        'دانشجوی مهندسی کامپیوتر ${profile.university} ',
-                        style: TextStyle(
-                          color: Color(0xff181818),
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'BLotus',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  child: Expanded(
-                    child: Form(
-                      key: controller.keyForm,
+                  Container(
+                    child: Expanded(
                       child: ListView(
                         children: [
                           Text(
@@ -240,6 +254,9 @@ class _SettingViewState extends State<SettingView> {
                           SizedBox(
                             height: 79,
                             child: TextFormField(
+                              onChanged: (String newBio) {
+                                bio = newBio;
+                              },
                               autofocus: false,
                               controller:
                                   TextEditingController(text: profile.bio),
@@ -314,10 +331,12 @@ class _SettingViewState extends State<SettingView> {
                                 child: SizedBox(
                                   height: 50,
                                   child: TextFormField(
+                                    onChanged: (String newName) {
+                                      name = newName;
+                                    },
                                     autofocus: false,
                                     controller: TextEditingController(
                                         text: profile.name),
-                                    // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 16,
@@ -330,7 +349,6 @@ class _SettingViewState extends State<SettingView> {
                                       border: myinputborder(),
                                       enabledBorder: myinputborder(),
                                     ),
-
                                     keyboardType: TextInputType.text,
                                     textInputAction: TextInputAction.next,
                                     focusNode: _nameFocusNode,
@@ -361,7 +379,6 @@ class _SettingViewState extends State<SettingView> {
                                     autofocus: false,
                                     controller: TextEditingController(
                                         text: profile.university),
-                                    // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 16,
@@ -374,24 +391,22 @@ class _SettingViewState extends State<SettingView> {
                                       border: myinputborder(),
                                       enabledBorder: myinputborder(),
                                     ),
-
                                     keyboardType: TextInputType.text,
                                     textInputAction: TextInputAction.next,
                                     focusNode: _universityFocusNode,
-
                                     onFieldSubmitted: (_) {
                                       FocusScope.of(context).requestFocus();
                                     },
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'نام دانشگاه نباید خالی باشد.';
-                                      }
-                                      if (value.length > 10) {
-                                        return 'دانشگاه باید کمتر از 10 کاراکتر باشد.';
-                                      }
+                                    // validator: (value) {
+                                    //   if (value!.isEmpty) {
+                                    //     return 'نام دانشگاه نباید خالی باشد.';
+                                    //   }
+                                    //   if (value.length > 10) {
+                                    //     return 'دانشگاه باید کمتر از 10 کاراکتر باشد.';
+                                    //   }
 
-                                      return null;
-                                    },
+                                    //   return null;
+                                    // },
                                   ),
                                 ),
                               ),
@@ -415,8 +430,8 @@ class _SettingViewState extends State<SettingView> {
                               autofocus: false,
                               controller:
                                   TextEditingController(text: profile.email),
-                              onChanged: (String newUniversity) {
-                                _emailController.text = newUniversity;
+                              onChanged: (String newEmail) {
+                                email = newEmail;
                               },
                               style: TextStyle(
                                 color: Colors.grey,
@@ -443,7 +458,7 @@ class _SettingViewState extends State<SettingView> {
                               textInputAction: TextInputAction.done,
                               focusNode: _emailFocusNode,
                               onFieldSubmitted: (_) {
-                                _saveForm();
+                                () {};
                               },
                               validator: (value) {
                                 if (value!.isEmpty) {
@@ -486,7 +501,6 @@ class _SettingViewState extends State<SettingView> {
                               autofocus: false,
                               controller: _passController,
                               textDirection: TextDirection.ltr,
-                              // initialValue: 'دانشجوی مهندسی کامپیوتر دانشگاه خوارزمی',
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 16,
@@ -517,13 +531,10 @@ class _SettingViewState extends State<SettingView> {
                                 border: myinputborder(),
                                 enabledBorder: myinputborder(),
                               ),
-
                               keyboardType: TextInputType.visiblePassword,
                               textInputAction: TextInputAction.done,
                               focusNode: _passwordFocusNode,
-                              onFieldSubmitted: (_) {
-                                _saveForm();
-                              },
+                              onFieldSubmitted: (_) {},
                             ),
                           ),
                           Padding(
@@ -543,14 +554,14 @@ class _SettingViewState extends State<SettingView> {
                                     onPressed: () async {
                                       if (controller.keyForm.currentState!
                                           .validate()) {
-                                        var resEmail = await controller
-                                            .changeEmail(_emailController.text);
+                                        var resEmail =
+                                            await controller.changeEmail(email);
                                         var resProfile =
                                             await controller.changeProfile(
-                                                _nameController.text,
-                                                _bioController.text,
-                                                _photoController.text);
+                                                name, bio, _pickedImage!);
                                         if (resEmail && resProfile) {
+                                          print(email);
+
                                           showDialog<String>(
                                             context: context,
                                             builder: (BuildContext context) =>
@@ -622,8 +633,8 @@ class _SettingViewState extends State<SettingView> {
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           },
         ),

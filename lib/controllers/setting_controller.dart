@@ -6,6 +6,8 @@ import 'package:project/models/profile_model.dart';
 
 class ChangeSettingControler extends ChangeNotifier {
   bool isLoading = false;
+  late final String _token;
+  String get token => _token;
 
   final keyForm = GlobalKey<FormState>();
   getProfile() async {

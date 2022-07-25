@@ -3,49 +3,59 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+// import 'package:image/image.dart' as img;
 class UserImagePicker extends StatefulWidget {
   @override
   _UserImagePickerState createState() => _UserImagePickerState();
 }
 
 class _UserImagePickerState extends State<UserImagePicker> {
-  late XFile _imageFileList;
-  final ImagePicker _picker = ImagePicker();
-  var _image;
+  late File _pickedImage;
+
   void _pickImage() async {
-    XFile? pickedImageFile =
-        await _picker.pickImage(source: ImageSource.camera);
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+
+//convert XFile to File
+    final File? imagefile = File(image!.path);
 
     setState(() {
-      _image = File(pickedImageFile!.path);
+      _pickedImage = imagefile!;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        _image != null
-            ? Image.file(
-                _image,
-                width: 200.0,
-                height: 200.0,
-                fit: BoxFit.fitHeight,
-              )
-            :
-            // CircleAvatar(
-            //   radius: 40,
-            //   backgroundColor: Colors.grey,
-            //   backgroundImage:
-            //       _image != null ? XFileImage(_imageFileList) : null,
-            // ),
-            FlatButton.icon(
-                textColor: Theme.of(context).primaryColor,
-                onPressed: _pickImage,
-                icon: Icon(Icons.image),
-                label: Text('Add Image'),
+    return new Center(
+      child: new Container(
+        child: new Material(
+          child: new InkWell(
+            onTap: _pickImage,
+            child: new Container(
+              width: 75.0,
+              height: 75.0,
+              child: InkWell(
+                child: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  radius: 40,
+                  backgroundImage:
+                      _pickedImage != null ? FileImage(_pickedImage) : null,
+                  // child: SizedBox(
+                  //   width: 60,
+                  //   height: 60,
+                  //   child: ClipOval(
+                  //     child: Image.asset(
+                  //       "assets/images/ic_profile.png",
+                  //     ),
+                  //   ),
+                  // ),
+                ),
               ),
-      ],
+            ),
+          ),
+          color: Colors.transparent,
+        ),
+      ),
     );
   }
 }
